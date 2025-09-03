@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.env.*
+db.sqlite3
+*.sqlite3
+
+# Virtual environments (enterprise standard)
+venv/
+.venv/
+env/
+.env/
+bee/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+.expo/
+.nyc_output
+coverage
+
+# Docker
+*.log
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,10 @@
+{
+    "expo": {
+        "name": "klynaa-mobile",
+        "slug": "klynaa-mobile",
+        "scheme": "klynaa",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "sdkVersion": "51.0.0"
+    }
+}

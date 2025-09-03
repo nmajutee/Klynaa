@@ -1,0 +1,1 @@
+Feature app for bins management (states, locations).

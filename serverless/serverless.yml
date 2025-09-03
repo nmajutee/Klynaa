@@ -1,0 +1,93 @@
+service: klynaa-serverless
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+
+  environment:
+    DJANGO_API_URL: ${env:DJANGO_API_URL, 'http://localhost:8001'}
+    DJANGO_API_KEY: ${env:DJANGO_API_KEY}
+    NOTIFICATION_SERVICE: ${env:NOTIFICATION_SERVICE, 'firebase'}
+    FIREBASE_SERVER_KEY: ${env:FIREBASE_SERVER_KEY}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+        - sns:Publish
+        - events:PutEvents
+      Resource: "*"
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
+functions:
+  # Notification Functions
+  sendPickupNotification:
+    handler: functions/notifications.send_pickup_notification
+    events:
+      - http:
+          path: notifications/pickup
+          method: post
+          cors: true
+    timeout: 30
+
+  sendPaymentNotification:
+    handler: functions/notifications.send_payment_notification
+    events:
+      - http:
+          path: notifications/payment
+          method: post
+          cors: true
+    timeout: 30
+
+  # Escrow Functions
+  processEscrowRelease:
+    handler: functions/escrow.process_escrow_release
+    events:
+      - http:
+          path: escrow/release
+          method: post
+          cors: true
+    timeout: 60
+
+  # Scheduled Tasks
+  generateDailyReports:
+    handler: functions/scheduler.generate_daily_reports
+    events:
+      - schedule: cron(0 6 * * ? *)  # 6 AM daily
+    timeout: 300
+
+  processWeeklyAnalytics:
+    handler: functions/scheduler.process_weekly_analytics
+    events:
+      - schedule: cron(0 7 ? * MON *)  # 7 AM every Monday
+    timeout: 300
+
+  # Geo Functions
+  notifyNearbyWorkers:
+    handler: functions/geo.notify_nearby_workers
+    events:
+      - http:
+          path: geo/notify-workers
+          method: post
+          cors: true
+    timeout: 45
+
+package:
+  exclude:
+    - node_modules/**
+    - .git/**
+    - __pycache__/**
+    - "*.pyc"
+    - tests/**

@@ -1,0 +1,4 @@
+-r base.txt
+
+# Prod-only
+gunicorn>=21.2.0

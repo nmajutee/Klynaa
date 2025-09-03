@@ -1,0 +1,16 @@
+Django>=4.2,<5.0
+psycopg2-binary>=2.9
+python-dotenv>=1.0
+pydantic>=2.7
+
+# REST API
+djangorestframework>=3.14
+
+# CORS
+django-cors-headers>=4.0
+
+# Auth
+djangorestframework-simplejwt>=5.3
+
+# Utils
+requests>=2.31

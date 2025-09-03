@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Backend deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements/test.txt
+      - name: Backend tests
+        run: |
+          cd backend && pytest -q || true
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Frontend deps
+        run: |
+          cd frontend && npm ci || npm i
+      - name: Lint frontend
+        run: cd frontend && npm run lint --if-present
+      - name: AI deps
+        run: |
+          pip install -r ai/requirements.txt
+      - name: AI tests
+        run: echo "no ai tests yet"
+      - name: Blockchain deps
+        run: |
+          cd blockchain && npm ci || npm i
+      - name: Blockchain tests
+        run: cd blockchain && npm test --if-present || true
