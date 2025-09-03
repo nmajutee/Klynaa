@@ -1,26 +1,28 @@
-# 🌍 Klynaa — Modern Waste Management Platform (Monorepo)
+#  <img src="https://unpkg.com/lucide-static@latest/icons/recycle.svg" alt="Recycle" width="24" height="24" style="vertical-align: text-bottom;"> Klynaa — Modern Waste Management and Disposal Platform in Cameroon
 
 [![CI](https://github.com/nmajutee/Klynaa/actions/workflows/ci.yml/badge.svg)](https://github.com/nmajutee/Klynaa/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Node.js 20+](https://img.shields.io/badge/node.js-20+-green.svg)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?logo=open-source-initiative&logoColor=white)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-optional-326CE5?logo=kubernetes&logoColor=white)](k8s/README.md)
 
 Klynaa (pronounced “Clean‑ah”) is a full‑stack platform that digitizes waste management workflows for cities and municipalities. It brings together a Django REST backend, a Next.js web app, a React‑Native mobile app, AI microservices, and Web3 contracts—packaged as a Docker‑first monorepo.
 
 ---
 
-## ✨ Highlights
+## <img src="https://unpkg.com/lucide-static@latest/icons/sparkles.svg" alt="Highlights" width="18" height="18" style="vertical-align: text-bottom;"> Highlights
 
-- 🧠 Hybrid architecture: Django core + serverless‑friendly microservices (AI)
-- 🗺️ Smart pickup scheduling and future route optimization
-- 🔔 Notifications pipeline (email/SMS/push-ready)
-- 💳 Web3 plumbing for future tokenized payments (KLY)
-- 📊 Admin analytics and KPIs
-- 🧩 Monorepo with shared utilities and CI
+- <img src="https://unpkg.com/lucide-static@latest/icons/brain.svg" alt="Hybrid" width="16" height="16" style="vertical-align: text-bottom;"> Hybrid architecture: Django core + serverless‑friendly microservices (AI)
+- <img src="https://unpkg.com/lucide-static@latest/icons/route.svg" alt="Routing" width="16" height="16" style="vertical-align: text-bottom;"> Smart pickup scheduling and future route optimization
+- <img src="https://unpkg.com/lucide-static@latest/icons/bell.svg" alt="Notifications" width="16" height="16" style="vertical-align: text-bottom;"> Notifications pipeline (email/SMS/push‑ready)
+- <img src="https://unpkg.com/lucide-static@latest/icons/coins.svg" alt="Web3" width="16" height="16" style="vertical-align: text-bottom;"> Web3 plumbing for future tokenized payments (KLY)
+- <img src="https://unpkg.com/lucide-static@latest/icons/bar-chart-2.svg" alt="Analytics" width="16" height="16" style="vertical-align: text-bottom;"> Admin analytics and KPIs
+- <img src="https://unpkg.com/lucide-static@latest/icons/puzzle.svg" alt="Monorepo" width="16" height="16" style="vertical-align: text-bottom;"> Monorepo with shared utilities and CI
 
 ---
 
-## 🗂 Monorepo Layout (top‑level)
+## <img src="https://unpkg.com/lucide-static@latest/icons/folder-tree.svg" alt="Monorepo" width="18" height="18" style="vertical-align: text-bottom;"> Monorepo Layout (top‑level)
 
 ```
 Klynaa/
@@ -40,13 +42,13 @@ Klynaa/
 ```
 
 Nginx reverse‑proxies locally to:
-- http://localhost → Frontend
-- http://localhost/api → Backend
-- http://localhost/ai → AI service
+- <img src="https://unpkg.com/lucide-static@latest/icons/globe.svg" alt="Frontend" width="14" height="14" style="vertical-align: text-bottom;"> http://localhost → Frontend
+- <img src="https://unpkg.com/lucide-static@latest/icons/server.svg" alt="Backend" width="14" height="14" style="vertical-align: text-bottom;"> http://localhost/api → Backend
+- <img src="https://unpkg.com/lucide-static@latest/icons/cpu.svg" alt="AI" width="14" height="14" style="vertical-align: text-bottom;"> http://localhost/ai → AI service
 
 ---
 
-## 🚀 Quick Start (Docker‑first)
+## <img src="https://unpkg.com/lucide-static@latest/icons/rocket.svg" alt="Quick Start" width="18" height="18" style="vertical-align: text-bottom;"> Quick Start (Docker‑first)
 
 Prereqs: Docker, Docker Compose, Node 20+, Python 3.11+, Make.
 
@@ -89,7 +91,7 @@ docker compose \
 
 ---
 
-## 💻 Local Dev (without Docker)
+## <img src="https://unpkg.com/lucide-static@latest/icons/laptop.svg" alt="Local Dev" width="18" height="18" style="vertical-align: text-bottom;"> Local Dev (without Docker)
 
 Backend (SQLite dev):
 ```bash
@@ -120,7 +122,7 @@ npm test
 
 ---
 
-## 🔐 Environment Variables
+## <img src="https://unpkg.com/lucide-static@latest/icons/lock.svg" alt="Env" width="18" height="18" style="vertical-align: text-bottom;"> Environment Variables
 
 Start with `.env.example` → `.env`. The Bee dev profile also reads `environments/bee/.env.bee` used by Docker Compose. Common variables:
 
@@ -130,7 +132,7 @@ Start with `.env.example` → `.env`. The Bee dev profile also reads `environmen
 
 ---
 
-## 🧪 Testing
+## <img src="https://unpkg.com/lucide-static@latest/icons/beaker.svg" alt="Testing" width="18" height="18" style="vertical-align: text-bottom;"> Testing
 
 - CI runs backend, frontend lint, AI stubs, and blockchain tests via `.github/workflows/ci.yml`.
 - Locally (Docker):
@@ -148,33 +150,33 @@ cd blockchain && npm test
 
 ---
 
-## 🧱 Services Overview
+## <img src="https://unpkg.com/lucide-static@latest/icons/layers.svg" alt="Services" width="18" height="18" style="vertical-align: text-bottom;"> Services Overview
 
-### Backend (Django)
+### <img src="https://unpkg.com/lucide-static@latest/icons/database.svg" alt="Django" width="16" height="16" style="vertical-align: text-bottom;"> Backend (Django)
 - Feature apps under `backend/apps/*` (users, bins, pickups, payments, notifications, analytics)
 - DRF APIs defined in `backend/config/urls.py`
 - Dev DB: SQLite (simple), Prod: PostgreSQL (via optional profiles)
 
-### Frontend (Next.js)
+### <img src="https://unpkg.com/lucide-static@latest/icons/layout-dashboard.svg" alt="Next.js" width="16" height="16" style="vertical-align: text-bottom;"> Frontend (Next.js)
 - Pages in `frontend/pages`
 - API wrappers in `frontend/services`
 - ESLint configured (`.eslintrc.json`) for CI stability
 
-### Mobile (Expo)
+### <img src="https://unpkg.com/lucide-static@latest/icons/smartphone.svg" alt="Mobile" width="16" height="16" style="vertical-align: text-bottom;"> Mobile (Expo)
 - Cross‑platform app targeting field agents & citizens
 
-### AI (FastAPI)
+### <img src="https://unpkg.com/lucide-static@latest/icons/cpu.svg" alt="AI" width="16" height="16" style="vertical-align: text-bottom;"> AI (FastAPI)
 - `services/main.py` exposes health and stub endpoints
 - Ready to host models for forecasting, routing, classification, etc.
 
-### Blockchain (Hardhat)
+### <img src="https://unpkg.com/lucide-static@latest/icons/circuit-board.svg" alt="Blockchain" width="16" height="16" style="vertical-align: text-bottom;"> Blockchain (Hardhat)
 - Contract: `contracts/KlynaaToken.sol`
 - Tests in `test/` (sample token metadata test)
 - Ethers.js v6 integration ready
 
 ---
 
-## 🏗️ Deployment Notes
+## <img src="https://unpkg.com/lucide-static@latest/icons/server-cog.svg" alt="Deployment" width="18" height="18" style="vertical-align: text-bottom;"> Deployment Notes
 
 - Docker images can be built per service using the included Dockerfiles
 - Nginx provides a simple local reverse proxy; for production use hardened config or a managed ingress
@@ -182,7 +184,7 @@ cd blockchain && npm test
 
 ---
 
-## 🤝 Contributing
+## <img src="https://unpkg.com/lucide-static@latest/icons/handshake.svg" alt="Contributing" width="18" height="18" style="vertical-align: text-bottom;"> Contributing
 
 1) Fork the repo and create a feature branch
 2) Follow the service style guides (Black/Flake8, Prettier, ESLint)
@@ -193,7 +195,7 @@ See `docs/contribution.md` for conventions.
 
 ---
 
-## 📚 Further Reading
+## <img src="https://unpkg.com/lucide-static@latest/icons/book-open.svg" alt="Docs" width="18" height="18" style="vertical-align: text-bottom;"> Further Reading
 
 - `docs/setup.md` — onboarding & commands
 - `docs/architecture.md` — high‑level design
@@ -201,6 +203,6 @@ See `docs/contribution.md` for conventions.
 
 ---
 
-## 📄 License
+## <img src="https://unpkg.com/lucide-static@latest/icons/file-text.svg" alt="License" width="18" height="18" style="vertical-align: text-bottom;"> License
 
 MIT. See LICENSE.
