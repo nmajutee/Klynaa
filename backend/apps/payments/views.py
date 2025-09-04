@@ -28,10 +28,11 @@ class EscrowAccountViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin_user:
-            return EscrowAccount.objects.all()
+        base_qs = EscrowAccount.objects.select_related('pickup_request', 'payer', 'payee')
+        if getattr(user, 'is_admin_user', False):
+            return base_qs
         else:
-            return EscrowAccount.objects.filter(
+            return base_qs.filter(
                 models.Q(payer=user) | models.Q(payee=user)
             )
 
@@ -47,10 +48,11 @@ class PaymentTransactionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin_user:
-            return PaymentTransaction.objects.all()
+        base_qs = PaymentTransaction.objects.select_related('escrow_account', 'initiated_by')
+        if getattr(user, 'is_admin_user', False):
+            return base_qs
         else:
-            return PaymentTransaction.objects.filter(initiated_by=user)
+            return base_qs.filter(initiated_by=user)
 
     @action(detail=False, methods=['post'])
     def initiate_payment(self, request):
@@ -81,10 +83,11 @@ class UserWalletViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin_user:
-            return UserWallet.objects.all()
+        base_qs = UserWallet.objects.select_related('user')
+        if getattr(user, 'is_admin_user', False):
+            return base_qs
         else:
-            return UserWallet.objects.filter(user=user)
+            return base_qs.filter(user=user)
 
     @action(detail=True, methods=['get'])
     def balance(self, request, pk=None):
@@ -113,7 +116,8 @@ class WalletTransactionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin_user:
-            return WalletTransaction.objects.all()
+        base_qs = WalletTransaction.objects.select_related('wallet', 'wallet__user')
+        if getattr(user, 'is_admin_user', False):
+            return base_qs
         else:
-            return WalletTransaction.objects.filter(wallet__user=user)
+            return base_qs.filter(wallet__user=user)

@@ -26,11 +26,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin_user:
-            return Review.objects.all()
+        base_qs = Review.objects.select_related('reviewer', 'reviewed_user', 'pickup_request')
+        if getattr(user, 'is_admin_user', False):
+            return base_qs
         else:
-            # Users can see reviews they gave or received
-            return Review.objects.filter(
+            return base_qs.filter(
                 models.Q(reviewer=user) | models.Q(reviewed_user=user)
             )
 
@@ -61,11 +61,12 @@ class DisputeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin_user:
-            return Dispute.objects.all()
+        base_qs = Dispute.objects.select_related('filed_by', 'against_user', 'pickup_request', 'resolved_by')
+        if getattr(user, 'is_admin_user', False):
+            return base_qs
         else:
             # Users can see disputes they filed or are involved in
-            return Dispute.objects.filter(
+            return base_qs.filter(
                 models.Q(filed_by=user) | models.Q(against_user=user)
             )
 
