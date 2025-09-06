@@ -30,3 +30,6 @@ coverage
 # Editor
 .vscode/
 .idea/
+
+# Project Management (Internal Only)
+PROJECT_STATUS.md

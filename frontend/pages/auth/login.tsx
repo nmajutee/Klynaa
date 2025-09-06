@@ -51,18 +51,20 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8">
+        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--color-background-hover)' }}>
+            <div className="max-w-md w-full space-y-8 bg-white rounded-lg shadow-lg p-8">
                 <div>
                     <div className="mx-auto h-12 w-auto flex items-center justify-center">
-                        <h1 className="text-3xl font-bold text-primary-600">Klynaa</h1>
+                        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-h2)', fontWeight: 700, color: 'var(--color-black)' }}>
+                            Klynaa
+                        </h1>
                     </div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    <h2 className="mt-6 text-center" style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-h3)', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                         Sign in to your account
                     </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
+                    <p className="mt-2 text-center" style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-small)', color: 'var(--color-text-secondary)' }}>
                         Don't have an account?{' '}
-                        <Link href="/auth/register" className="font-medium text-primary-600 hover:text-primary-500">
+                        <Link href="/auth/register" className="font-medium hover:underline" style={{ color: 'var(--color-black)' }}>
                             Register here
                         </Link>
                     </p>
@@ -70,14 +72,14 @@ const Login: React.FC = () => {
 
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {error && (
-                        <div className="rounded-md bg-red-50 p-4">
-                            <div className="text-sm text-red-700">{error}</div>
+                        <div className="rounded-md p-4" style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA' }}>
+                            <div style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-small)', color: '#DC2626' }}>{error}</div>
                         </div>
                     )}
 
                     <div className="space-y-4">
                         <div>
-                            <label htmlFor="email" className="label">
+                            <label htmlFor="email" className="form-label">
                                 Email address
                             </label>
                             <input
@@ -90,16 +92,16 @@ const Login: React.FC = () => {
                                 })}
                                 type="email"
                                 autoComplete="email"
-                                className="input-field"
+                                className="form-input"
                                 placeholder="Enter your email"
                             />
                             {errors.email && (
-                                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                                <p className="form-error">{errors.email.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="label">
+                            <label htmlFor="password" className="form-label">
                                 Password
                             </label>
                             <div className="relative">
@@ -113,7 +115,7 @@ const Login: React.FC = () => {
                                     })}
                                     type={showPassword ? 'text' : 'password'}
                                     autoComplete="current-password"
-                                    className="input-field pr-10"
+                                    className="form-input pr-12"
                                     placeholder="Enter your password"
                                 />
                                 <button
@@ -129,7 +131,7 @@ const Login: React.FC = () => {
                                 </button>
                             </div>
                             {errors.password && (
-                                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                                <p className="form-error">{errors.password.message}</p>
                             )}
                         </div>
                     </div>
@@ -140,15 +142,16 @@ const Login: React.FC = () => {
                                 id="remember-me"
                                 name="remember-me"
                                 type="checkbox"
-                                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                                className="h-4 w-4 rounded border-gray-300 focus:ring-2 focus:ring-green-500"
+                                style={{ accentColor: '#16a34a' }}
                             />
-                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                            <label htmlFor="remember-me" className="ml-2 block form-label mb-0">
                                 Remember me
                             </label>
                         </div>
 
-                        <div className="text-sm">
-                            <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
+                        <div>
+                            <a href="#" className="hover:underline form-label mb-0" style={{ color: 'var(--color-black)' }}>
                                 Forgot your password?
                             </a>
                         </div>
@@ -158,7 +161,7 @@ const Login: React.FC = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="btn btn-primary w-full flex justify-center items-center"
                         >
                             {isLoading ? (
                                 <div className="spinner mr-2" />

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import L, { Map as LeafletMap, TileLayer } from 'leaflet';
 import 'leaflet.markercluster';
 
@@ -60,12 +60,18 @@ const ServiceMapLeaflet: React.FC<ServiceMapLeafletProps> = ({
     return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
   };
 
-  // Create marker icon with inline labels
-  const createLabeledMarker = (p: Provider) => {
+  // Create marker icon with inline labels and React-style icons
+  const createLabeledMarker = useCallback((p: Provider) => {
     const isWorker = p.type === 'worker';
     const bgColor = isWorker ? 'var(--color-secondary)' : 'var(--color-success)';
     const roleText = isWorker ? 'Worker' : 'Bin Owner';
     const truncatedName = truncateName(p.name);
+
+    // SVG icons matching Lucide React icons
+    const userIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>`;
+    const trashIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>`;
+
+    const iconSvg = isWorker ? userIcon : trashIcon;
 
     return L.divIcon({
       className: 'custom-labeled-marker',
@@ -76,7 +82,7 @@ const ServiceMapLeaflet: React.FC<ServiceMapLeafletProps> = ({
             <div class="marker-role">${roleText}</div>
           </div>
           <div class="marker-pin" style="background-color: ${bgColor};">
-            <div class="marker-icon">${isWorker ? '🧑‍🔧' : '🗑️'}</div>
+            <div class="marker-icon">${iconSvg}</div>
           </div>
         </div>
       `,
@@ -84,10 +90,10 @@ const ServiceMapLeaflet: React.FC<ServiceMapLeafletProps> = ({
       iconAnchor: [60, 60],
       popupAnchor: [0, -55]
     });
-  };
+  }, []);
 
   // Create enhanced popup content
-  const createPopupContent = (p: Provider): string => {
+  const createPopupContent = useCallback((p: Provider): string => {
     const isWorker = p.type === 'worker';
     const badgeColor = isWorker ? 'var(--color-secondary)' : 'var(--color-success)';
     const badgeText = isWorker ? 'Worker' : 'Bin Owner';
@@ -156,7 +162,7 @@ const ServiceMapLeaflet: React.FC<ServiceMapLeafletProps> = ({
         </div>
       </div>
     `;
-  };
+  }, []);
 
   // Initialize map
   useEffect(() => {
@@ -192,7 +198,7 @@ const ServiceMapLeaflet: React.FC<ServiceMapLeafletProps> = ({
       clusterGroupRef.current = null;
       baseLayerRef.current = null;
     };
-  }, []);
+  }, [center, zoom, theme]);
 
   // Update tile layer on theme change
   useEffect(() => {
@@ -228,7 +234,7 @@ const ServiceMapLeaflet: React.FC<ServiceMapLeafletProps> = ({
     });
 
     markers.forEach((m) => cluster.addLayer(m));
-  }, [providers]);
+  }, [providers, createLabeledMarker, createPopupContent, onProviderClick]);
 
   // User location marker
   useEffect(() => {

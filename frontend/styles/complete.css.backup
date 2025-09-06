@@ -1,5 +1,5 @@
-/* Klynaa (TrashBee) Frontend Styles - Enterprise Design System */
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700&display=swap');
+/* Klynaa (TrashBee) Frontend Styles - Modern Uber-Inspired Design System */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* Design Tokens */
 :root {
@@ -11,7 +11,16 @@
     --color-secondary-light: #3B82F6;
     --color-secondary-dark: #1D4ED8;
 
-    /* Neutral Colors */
+    /* Uber-Inspired Neutral System */
+    --color-black: #111111;
+    --color-dark-gray: #222222;
+    --color-text-primary: #111111;
+    --color-text-secondary: #333333;
+    --color-text-muted: #6B6B6B;
+    --color-border-light: #E0E0E0;
+    --color-background-hover: #F7F7F7;
+
+    /* Legacy Neutral Colors */
     --color-gray-50: #F9FAFB;
     --color-gray-100: #F3F4F6;
     --color-gray-200: #E5E7EB;
@@ -29,52 +38,36 @@
     --color-error: #EF4444;
     --color-info: #3B82F6;
 
-    /* Typography - Dual Font System */
+    /* Typography System - Manrope + Inter */
     --font-heading: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --font-secondary: 'Roboto', sans-serif;
+    --font-primary: var(--font-heading);
+    --font-secondary: var(--font-body);
 
-    /* Typography Scale - Uber-Inspired */
-    --text-h1: 3rem;
-    /* 48px */
-    --text-h2: 2.25rem;
-    /* 36px */
-    --text-h3: 1.5rem;
-    /* 24px */
-    --text-h4: 1.125rem;
-    /* 18px */
-    --text-body: 1rem;
-    /* 16px */
-    --text-small: 0.875rem;
-    /* 14px */
+    /* Typography Scale - Desktop */
+    --text-h1: 3rem;        /* 48px */
+    --text-h2: 2.25rem;     /* 36px */
+    --text-h3: 1.75rem;     /* 28px */
+    --text-h4: 1.375rem;    /* 22px */
+    --text-body: 1rem;      /* 16px */
+    --text-small: 0.875rem; /* 14px */
+    --text-xs: 0.75rem;     /* 12px */
 
-    /* Mobile Typography */
-    --text-h1-mobile: 2.625rem;
-    /* 42px */
-    --text-h2-mobile: 2rem;
-    /* 32px */
-    --text-h3-mobile: 1.25rem;
-    /* 20px */
-    --text-h4-mobile: 1rem;
-    /* 16px */
-    --text-body-mobile: 0.875rem;
-    /* 14px */
+    /* Typography Scale - Mobile */
+    --text-h1-mobile: 2rem;     /* 32px */
+    --text-h2-mobile: 1.75rem;  /* 28px */
+    --text-h3-mobile: 1.5rem;   /* 24px */
+    --text-h4-mobile: 1.25rem;  /* 20px */
+    --text-body-mobile: 0.9375rem; /* 15px */
 
-    /* Font Sizes (8px baseline grid) */
+    /* Legacy Font Sizes */
     --text-xs: 0.75rem;
-    /* 12px */
     --text-sm: 0.875rem;
-    /* 14px */
     --text-base: 1rem;
-    /* 16px */
     --text-lg: 1.125rem;
-    /* 18px */
     --text-xl: 1.25rem;
-    /* 20px */
     --text-2xl: 1.5rem;
-    /* 24px */
     --text-3xl: 1.875rem;
-    /* 30px */
     --text-4xl: 2.25rem;
     /* 36px */
     --text-5xl: 3rem;
@@ -113,6 +106,19 @@
     --space-24: 6rem;
     /* 96px */
 
+    /* Uber-Inspired Button System */
+    --btn-height: 2.75rem;        /* 44px - Reduced from oversized */
+    --btn-height-sm: 2.5rem;      /* 40px */
+    --btn-height-lg: 3rem;        /* 48px */
+    --btn-radius: 0.5rem;         /* 8px - Slightly rounded */
+    --btn-padding: 0.625rem 1.125rem; /* 10px 18px */
+    --btn-padding-sm: 0.5rem 1rem;    /* 8px 16px */
+    --btn-padding-lg: 0.75rem 1.25rem; /* 12px 20px */
+    --btn-font-size: 1rem;        /* 16px */
+    --btn-font-weight: 600;       /* SemiBold */
+    --btn-letter-spacing: -0.0125em; /* -0.2px for sleek look */
+    --btn-transition: all 0.15s ease;
+
     /* Border Radius */
     --radius-sm: 0.375rem;
     /* 6px */
@@ -137,24 +143,6 @@
     --transition-normal: 300ms ease;
     --transition-slow: 500ms ease;
     --transition-bounce: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* Button System - Uber-Inspired */
-    --btn-height: 44px;
-    --btn-radius: 8px;
-    --btn-padding: 10px 18px;
-    --btn-font-weight: 600;
-    --btn-font-size: 16px;
-    --btn-letter-spacing: -0.2px;
-    --btn-transition: all 150ms ease;
-
-    /* Colors for Button System */
-    --color-black: #111827;
-    --color-dark-gray: #374151;
-    --color-text-primary: #111827;
-    --color-text-secondary: #6B7280;
-    --color-text-muted: #9CA3AF;
-    --color-border-light: #E5E7EB;
-    --color-background-hover: #F9FAFB;
 }
 
 /* CSS Reset */
@@ -171,14 +159,14 @@ body {
     height: 100%;
     font-family: var(--font-body);
     line-height: var(--leading-normal);
-    color: var(--color-gray-700);
+    color: var(--color-text-secondary);
     background-color: #ffffff;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Enhanced Typography System - Manrope + Inter */
+/* Modern Typography System - Manrope + Inter */
 h1,
 h2,
 h3,
@@ -187,40 +175,40 @@ h5,
 h6 {
     margin: 0;
     font-family: var(--font-heading);
-    font-weight: 700;
     line-height: var(--leading-tight);
     color: var(--color-text-primary);
     letter-spacing: -0.025em;
 }
 
+/* Desktop Typography */
 h1 {
     font-size: var(--text-h1);
-    font-weight: 800;
+    font-weight: 700;  /* Manrope Bold */
 }
 
 h2 {
     font-size: var(--text-h2);
-    font-weight: 700;
+    font-weight: 600;  /* Manrope SemiBold */
 }
 
 h3 {
     font-size: var(--text-h3);
-    font-weight: 600;
+    font-weight: 600;  /* Manrope SemiBold */
 }
 
 h4 {
     font-size: var(--text-h4);
-    font-weight: 500;
+    font-weight: 500;  /* Manrope Medium */
 }
 
 h5 {
-    font-size: var(--text-small);
+    font-size: var(--text-xl);
     font-weight: 500;
 }
 
 h6 {
-    font-size: var(--text-small);
-    font-weight: 400;
+    font-size: var(--text-lg);
+    font-weight: 500;
 }
 
 /* Body Text - Inter Font */
@@ -232,24 +220,21 @@ p {
     line-height: var(--leading-relaxed);
 }
 
+/* Small Text and Labels */
+.text-small {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
 /* Mobile Typography Responsiveness */
 @media (max-width: 768px) {
-    h1 {
-        font-size: var(--text-h1-mobile);
-    }
-
-    h2 {
-        font-size: var(--text-h2-mobile);
-    }
-
-    h3 {
-        font-size: var(--text-h3-mobile);
-    }
-
-    h4 {
-        font-size: var(--text-h4-mobile);
-    }
-
+    h1 { font-size: var(--text-h1-mobile); }
+    h2 { font-size: var(--text-h2-mobile); }
+    h3 { font-size: var(--text-h3-mobile); }
+    h4 { font-size: var(--text-h4-mobile); }
+    
     p {
         font-size: var(--text-body-mobile);
     }
@@ -293,10 +278,6 @@ button {
 }
 
 /* =============================================================================
-   COMPONENT SYSTEM - Enterprise Grade Components
-   ============================================================================= */
-
-/* =============================================================================
    UBER-INSPIRED BUTTON SYSTEM - Modern & Sleek
    ============================================================================= */
 
@@ -328,75 +309,6 @@ button {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
-}
-
-/* Button Size Variants - Uber-Inspired Scaling */
-.btn-lg {
-    padding: 14px 24px;
-    font-size: 18px;
-    height: 52px;
-}
-
-.btn-sm {
-    padding: 6px 14px;
-    font-size: 14px;
-    height: 36px;
-}
-
-/* Search Button - Uber-Inspired Primary Style */
-.search-button {
-    height: var(--btn-height);
-    padding: var(--btn-padding);
-    border-radius: var(--btn-radius);
-    font-family: var(--font-heading);
-    font-weight: var(--btn-font-weight);
-    font-size: var(--btn-font-size);
-    letter-spacing: var(--btn-letter-spacing);
-    background-color: var(--color-black);
-    color: white;
-    border: 1px solid var(--color-black);
-    cursor: pointer;
-    transition: var(--btn-transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    min-width: fit-content;
-    white-space: nowrap;
-}
-
-.search-button:hover {
-    background-color: var(--color-dark-gray);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(17, 17, 17, 0.15);
-}
-
-/* Enhanced Search Input & Select - Match button height and modern styling */
-.search-input,
-.search-select {
-    height: 60px;
-    padding: 1.375rem 1.5rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 0.875rem;
-    font-size: 1rem;
-    font-weight: 500;
-    background-color: #f8fafc;
-    color: #374151;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    outline: none;
-}
-
-.search-input {
-    padding-left: 3.5rem;
-    /* Space for icon */
-}
-
-.search-input:focus,
-.search-select:focus {
-    border-color: #16a34a;
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
-    background-color: white;
-    transform: translateY(-1px);
 }
 
 /* Primary Button - Black (Uber Style) */
@@ -459,6 +371,115 @@ button {
     outline-offset: 2px;
 }
 
+/* Button Size Variants - Uber-Inspired Scaling */
+.btn-lg {
+    padding: 14px 24px;
+    font-size: 18px;
+    height: 52px;
+    /* Larger variant maintaining proportions */
+}
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 14px;
+    height: 36px;
+    /* Smaller variant maintaining proportions */
+}
+
+/* Search Button - Uber-Inspired Primary Style */
+.search-button {
+    height: var(--btn-height);
+    padding: var(--btn-padding);
+    border-radius: var(--btn-radius);
+    font-family: var(--font-heading);
+    font-weight: var(--btn-font-weight);
+    font-size: var(--btn-font-size);
+    letter-spacing: var(--btn-letter-spacing);
+    background-color: var(--color-black);
+    color: white;
+    border: 1px solid var(--color-black);
+    cursor: pointer;
+    transition: var(--btn-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: fit-content;
+    white-space: nowrap;
+}
+
+.search-button:hover {
+    background-color: var(--color-dark-gray);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(17, 17, 17, 0.15);
+}
+
+/* Search Input - Uber-Inspired Styling */
+.search-input,
+.search-select {
+    height: var(--btn-height);
+    padding: 0 var(--space-4);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--btn-radius);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    background: white;
+    transition: var(--btn-transition);
+}
+
+.search-input {
+    padding-left: 3rem;
+    /* Space for icon */
+}
+
+.search-input:focus,
+.search-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+/* Legacy Primary Button */
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    color: white;
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, #14532d 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Legacy Secondary Button */
+.btn-secondary {
+    background: white;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--color-gray-50);
+    border-color: var(--color-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Legacy Ghost Button */
+.btn-ghost {
+    background: transparent;
+    color: var(--color-gray-700);
+    border-color: var(--color-gray-300);
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background: var(--color-gray-50);
+    color: var(--color-gray-900);
+}
+
 /* Outline Button */
 .btn-outline {
     background: transparent;
@@ -472,22 +493,6 @@ button {
     color: white;
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
-}
-
-/* Legacy Button Sizes */
-.btn-lg {
-    padding: var(--space-4) var(--space-8);
-    font-size: var(--text-lg);
-    min-width: 180px;
-    height: 3.5rem;
-    /* 56px */
-}
-
-.btn-sm {
-    padding: var(--space-2) var(--space-4);
-    font-size: var(--text-sm);
-    height: 2.5rem;
-    /* 40px */
 }
 
 /* Enhanced Button System Utilities */
@@ -648,164 +653,35 @@ button {
 
 .form-input {
     width: 100%;
-    padding: 1.375rem 1.5rem;
-    border: 2px solid #e5e7eb;
-    border-radius: 0.875rem;
-    font-size: 1rem;
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-base);
     font-weight: 500;
-    outline: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: #f8fafc;
-    color: #374151;
-    height: 60px;
-    font-family: var(--font-body);
+    background-color: var(--color-gray-50);
+    transition: all var(--transition-bounce);
+    color: var(--color-gray-700);
 }
 
 .form-input:focus {
-    border-color: #16a34a;
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    border-color: var(--color-primary);
     background-color: white;
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.1);
     transform: translateY(-1px);
 }
 
 .form-input::placeholder {
-    color: #9ca3af;
+    color: var(--color-gray-400);
     font-weight: 400;
-}
-
-.form-input:invalid {
-    border-color: #ef4444;
-}
-
-.form-input:invalid:focus {
-    border-color: #ef4444;
-    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
 }
 
 .form-select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2316a34a' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 1rem center;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right var(--space-3) center;
     background-repeat: no-repeat;
     background-size: 1.25em 1.25em;
-    padding-right: 3.5rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.form-select:hover {
-    border-color: #16a34a;
-    background-color: white;
-    transform: translateY(-1px);
-}
-
-.form-select:focus {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2316a34a' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 12 4-4 4 4'/%3e%3c/svg%3e");
-}
-
-/* Custom dropdown styling for better visual hierarchy */
-.form-select option {
-    padding: 12px 16px;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    color: #374151;
-    background-color: white;
-    border: none;
-}
-
-.form-select option:hover,
-.form-select option:focus {
-    background-color: #f8fafc;
-    color: #16a34a;
-}
-
-.form-select option:checked {
-    background-color: #16a34a;
-    color: white;
-    font-weight: 600;
-}
-
-/* Disabled state */
-.form-select:disabled {
-    background-color: #f3f4f6;
-    color: #9ca3af;
-    cursor: not-allowed;
-    border-color: #d1d5db;
-}
-
-.form-select:disabled:hover {
-    transform: none;
-    border-color: #d1d5db;
-}
-
-/* Form Labels */
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-family: var(--font-body);
-    font-size: var(--text-small);
-    font-weight: 500;
-    color: var(--color-text-primary);
-}
-
-/* Form Error Messages */
-.form-error {
-    margin-top: 0.25rem;
-    font-family: var(--font-body);
-    font-size: var(--text-small);
-    color: #DC2626;
-}
-
-/* Enhanced select styling for webkit browsers */
-.form-select::-webkit-scrollbar {
-    width: 8px;
-}
-
-.form-select::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.form-select::-webkit-scrollbar-thumb {
-    background: #16a34a;
-    border-radius: 4px;
-}
-
-.form-select::-webkit-scrollbar-thumb:hover {
-    background: #15803d;
-}
-
-/* Firefox select styling */
-.form-select {
-    scrollbar-width: thin;
-    scrollbar-color: #16a34a #f1f1f1;
-}
-
-/* Enhanced focus ring for better accessibility */
-.form-input:focus-visible,
-.form-select:focus-visible {
-    outline: 2px solid #16a34a;
-    outline-offset: 2px;
-}
-
-/* Custom arrow animation */
-.form-select:focus {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2316a34a' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 12 4-4 4 4'/%3e%3c/svg%3e");
-    animation: selectArrowRotate 0.2s ease-in-out;
-}
-
-@keyframes selectArrowRotate {
-    0% {
-        transform: translateY(-1px) rotate(0deg);
-    }
-
-    50% {
-        transform: translateY(-1px) rotate(180deg);
-    }
-
-    100% {
-        transform: translateY(-1px) rotate(180deg);
-    }
+    padding-right: var(--space-10);
 }
 
 /* Modal System */
@@ -1833,7 +1709,7 @@ nav {
     color: #374151;
     cursor: pointer;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2316a34a' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 1rem center;
     background-repeat: no-repeat;
     background-size: 1.25em 1.25em;
@@ -1842,40 +1718,11 @@ nav {
     height: 60px;
 }
 
-.search-select:hover {
-    border-color: #16a34a;
-    background-color: white;
-    transform: translateY(-1px);
-}
-
 .search-select:focus {
     border-color: #16a34a;
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
     background-color: white;
     transform: translateY(-1px);
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2316a34a' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 12 4-4 4 4'/%3e%3c/svg%3e");
-}
-
-/* Search select option styling */
-.search-select option {
-    padding: 12px 16px;
-    font-family: var(--font-body);
-    font-size: 1rem;
-    color: #374151;
-    background-color: white;
-    border: none;
-}
-
-.search-select option:hover,
-.search-select option:focus {
-    background-color: #f8fafc;
-    color: #16a34a;
-}
-
-.search-select option:checked {
-    background-color: #16a34a;
-    color: white;
-    font-weight: 600;
 }
 
 .search-button {
@@ -2419,7 +2266,7 @@ nav {
     color: var(--color-gray-900);
     margin-bottom: var(--space-4);
     letter-spacing: -0.025em;
-    font-family: var(--font-heading);
+    font-family: var(--font-primary);
 }
 
 .service-coverage-subtitle {
@@ -2428,7 +2275,7 @@ nav {
     line-height: var(--leading-relaxed);
     max-width: 600px;
     margin: 0 auto;
-    font-family: var(--font-body);
+    font-family: var(--font-primary);
 }
 
 .service-coverage-map-container {
@@ -2600,7 +2447,7 @@ nav {
     font-weight: 600;
     color: var(--color-gray-900);
     margin-bottom: 0.25rem;
-    font-family: var(--font-heading);
+    font-family: var(--font-primary);
 }
 
 .popup-badge {
@@ -2705,14 +2552,14 @@ nav {
     font-weight: 700;
     color: var(--color-gray-900);
     margin-bottom: 0.5rem;
-    font-family: var(--font-heading);
+    font-family: var(--font-primary);
 }
 
 .coverage-stat-label {
     color: var(--color-gray-600);
     font-size: var(--text-base);
     font-weight: 500;
-    font-family: var(--font-body);
+    font-family: var(--font-primary);
 }
 
 /* Join Network CTA */
@@ -2745,7 +2592,7 @@ nav {
     font-weight: 700;
     color: var(--color-gray-900);
     margin-bottom: 1rem;
-    font-family: var(--font-heading);
+    font-family: var(--font-primary);
 }
 
 .join-network-description {
@@ -2756,7 +2603,7 @@ nav {
     max-width: 500px;
     margin-left: auto;
     margin-right: auto;
-    font-family: var(--font-body);
+    font-family: var(--font-primary);
 }
 
 /* Button Integration with Existing Components */

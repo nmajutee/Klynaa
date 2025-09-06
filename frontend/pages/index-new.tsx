@@ -201,12 +201,12 @@ export default function Home() {
                                                 <input
                                                     type="text"
                                                     placeholder="Enter your location (e.g., Douala, Yaoundé)"
-                                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                                                    className="form-input pl-10"
                                                 />
                                             </div>
                                         </div>
                                         <div className="flex-1">
-                                            <select className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500">
+                                            <select className="form-input form-select">
                                                 <option>Select service type</option>
                                                 <option>Household Waste</option>
                                                 <option>Commercial Waste</option>

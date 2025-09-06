@@ -49,18 +49,20 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8">
+        <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8" style={{ backgroundColor: 'var(--color-background-hover)' }}>
+            <div className="max-w-md w-full space-y-8 bg-white rounded-lg shadow-lg p-8">
                 <div>
                     <div className="mx-auto h-12 w-auto flex items-center justify-center">
-                        <h1 className="text-3xl font-bold text-primary-600">Klynaa</h1>
+                        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-h2)', fontWeight: 700, color: 'var(--color-black)' }}>
+                            Klynaa
+                        </h1>
                     </div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    <h2 className="mt-6 text-center" style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-h3)', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                         Create your account
                     </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
+                    <p className="mt-2 text-center" style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-small)', color: 'var(--color-text-secondary)' }}>
                         Already have an account?{' '}
-                        <Link href="/auth/login" className="font-medium text-primary-600 hover:text-primary-500">
+                        <Link href="/auth/login" className="font-medium hover:underline" style={{ color: 'var(--color-black)' }}>
                             Sign in here
                         </Link>
                     </p>
@@ -68,15 +70,15 @@ const Register: React.FC = () => {
 
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {error && (
-                        <div className="rounded-md bg-red-50 p-4">
-                            <div className="text-sm text-red-700">{error}</div>
+                        <div className="rounded-md p-4" style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA' }}>
+                            <div style={{ fontFamily: 'var(--font-body)', fontSize: 'var(--text-small)', color: '#DC2626' }}>{error}</div>
                         </div>
                     )}
 
                     <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label htmlFor="first_name" className="label">
+                                <label htmlFor="first_name" className="form-label">
                                     First Name
                                 </label>
                                 <input
@@ -88,16 +90,16 @@ const Register: React.FC = () => {
                                         },
                                     })}
                                     type="text"
-                                    className="input-field"
+                                    className="form-input"
                                     placeholder="John"
                                 />
                                 {errors.first_name && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.first_name.message}</p>
+                                    <p className="form-error">{errors.first_name.message}</p>
                                 )}
                             </div>
 
                             <div>
-                                <label htmlFor="last_name" className="label">
+                                <label htmlFor="last_name" className="form-label">
                                     Last Name
                                 </label>
                                 <input
@@ -109,17 +111,17 @@ const Register: React.FC = () => {
                                         },
                                     })}
                                     type="text"
-                                    className="input-field"
+                                    className="form-input"
                                     placeholder="Doe"
                                 />
                                 {errors.last_name && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.last_name.message}</p>
+                                    <p className="form-error">{errors.last_name.message}</p>
                                 )}
                             </div>
                         </div>
 
                         <div>
-                            <label htmlFor="email" className="label">
+                            <label htmlFor="email" className="form-label">
                                 Email address
                             </label>
                             <input
@@ -132,57 +134,63 @@ const Register: React.FC = () => {
                                 })}
                                 type="email"
                                 autoComplete="email"
-                                className="input-field"
+                                className="form-input"
                                 placeholder="john@example.com"
                             />
                             {errors.email && (
-                                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                                <p className="form-error">{errors.email.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label htmlFor="phone_number" className="label">
+                            <label htmlFor="phone_number" className="form-label">
                                 Phone Number (Optional)
                             </label>
                             <input
                                 {...register('phone_number')}
                                 type="tel"
-                                className="input-field"
+                                className="form-input"
                                 placeholder="+237 6XX XXX XXX"
                             />
+                            {errors.phone_number && (
+                                <p className="form-error">{errors.phone_number.message}</p>
+                            )}
                         </div>
 
                         <div>
-                            <label htmlFor="role" className="label">
+                            <label htmlFor="role" className="form-label">
                                 Account Type
                             </label>
                             <select
                                 {...register('role', { required: 'Please select an account type' })}
-                                className="input-field"
+                                className="form-input form-select"
                             >
                                 <option value="">Select account type</option>
                                 <option value="customer">Customer - Request waste pickup services</option>
                                 <option value="worker">Worker - Provide waste pickup services</option>
                             </select>
                             {errors.role && (
-                                <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
+                                <p className="form-error">{errors.role.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label htmlFor="location" className="label">
+                            <label htmlFor="location" className="form-label">
                                 Location (Optional)
                             </label>
                             <input
                                 {...register('location')}
                                 type="text"
-                                className="input-field"
+                                className="form-input"
                                 placeholder="Douala, Cameroon"
                             />
+                            {errors.location && (
+                                <p className="form-error">{errors.location.message}</p>
+                            )}
                         </div>
 
                         <div>
-                            <label htmlFor="password" className="label">
+                            <label htmlFor="password" className="form-label">
                                 Password
                             </label>
                             <div className="relative">
@@ -199,7 +207,7 @@ const Register: React.FC = () => {
                                         },
                                     })}
                                     type={showPassword ? 'text' : 'password'}
-                                    className="input-field pr-10"
+                                    className="form-input pr-12"
                                     placeholder="Create a strong password"
                                 />
                                 <button
@@ -215,12 +223,12 @@ const Register: React.FC = () => {
                                 </button>
                             </div>
                             {errors.password && (
-                                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                                <p className="form-error">{errors.password.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label htmlFor="password_confirm" className="label">
+                            <label htmlFor="password_confirm" className="form-label">
                                 Confirm Password
                             </label>
                             <div className="relative">
@@ -230,7 +238,7 @@ const Register: React.FC = () => {
                                         validate: (value) => value === password || 'Passwords do not match',
                                     })}
                                     type={showConfirmPassword ? 'text' : 'password'}
-                                    className="input-field pr-10"
+                                    className="form-input pr-12"
                                     placeholder="Confirm your password"
                                 />
                                 <button
@@ -246,7 +254,7 @@ const Register: React.FC = () => {
                                 </button>
                             </div>
                             {errors.password_confirm && (
-                                <p className="mt-1 text-sm text-red-600">{errors.password_confirm.message}</p>
+                                <p className="form-error">{errors.password_confirm.message}</p>
                             )}
                         </div>
                     </div>
@@ -257,15 +265,16 @@ const Register: React.FC = () => {
                             name="agree-terms"
                             type="checkbox"
                             required
-                            className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                            className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                            style={{ accentColor: '#16a34a' }}
                         />
-                        <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-900">
+                        <label htmlFor="agree-terms" className="ml-2 block form-label mb-0">
                             I agree to the{' '}
-                            <a href="#" className="text-primary-600 hover:text-primary-500">
+                            <a href="#" className="underline hover:no-underline" style={{ color: 'var(--color-black)' }}>
                                 Terms of Service
                             </a>{' '}
                             and{' '}
-                            <a href="#" className="text-primary-600 hover:text-primary-500">
+                            <a href="#" className="underline hover:no-underline" style={{ color: 'var(--color-black)' }}>
                                 Privacy Policy
                             </a>
                         </label>
@@ -275,12 +284,25 @@ const Register: React.FC = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="btn-primary w-full flex justify-center items-center"
+                            style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'var(--text-body)',
+                                fontWeight: 600,
+                                opacity: isLoading ? 0.7 : 1
+                            }}
                         >
                             {isLoading ? (
-                                <div className="spinner mr-2" />
-                            ) : null}
-                            {isLoading ? 'Creating account...' : 'Create account'}
+                                <>
+                                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Creating account...
+                                </>
+                            ) : (
+                                'Create Account'
+                            )}
                         </button>
                     </div>
                 </form>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import PrivateRoute from '../components/PrivateRoute';
@@ -29,11 +29,7 @@ const BinsPage: React.FC = () => {
         formState: { errors },
     } = useForm<BinFormData>();
 
-    useEffect(() => {
-        loadBins();
-    }, []);
-
-    const loadBins = async () => {
+    const loadBins = useCallback(async () => {
         try {
             setLoading(true);
             const response = await binsApi.getBins();
@@ -44,7 +40,12 @@ const BinsPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // setState functions are stable and don't need to be in dependencies
+
+    useEffect(() => {
+        loadBins();
+    }, [loadBins]);
 
     const onSubmit = async (data: BinFormData) => {
         setIsSubmitting(true);
@@ -157,34 +158,34 @@ const BinsPage: React.FC = () => {
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Add New Bin</h3>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div>
-                            <label className="label">Bin Name</label>
+                            <label className="form-label">Bin Name</label>
                             <input
                                 {...register('name', { required: 'Bin name is required' })}
                                 type="text"
-                                className="input-field"
+                                className="form-input"
                                 placeholder="e.g., Kitchen Bin"
                             />
                             {errors.name && (
-                                <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                                <p className="form-error">{errors.name.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="label">Location</label>
+                            <label className="form-label">Location</label>
                             <input
                                 {...register('location', { required: 'Location is required' })}
                                 type="text"
-                                className="input-field"
+                                className="form-input"
                                 placeholder="e.g., Kitchen, Garden"
                             />
                             {errors.location && (
-                                <p className="mt-1 text-sm text-red-600">{errors.location.message}</p>
+                                <p className="form-error">{errors.location.message}</p>
                             )}
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="label">Latitude</label>
+                                <label className="form-label">Latitude</label>
                                 <input
                                     {...register('latitude', {
                                         required: 'Latitude is required',
@@ -192,16 +193,16 @@ const BinsPage: React.FC = () => {
                                     })}
                                     type="number"
                                     step="any"
-                                    className="input-field"
+                                    className="form-input"
                                     placeholder="4.0511"
                                 />
                                 {errors.latitude && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.latitude.message}</p>
+                                    <p className="form-error">{errors.latitude.message}</p>
                                 )}
                             </div>
 
                             <div>
-                                <label className="label">Longitude</label>
+                                <label className="form-label">Longitude</label>
                                 <input
                                     {...register('longitude', {
                                         required: 'Longitude is required',
@@ -209,20 +210,20 @@ const BinsPage: React.FC = () => {
                                     })}
                                     type="number"
                                     step="any"
-                                    className="input-field"
+                                    className="form-input"
                                     placeholder="9.7679"
                                 />
                                 {errors.longitude && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.longitude.message}</p>
+                                    <p className="form-error">{errors.longitude.message}</p>
                                 )}
                             </div>
                         </div>
 
                         <div>
-                            <label className="label">Bin Type</label>
+                            <label className="form-label">Bin Type</label>
                             <select
                                 {...register('bin_type', { required: 'Bin type is required' })}
-                                className="input-field"
+                                className="form-input form-select"
                             >
                                 <option value="">Select bin type</option>
                                 <option value="general">General Waste</option>
@@ -231,12 +232,12 @@ const BinsPage: React.FC = () => {
                                 <option value="electronic">Electronic Waste</option>
                             </select>
                             {errors.bin_type && (
-                                <p className="mt-1 text-sm text-red-600">{errors.bin_type.message}</p>
+                                <p className="form-error">{errors.bin_type.message}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="label">Capacity (Liters)</label>
+                            <label className="form-label">Capacity (Liters)</label>
                             <input
                                 {...register('capacity', {
                                     required: 'Capacity is required',
@@ -244,11 +245,11 @@ const BinsPage: React.FC = () => {
                                     min: { value: 1, message: 'Capacity must be at least 1 liter' }
                                 })}
                                 type="number"
-                                className="input-field"
+                                className="form-input"
                                 placeholder="50"
                             />
                             {errors.capacity && (
-                                <p className="mt-1 text-sm text-red-600">{errors.capacity.message}</p>
+                                <p className="form-error">{errors.capacity.message}</p>
                             )}
                         </div>
 
