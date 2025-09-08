@@ -23,6 +23,9 @@ import {
     Bars3Icon,
     XMarkIcon,
     MapIcon,
+    ChevronLeftIcon,
+    ChevronRightIcon,
+    ArrowRightIcon,
     UserIcon,
     StarIcon,
     BuildingStorefrontIcon,
@@ -48,6 +51,11 @@ export default function Home() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [currentLanguage, setCurrentLanguage] = useState('en');
 
+    // Carousel state
+    const [currentSlide, setCurrentSlide] = useState(0);
+    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+    const [activeStory, setActiveStory] = useState('douala');
+
     const handleLanguageChange = (language: string) => {
         setCurrentLanguage(language);
         // Here you would typically save to localStorage and trigger i18n
@@ -55,18 +63,99 @@ export default function Home() {
         // TODO: Implement actual translation switching
     };
 
-    // Mock providers for the coverage map
+    // Mock providers for the coverage map - showing only FULL BINS ready for pickup
     const providers: CoverageProvider[] = [
-        // Bin Owners (Green)
-        { id: 'o1', name: 'Nmaju Terence', type: 'bin_owner', lat: 4.0511, lng: 9.7679, rating: 4.6, availability: 'available', distance: '1.2 km', services: ['Business Bin'], phone: '+237123456789' },
-        { id: 'o2', name: 'Tang Chi', type: 'bin_owner', lat: 4.0615, lng: 9.7821, rating: 4.8, availability: 'available', distance: '2.1 km', services: ['Business Bin'], phone: '+237123456790' },
-        { id: 'o3', name: 'Ngang Edwin', type: 'bin_owner', lat: 4.042, lng: 9.751, rating: 4.3, availability: 'busy', distance: '1.8 km', services: ['Residential Bin'] },
-        { id: 'o4', name: 'Sarah Miller', type: 'bin_owner', lat: 4.065, lng: 9.735, rating: 4.7, availability: 'available', distance: '3.1 km', services: ['Residential Bin'], phone: '+237123456791' },
-        // Workers (Blue)
-        { id: 'w1', name: 'Tarh Joshua', type: 'worker', lat: 4.072, lng: 9.773, rating: 4.7, availability: 'available', distance: '2.3 km', services: ['Bins Emptied: 230'], phone: '+237123456792' },
-        { id: 'w2', name: 'Chi Che', type: 'worker', lat: 4.045, lng: 9.745, rating: 4.9, availability: 'available', distance: '1.5 km', services: ['Bins Emptied: 310'], phone: '+237123456793' },
-        { id: 'w3', name: 'Frida Ayuk', type: 'worker', lat: 4.058, lng: 9.762, rating: 4.5, availability: 'available', distance: '2.8 km', services: ['Bins Emptied: 190'], phone: '+237123456794' },
-        { id: 'w4', name: 'Ada N.', type: 'worker', lat: 4.035, lng: 9.785, rating: 4.8, availability: 'offline', distance: '4.0 km', services: ['Bins Emptied: 275'] },
+        // Full Bins Only (Red pins - urgent pickup needed)
+        {
+            id: 'b1',
+            name: 'Nmaju Terence',
+            type: 'bin_owner',
+            lat: 4.0511,
+            lng: 9.7679,
+            rating: 4.6,
+            availability: 'available',
+            distance: '1.2 km',
+            services: ['Commercial Bin'],
+            phone: '+237123456789',
+            binStatus: 'full',
+            fillLevel: 100,
+            timesFull: '2h 15m',
+            binType: 'commercial',
+            ownerPhoto: '/api/placeholder/50/50',
+            address: 'Douala Central Market'
+        },
+        {
+            id: 'b2',
+            name: 'Tang Chi',
+            type: 'bin_owner',
+            lat: 4.0615,
+            lng: 9.7821,
+            rating: 4.8,
+            availability: 'available',
+            distance: '2.1 km',
+            services: ['Residential Bin'],
+            phone: '+237123456790',
+            binStatus: 'full',
+            fillLevel: 95,
+            timesFull: '4h 30m',
+            binType: 'residential',
+            ownerPhoto: '/api/placeholder/50/50',
+            address: 'Akwa North Residential'
+        },
+        {
+            id: 'b3',
+            name: 'Marie Kenfack',
+            type: 'bin_owner',
+            lat: 4.042,
+            lng: 9.751,
+            rating: 4.3,
+            availability: 'available',
+            distance: '1.8 km',
+            services: ['Recycling Bin'],
+            phone: '+237123456791',
+            binStatus: 'full',
+            fillLevel: 100,
+            timesFull: '1h 45m',
+            binType: 'recycling',
+            ownerPhoto: '/api/placeholder/50/50',
+            address: 'Bonanjo Business District'
+        },
+        {
+            id: 'b4',
+            name: 'Sarah Miller',
+            type: 'bin_owner',
+            lat: 4.065,
+            lng: 9.735,
+            rating: 4.7,
+            availability: 'available',
+            distance: '3.1 km',
+            services: ['Commercial Bin'],
+            phone: '+237123456792',
+            binStatus: 'full',
+            fillLevel: 90,
+            timesFull: '6h 10m',
+            binType: 'commercial',
+            ownerPhoto: '/api/placeholder/50/50',
+            address: 'New Bell Commercial Area'
+        },
+        {
+            id: 'b5',
+            name: 'Jean Baptiste',
+            type: 'bin_owner',
+            lat: 4.058,
+            lng: 9.762,
+            rating: 4.5,
+            availability: 'available',
+            distance: '2.8 km',
+            services: ['Residential Bin'],
+            phone: '+237123456793',
+            binStatus: 'full',
+            fillLevel: 100,
+            timesFull: '3h 20m',
+            binType: 'residential',
+            ownerPhoto: '/api/placeholder/50/50',
+            address: 'Bonapriso Residential'
+        }
     ];
 
     useEffect(() => {
@@ -133,6 +222,81 @@ export default function Home() {
         };
     }, [isAuthenticated, user, router]);
 
+    // Carousel configuration
+    const cardsPerView = {
+        desktop: 3,
+        tablet: 2,
+        mobile: 1
+    };
+
+    const services = [
+        {
+            title: "Household Waste Pickup",
+            description: "Schedule fast and reliable waste pickups right from your home. Eco-friendly disposal guaranteed.",
+            icon: HomeIcon,
+            href: "/services/household",
+            color: "bg-green-500"
+        },
+        {
+            title: "Commercial Waste Management",
+            description: "Tailored solutions for offices, shops, and markets. Keep your business clean and compliant.",
+            icon: BuildingOfficeIcon,
+            href: "/services/commercial",
+            color: "bg-blue-500"
+        },
+        {
+            title: "Recycling Services",
+            description: "Turn your recyclable waste into new opportunities. Helping the community and environment.",
+            icon: ArrowPathIcon,
+            href: "/services/recycling",
+            color: "bg-emerald-500"
+        },
+        {
+            title: "Urgent Waste Pickup",
+            description: "Need immediate cleanup? Book a rapid-response pickup in minutes.",
+            icon: BoltIcon,
+            href: "/services/urgent",
+            color: "bg-orange-500"
+        },
+        {
+            title: "Waste-to-Energy",
+            description: "Converting waste into renewable energy sources to power local communities.",
+            icon: SparklesIcon,
+            href: "/services/energy",
+            color: "bg-purple-500"
+        },
+        {
+            title: "Bulk Waste Removal",
+            description: "Large item disposal and construction waste management for homes and businesses.",
+            icon: TruckIcon,
+            href: "/services/bulk",
+            color: "bg-indigo-500"
+        }
+    ];
+
+    // Auto-advance carousel
+    React.useEffect(() => {
+        if (!isAutoPlaying) return;
+
+        const interval = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % Math.ceil(services.length / cardsPerView.desktop));
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [isAutoPlaying, services.length, cardsPerView.desktop]);
+
+    const nextSlide = () => {
+        setCurrentSlide((prev) => (prev + 1) % Math.ceil(services.length / cardsPerView.desktop));
+    };
+
+    const prevSlide = () => {
+        setCurrentSlide((prev) => (prev - 1 + Math.ceil(services.length / cardsPerView.desktop)) % Math.ceil(services.length / cardsPerView.desktop));
+    };
+
+    const handleStoryClick = (storyId: string) => {
+        setActiveStory(storyId);
+    };
+
     if (isAuthenticated) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -143,37 +307,6 @@ export default function Home() {
             </div>
         );
     }
-
-    const services = [
-        {
-            title: "Household Waste",
-            description: "Regular pickup for home waste and recycling",
-            icon: HomeIcon,
-            href: "/services/household",
-            color: "bg-green-500"
-        },
-        {
-            title: "Commercial Waste",
-            description: "Business waste management solutions",
-            icon: BuildingOfficeIcon,
-            href: "/services/commercial",
-            color: "bg-blue-500"
-        },
-        {
-            title: "Recycling",
-            description: "Eco-friendly recycling services",
-            icon: ArrowPathIcon,
-            href: "/services/recycling",
-            color: "bg-emerald-500"
-        },
-        {
-            title: "Urgent Pickup",
-            description: "Same-day waste collection",
-            icon: BoltIcon,
-            href: "/services/urgent",
-            color: "bg-orange-500"
-        }
-    ];
 
     const howItWorks = [
         {
@@ -368,6 +501,288 @@ export default function Home() {
                     </div>
                 </section>
 
+                {/* Our Services Section */}
+                <section className="our-services-section py-16 bg-gray-50">
+                    <div className="our-services-container">
+                        <div className="our-services-header">
+                            <h2 className="our-services-title">Our Services</h2>
+                            <p className="our-services-subtitle">
+                                Comprehensive waste management solutions tailored to meet your needs.
+                                From household pickups to commercial waste management, we've got you covered.
+                            </p>
+                        </div>
+
+                        <div className="services-carousel-wrapper"
+                            onMouseEnter={() => setIsAutoPlaying(false)}
+                            onMouseLeave={() => setIsAutoPlaying(true)}>
+
+                            {/* Navigation Controls */}
+                            <button
+                                onClick={prevSlide}
+                                className="carousel-nav carousel-nav-prev"
+                                aria-label="Previous services"
+                            >
+                                <ChevronLeftIcon className="w-6 h-6" />
+                            </button>
+
+                            <button
+                                onClick={nextSlide}
+                                className="carousel-nav carousel-nav-next"
+                                aria-label="Next services"
+                            >
+                                <ChevronRightIcon className="w-6 h-6" />
+                            </button>
+
+                            {/* Carousel Track */}
+                            <div className="services-carousel">
+                                <div className="services-carousel-track">
+                                    <div className="services-carousel-container"
+                                        style={{ transform: `translateX(-${currentSlide * 50}%)` }}>
+                                        {services.map((service, index) => {
+                                            const IconComponent = service.icon;
+                                            return (
+                                                <div key={index} className="service-card-wrapper">
+                                                    <div className="service-card">
+                                                        <div className="service-card-content">
+                                                            <div className={`service-icon ${service.color}`}>
+                                                                <IconComponent className="service-icon-svg" />
+                                                            </div>
+                                                            <div className="service-content">
+                                                                <h3 className="service-title">{service.title}</h3>
+                                                                <p className="service-description">{service.description}</p>
+                                                            </div>
+                                                            <a href={service.href} className="service-cta">
+                                                                <span className="service-cta-text">Learn More</span>
+                                                                <ArrowRightIcon className="service-cta-icon w-3 h-3" />
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Slide Indicators */}
+                            <div className="carousel-dots">
+                                {Array.from({ length: Math.ceil(services.length / cardsPerView.desktop) }).map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentSlide(index)}
+                                        className={`carousel-dot ${currentSlide === index ? 'active' : ''}`}
+                                        aria-label={`Go to slide ${index + 1}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="our-services-cta">
+                            <Link href="/services" className="btn-primary btn-lg">
+                                View All Services
+                            </Link>
+                        </div>
+                    </div>
+                </section>
+
+                {/* Service Coverage Area Section */}
+                <section className="service-coverage-section">
+                    <div className="service-coverage-container">
+                        {/* Header */}
+                        <div className="service-coverage-header">
+                            <h2 className="service-coverage-title">Full Bins Ready for Pickup</h2>
+                            <p className="service-coverage-subtitle">
+                                Real-time map showing bins that are full and ready for immediate pickup.
+                                Help keep our communities clean by connecting with verified workers in your area.
+                            </p>
+                        </div>
+
+                        {/* Interactive Map */}
+                        <div className="service-coverage-map-container">
+                            <ServiceCoverageMap
+                                providers={providers}
+                                height="500px"
+                                center={[4.0511, 9.7679]} // Douala, Cameroon coordinates
+                                zoom={11}
+                                onProviderSelect={(provider) => console.log('Selected provider:', provider)}
+                            />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Community Impact Dashboard */}
+                <section className="impact-dashboard-section">
+                    <div className="impact-dashboard-container">
+                        {/* Header */}
+                        <div className="impact-dashboard-header">
+                            <h2 className="impact-dashboard-title">Making a Real Difference</h2>
+                            <p className="impact-dashboard-subtitle">
+                                Every pickup, every recycled item, every job created contributes to a cleaner, more sustainable Cameroon
+                            </p>
+                        </div>
+
+                        {/* Main Impact Display */}
+                        <div className="impact-hero-metric">
+                            <div className="hero-metric-content">
+                                <div className="hero-metric-number">2,547</div>
+                                <div className="hero-metric-label">Lives Positively Impacted</div>
+                                <div className="hero-metric-description">
+                                    Through job creation, cleaner neighborhoods, and environmental education
+                                </div>
+                            </div>
+                            <div className="hero-metric-visual">
+                                <div className="metric-circle">
+                                    <div className="metric-circle-progress"></div>
+                                    <div className="metric-circle-center">
+                                        <SparklesIcon className="w-12 h-12 text-green-500" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Secondary Metrics Grid */}
+                        <div className="secondary-metrics-grid">
+                            <div className="secondary-metric">
+                                <div className="secondary-metric-icon">
+                                    <ArrowPathIcon className="w-6 h-6" />
+                                </div>
+                                <div className="secondary-metric-content">
+                                    <div className="secondary-metric-number">2,500+</div>
+                                    <div className="secondary-metric-label">Tons Recycled</div>
+                                </div>
+                                <div className="secondary-metric-bar">
+                                    <div className="metric-bar-fill" style={{ width: '85%' }}></div>
+                                </div>
+                            </div>
+
+                            <div className="secondary-metric">
+                                <div className="secondary-metric-icon">
+                                    <UserGroupIcon className="w-6 h-6" />
+                                </div>
+                                <div className="secondary-metric-content">
+                                    <div className="secondary-metric-number">150+</div>
+                                    <div className="secondary-metric-label">Jobs Created</div>
+                                </div>
+                                <div className="secondary-metric-bar">
+                                    <div className="metric-bar-fill" style={{ width: '70%' }}></div>
+                                </div>
+                            </div>
+
+                            <div className="secondary-metric">
+                                <div className="secondary-metric-icon">
+                                    <HomeIcon className="w-6 h-6" />
+                                </div>
+                                <div className="secondary-metric-content">
+                                    <div className="secondary-metric-number">8,900+</div>
+                                    <div className="secondary-metric-label">Households Served</div>
+                                </div>
+                                <div className="secondary-metric-bar">
+                                    <div className="metric-bar-fill" style={{ width: '92%' }}></div>
+                                </div>
+                            </div>
+
+                            <div className="secondary-metric">
+                                <div className="secondary-metric-icon">
+                                    <MapPinIcon className="w-6 h-6" />
+                                </div>
+                                <div className="secondary-metric-content">
+                                    <div className="secondary-metric-number">47</div>
+                                    <div className="secondary-metric-label">Neighborhoods</div>
+                                </div>
+                                <div className="secondary-metric-bar">
+                                    <div className="metric-bar-fill" style={{ width: '65%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Featured Success Story */}
+                        <div className="featured-story">
+                            <div className="featured-story-content">
+                                <div className="featured-story-header">
+                                    <h3 className="featured-story-title">This Month's Success Story</h3>
+                                    <span className="featured-story-location">Douala Central Market</span>
+                                </div>
+
+                                <div className="featured-story-body">
+                                    <div className="featured-story-text">
+                                        <blockquote className="featured-quote">
+                                            "Since Klynaa started managing our market waste, business has improved dramatically.
+                                            The cleaner environment attracts more customers, and our vendors feel proud of their workspace."
+                                        </blockquote>
+                                        <div className="featured-author">
+                                            <div className="author-info">
+                                                <div className="author-name">Marie Ngozi</div>
+                                                <div className="author-role">Market Vendor & Community Leader</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="featured-story-metrics">
+                                        <div className="story-mini-metric">
+                                            <span className="mini-metric-number">300+</span>
+                                            <span className="mini-metric-label">Vendors</span>
+                                        </div>
+                                        <div className="story-mini-metric">
+                                            <span className="mini-metric-number">80%</span>
+                                            <span className="mini-metric-label">Cleaner</span>
+                                        </div>
+                                        <div className="story-mini-metric">
+                                            <span className="mini-metric-number">15</span>
+                                            <span className="mini-metric-label">Jobs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="featured-story-visual">
+                                <div className="story-image-container">
+                                    <img
+                                        src="/api/placeholder/400/300"
+                                        alt="Douala Market Transformation"
+                                        className="story-image"
+                                    />
+                                    <div className="story-image-overlay">
+                                        <div className="overlay-badge">
+                                            <CheckCircleIcon className="w-5 h-5" />
+                                            <span>Transformed</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Environmental Impact Summary */}
+                        <div className="environmental-impact">
+                            <h3 className="environmental-title">Environmental Impact</h3>
+                            <div className="environmental-grid">
+                                <div className="environmental-item">
+                                    <div className="environmental-icon">🌱</div>
+                                    <div className="environmental-text">
+                                        <div className="environmental-number">450 tons</div>
+                                        <div className="environmental-label">CO₂ Emissions Prevented</div>
+                                    </div>
+                                </div>
+
+                                <div className="environmental-item">
+                                    <div className="environmental-icon">🌳</div>
+                                    <div className="environmental-text">
+                                        <div className="environmental-number">1,200</div>
+                                        <div className="environmental-label">Trees Worth of Impact</div>
+                                    </div>
+                                </div>
+
+                                <div className="environmental-item">
+                                    <div className="environmental-icon">💧</div>
+                                    <div className="environmental-text">
+                                        <div className="environmental-number">85%</div>
+                                        <div className="environmental-label">Reduction in Water Pollution</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Enhanced How It Works Section */}
                 <section className="how-it-works-section">
                     <div className="how-it-works-container">
@@ -407,197 +822,23 @@ export default function Home() {
                     </div>
                 </section>
 
-                {/* Service Coverage Area Section */}
-                <section className="service-coverage-section">
-                    <div className="service-coverage-container">
-                        {/* Header */}
-                        <div className="service-coverage-header">
-                            <h2 className="service-coverage-title">Service Coverage Area</h2>
-                            <p className="service-coverage-subtitle">
-                                Discover our growing network of waste management professionals and bin owners
-                                across your city. Join thousands of users already making waste management smarter.
-                            </p>
-                        </div>
-
-                        {/* Interactive Map */}
-                        <div className="service-coverage-map-container">
-                            <ServiceCoverageMap
-                                providers={providers}
-                                height="500px"
-                                center={[4.0511, 9.7679]} // Douala, Cameroon coordinates
-                                zoom={11}
-                                onProviderSelect={(provider) => console.log('Selected provider:', provider)}
-                            />
-                        </div>
-
-                        {/* Coverage Statistics */}
-                        <div className="service-coverage-stats">
-                            <div className="coverage-stat-card">
-                                <UserGroupIcon className="coverage-stat-icon" />
-                                <div className="coverage-stat-number">2,547</div>
-                                <div className="coverage-stat-label">Active Workers</div>
-                            </div>
-                            <div className="coverage-stat-card">
-                                <HomeIcon className="coverage-stat-icon" />
-                                <div className="coverage-stat-number">8,932</div>
-                                <div className="coverage-stat-label">Registered Bins</div>
-                            </div>
-                            <div className="coverage-stat-card">
-                                <MapPinIcon className="coverage-stat-icon" />
-                                <div className="coverage-stat-number">47</div>
-                                <div className="coverage-stat-label">Neighborhoods</div>
-                            </div>
-                        </div>
-
-                        {/* Join Network CTA */}
-                        <div className="join-network-cta">
-                            <h3 className="join-network-title">Join Our Growing Network</h3>
-                            <p className="join-network-description">
-                                Whether you're a waste management professional or a bin owner,
-                                join our platform to connect with your local community.
-                            </p>
-                            <div className="join-network-buttons">
-                                <button className="btn btn-primary btn-sm">
-                                    <Briefcase size={16} className="mr-1" />
-                                    Become a Worker
-                                </button>
-                                <button className="btn btn-secondary btn-sm">
-                                    <UserPlus size={16} className="mr-1" />
-                                    Register Your Bin
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Services Section */}
-                <section className="py-16 bg-gray-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center">
-                            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                                Our Services
-                            </h2>
-                            <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-                                Comprehensive waste management solutions for every need
-                            </p>
-                        </div>
-
-                        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                            {services.map((service, index) => (
-                                <Link key={index} href={service.href} className="group">
-                                    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6">
-                                        <div className={`inline-flex items-center justify-center p-3 ${service.color} rounded-lg mb-4`}>
-                                            <service.icon className="h-6 w-6 text-white" />
-                                        </div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">
-                                            {service.title}
-                                        </h3>
-                                        <p className="text-gray-500">{service.description}</p>
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-
-                        <div className="mt-12 text-center">
-                            <Link href="/services" className="btn-primary text-lg px-8 py-3">
-                                View All Services
-                            </Link>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Map & Locations */}
-                <section className="py-16 bg-white">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center">
-                            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                                Service Coverage
-                            </h2>
-                            <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-                                We're expanding across Cameroon's major cities
-                            </p>
-                        </div>
-
-                        <div className="mt-16">
-                            <div className="bg-gray-100 rounded-lg h-96 flex items-center justify-center">
-                                <div className="text-center">
-                                    <MapPinIcon className="h-16 w-16 text-green-600 mx-auto mb-4" />
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Interactive Map Coming Soon</h3>
-                                    <p className="text-gray-500 mb-6">
-                                        Currently serving Douala, Yaoundé, and expanding to more cities
-                                    </p>
-                                    <Link href="/locations" className="btn-primary">
-                                        View Coverage Areas
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Testimonials & Impact */}
-                <section className="py-16 bg-green-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center">
-                            <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                                Community Impact
-                            </h2>
-                            <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-                                Real stories from our community members
-                            </p>
-                        </div>
-
-                        {/* Stats */}
-                        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
-                            <div className="text-center">
-                                <div className="text-3xl font-bold text-green-600">2,500+</div>
-                                <div className="text-gray-500">Tons Recycled</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-3xl font-bold text-green-600">150+</div>
-                                <div className="text-gray-500">Jobs Created</div>
-                            </div>
-                            <div className="text-center">
-                                <div className="text-3xl font-bold text-green-600">50+</div>
-                                <div className="text-gray-500">Communities Served</div>
-                            </div>
-                        </div>
-
-                        {/* Testimonials */}
-                        <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-3">
-                            {testimonials.map((testimonial, index) => (
-                                <div key={index} className="bg-white rounded-lg shadow-md p-6">
-                                    <div className="flex items-center mb-4">
-                                        {[...Array(testimonial.rating)].map((_, i) => (
-                                            <span key={i} className="text-yellow-400 text-lg">★</span>
-                                        ))}
-                                    </div>
-                                    <p className="text-gray-700 mb-4">"{testimonial.content}"</p>
-                                    <div>
-                                        <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                                        <div className="text-gray-500 text-sm">{testimonial.role}</div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* CTA Banner */}
+                {/* Join Our Growing Network CTA */}
                 <section className="py-16 bg-green-600">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                         <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-                            Ready to Make a Difference?
+                            Join Our Growing Network
                         </h2>
                         <p className="mt-4 text-xl text-green-100 max-w-2xl mx-auto">
-                            Join our community of environmentally conscious citizens and workers building a cleaner Cameroon.
+                            Whether you're a waste management professional or a bin owner, become part of our community building a cleaner Cameroon.
                         </p>
                         <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                            <Link href="/auth/register?role=customer" className="bg-white text-green-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors">
-                                Book Your First Pickup
+                            <Link href="/auth/register?role=worker" className="bg-white text-green-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors flex items-center justify-center">
+                                <Briefcase className="w-5 h-5 mr-2" />
+                                Become a Worker
                             </Link>
-                            <Link href="/auth/register?role=worker" className="border-2 border-white text-white hover:bg-white hover:text-green-600 font-semibold py-3 px-8 rounded-lg transition-colors">
-                                Start Earning Today
+                            <Link href="/auth/register?role=customer" className="bg-green-700 text-white hover:bg-green-800 font-semibold py-3 px-8 rounded-lg transition-colors border-2 border-white flex items-center justify-center">
+                                <UserPlus className="w-5 h-5 mr-2" />
+                                Register Your Bin
                             </Link>
                         </div>
                     </div>
