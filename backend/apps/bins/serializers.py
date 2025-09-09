@@ -3,7 +3,34 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from decimal import Decimal
-from .models import Bin, PickupRequest
+from .models import Bin, PickupRequest, PickupProof
+from apps.users.models import User
+
+
+class PickupProofSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+    captured_by_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PickupProof
+        fields = [
+            'id', 'pickup', 'type', 'image', 'image_url', 'latitude', 'longitude',
+            'captured_by', 'captured_by_name', 'status', 'notes',
+            'verified_by', 'created_at', 'verified_at'
+        ]
+        read_only_fields = ['id', 'captured_by', 'status', 'verified_by', 'created_at', 'verified_at']
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.image and hasattr(obj.image, 'url'):
+            url = obj.image.url
+            return request.build_absolute_uri(url) if request else url
+        return None
+
+    def get_captured_by_name(self, obj):
+        if obj.captured_by:
+            return f"{obj.captured_by.first_name} {obj.captured_by.last_name}".strip() or str(obj.captured_by)
+        return None
 
 User = get_user_model()
 
@@ -41,6 +68,7 @@ class PickupRequestSerializer(serializers.ModelSerializer):
     worker_details = serializers.StringRelatedField(source='worker', read_only=True)
     can_be_accepted = serializers.ReadOnlyField()
     can_be_delivered = serializers.ReadOnlyField()
+    proofs = PickupProofSerializer(many=True, read_only=True)  # Add proofs relationship
 
     class Meta:
         model = PickupRequest
@@ -50,7 +78,7 @@ class PickupRequestSerializer(serializers.ModelSerializer):
             'created_at', 'accepted_at', 'picked_at', 'completed_at',
             'expected_fee', 'actual_fee', 'payment_method', 'payment_status',
             'notes', 'cancellation_reason',
-            'can_be_accepted', 'can_be_delivered'
+            'can_be_accepted', 'can_be_delivered', 'proofs'
         ]
         read_only_fields = [
             'id', 'owner', 'created_at', 'accepted_at', 'picked_at',

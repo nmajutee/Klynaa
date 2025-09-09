@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 def health(_request):
@@ -27,12 +29,13 @@ def api_root(_request):
 urlpatterns = [
     path("", api_root),  # Root endpoint
     path("admin/", admin.site.urls),
-    # Note: Do not override the /api/ prefix with a static root view here.
-    # Individual app routes are included below so serverless endpoints and
-    # app APIs are reachable at /api/...
     path("api/health/", health),
     path("api/users/", include("apps.users.urls")),
     path("api/", include("apps.bins.urls")),
     path("api/", include("apps.reviews.urls")),
     path("api/payments/", include("apps.payments.urls")),
 ]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

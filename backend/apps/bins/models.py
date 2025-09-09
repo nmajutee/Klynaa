@@ -125,7 +125,44 @@ class PickupRequest(models.Model):
         ]
 
     def __str__(self):
-        return f"Pickup #{self.id} - {self.bin.label} ({self.get_status_display()})"
+        def __str__(self):
+        return f"Week {self.week_start} - {self.total_pickups} pickups"
+
+
+class PickupProof(models.Model):
+    """Photo proof for pickup verification."""
+
+    class ProofType(models.TextChoices):
+        BEFORE = 'before', 'Before'
+        AFTER = 'after', 'After'
+
+    class VerificationStatus(models.TextChoices):
+        PENDING = 'pending', 'Pending'
+        APPROVED = 'approved', 'Approved'
+        REJECTED = 'rejected', 'Rejected'
+
+    pickup = models.ForeignKey(PickupRequest, on_delete=models.CASCADE, related_name='proofs')
+    type = models.CharField(max_length=10, choices=ProofType.choices)
+    image = models.ImageField(upload_to='pickup_proofs/%Y/%m/%d/')
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    captured_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='captured_proofs')
+    status = models.CharField(max_length=10, choices=VerificationStatus.choices, default=VerificationStatus.PENDING)
+    notes = models.TextField(blank=True)
+    verified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='verified_proofs')
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['status']),
+            models.Index(fields=['type']),
+            models.Index(fields=['pickup', 'status']),
+        ]
+
+    def __str__(self):
+        return f"{self.get_type_display()} proof for Pickup #{self.pickup_id}"
 
     @property
     def can_be_accepted(self):

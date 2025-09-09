@@ -8,6 +8,7 @@ from django.db import transaction, models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from .models import Bin, PickupRequest
 from .serializers import (
@@ -617,6 +618,88 @@ class PickupRequestViewSet(viewsets.ModelViewSet):
             'completed_requests': queryset.filter(status=PickupRequest.PickupStatus.COMPLETED).count(),
         }
         return Response(stats)
+
+    @action(detail=True, methods=['post'], parser_classes=[MultiPartParser, FormParser])
+    def upload_proof(self, request, pk=None):
+        """Worker uploads before/after photo proof with optional GPS."""
+        pickup = self.get_object()
+        if not request.user.is_worker or pickup.worker_id != request.user.id:
+            return Response({'error': 'Only the assigned worker can upload proofs'}, status=status.HTTP_403_FORBIDDEN)
+
+        proof_type = request.data.get('type')
+        if proof_type not in ['before', 'after']:
+            return Response({'error': 'Invalid proof type'}, status=status.HTTP_400_BAD_REQUEST)
+
+        image = request.data.get('image')
+        if not image:
+            return Response({'error': 'Image is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        lat = request.data.get('latitude')
+        lng = request.data.get('longitude')
+
+        # Import here to avoid circular import
+        from .models import PickupProof
+
+        proof = PickupProof.objects.create(
+            pickup=pickup,
+            type=proof_type,
+            image=image,
+            latitude=lat or None,
+            longitude=lng or None,
+            captured_by=request.user
+        )
+
+        from .serializers import PickupProofSerializer
+        return Response(PickupProofSerializer(proof, context={'request': request}).data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['get'])
+    def proofs(self, request, pk=None):
+        pickup = self.get_object()
+        from .models import PickupProof
+        from .serializers import PickupProofSerializer
+        qs = pickup.proofs.all()
+        return Response(PickupProofSerializer(qs, many=True, context={'request': request}).data)
+
+    @action(detail=False, methods=['get'])
+    def pending_verifications(self, request):
+        if not getattr(request.user, 'is_admin_user', False):
+            return Response({'error': 'Admins only'}, status=status.HTTP_403_FORBIDDEN)
+
+        from .models import PickupProof
+        from .serializers import PickupProofSerializer
+        proofs = PickupProof.objects.filter(status='pending')
+        data = PickupProofSerializer(proofs, many=True, context={'request': request}).data
+        return Response({'proofs': data})
+
+    @action(detail=True, methods=['post'])
+    def verify_proof(self, request, pk=None):
+        """Admin approves/rejects a specific proof on a pickup."""
+        if not getattr(request.user, 'is_admin_user', False):
+            return Response({'error': 'Admins only'}, status=status.HTTP_403_FORBIDDEN)
+
+        pickup = self.get_object()
+        proof_id = request.data.get('proof_id')
+        decision = request.data.get('decision')
+        notes = request.data.get('notes', '')
+
+        from .models import PickupProof
+        from .serializers import PickupProofSerializer
+
+        try:
+            proof = pickup.proofs.get(id=proof_id)
+        except PickupProof.DoesNotExist:
+            return Response({'error': 'Proof not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        if decision not in ['approve', 'reject']:
+            return Response({'error': 'Invalid decision'}, status=status.HTTP_400_BAD_REQUEST)
+
+        proof.status = 'approved' if decision == 'approve' else 'rejected'
+        proof.notes = notes
+        proof.verified_by = request.user
+        proof.verified_at = timezone.now()
+        proof.save()
+
+        return Response({'message': f'Proof {decision}d', 'proof': PickupProofSerializer(proof, context={'request': request}).data})
 
 
 # Serverless Integration ViewSets
