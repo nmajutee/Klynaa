@@ -40,57 +40,63 @@ export interface RegisterData {
     longitude?: number;
 }
 
-// Bin Types
+// Bin Types - Updated to match backend
 export interface Bin {
     id: number;
-    name: string;
-    location: string;
-    latitude: number;
-    longitude: number;
+    bin_id: string;
+    label: string;
+    owner: string; // StringRelatedField
+    latitude: string; // DecimalField as string
+    longitude: string;
+    address: string;
+    status: 'empty' | 'partial' | 'full' | 'pending';
     fill_level: number;
-    status: 'active' | 'inactive' | 'maintenance';
-    owner: User;
-    bin_type: string;
-    capacity: number;
-    last_emptied?: string;
+    capacity_liters: number;
+    needs_pickup: boolean;
+    last_pickup?: string | null;
     created_at: string;
     updated_at: string;
 }
 
 export interface BinCreateData {
-    name: string;
-    location: string;
+    bin_id: string;
+    label?: string;
     latitude: number;
     longitude: number;
-    bin_type: string;
-    capacity: number;
+    address?: string;
+    capacity_liters?: number;
 }
 
 // Pickup Types
+// Pickup Types - Updated to match backend
 export interface PickupRequest {
     id: number;
-    customer: User;
-    worker?: User;
-    bin: Bin;
-    status: 'open' | 'accepted' | 'in_progress' | 'delivered' | 'completed' | 'cancelled';
-    service_type: string;
-    description?: string;
-    price: string;
-    pickup_date: string;
-    pickup_time?: string;
+    bin: number;
+    bin_details?: Bin;
+    owner: number;
+    owner_details?: string;
+    worker?: number | null;
+    worker_details?: string | null;
+    status: 'open' | 'accepted' | 'in_progress' | 'delivered' | 'completed' | 'cancelled' | 'disputed';
+    expected_fee: string;
+    actual_fee?: string | null;
+    payment_method: 'cash' | 'mobile_money' | 'card';
+    payment_status: 'pending' | 'escrowed' | 'paid' | 'refunded' | 'disputed' | 'pending_cash' | 'collected_cash';
     notes?: string;
+    cancellation_reason?: string;
     created_at: string;
-    updated_at: string;
-    completed_at?: string;
-    payment?: Payment;
+    accepted_at?: string | null;
+    picked_at?: string | null;
+    completed_at?: string | null;
+    can_be_accepted: boolean;
+    can_be_delivered: boolean;
+    proofs?: PickupProof[];
 }
 
 export interface PickupCreateData {
-    bin_id: number;
-    service_type: string;
-    description?: string;
-    pickup_date: string;
-    pickup_time?: string;
+    bin: number;
+    expected_fee?: string;
+    payment_method?: 'cash' | 'mobile_money' | 'card';
     notes?: string;
 }
 
@@ -175,4 +181,22 @@ export interface Notification {
     is_read: boolean;
     created_at: string;
     data?: Record<string, any>;
+}
+
+// Proof Types
+export interface PickupProof {
+    id: number;
+    pickup: number;
+    type: 'before' | 'after';
+    image: string;
+    image_url: string;
+    latitude?: string | null;
+    longitude?: string | null;
+    captured_by: number;
+    captured_by_name?: string;
+    status: 'pending' | 'approved' | 'rejected';
+    notes?: string;
+    verified_by?: number | null;
+    created_at: string;
+    verified_at?: string | null;
 }

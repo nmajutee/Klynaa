@@ -76,7 +76,7 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const response = await axios.post(`${API_BASE_URL}/auth/token/refresh/`, {
+                const response = await axios.post(`${API_BASE_URL}/users/token/refresh/`, {
                     refresh: refreshToken,
                 });
 
@@ -112,39 +112,36 @@ const handleApiError = (error: AxiosError): ApiError => {
 export const authApi = {
     login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
         try {
-            const response: AxiosResponse<AuthResponse> = await api.post('/auth/login/', credentials);
-            const { access, refresh, user } = response.data;
+            const response = await api.post('/users/token/', {
+                username: credentials.email,
+                password: credentials.password,
+            });
+            const { access, refresh } = response.data;
+
+            // Get user profile after login
+            const userResponse = await api.get('/users/me/', {
+                headers: { Authorization: `Bearer ${access}` }
+            });
+
             setTokens(access, refresh);
-            return response.data;
+            return { access, refresh, user: userResponse.data };
         } catch (error) {
             throw handleApiError(error as AxiosError);
         }
     },
 
     register: async (data: RegisterData): Promise<AuthResponse> => {
-        try {
-            const response: AxiosResponse<AuthResponse> = await api.post('/auth/register/', data);
-            const { access, refresh, user } = response.data;
-            setTokens(access, refresh);
-            return response.data;
-        } catch (error) {
-            throw handleApiError(error as AxiosError);
-        }
+        // Registration endpoint not implemented in backend yet
+        throw { message: 'Registration endpoint not available. Contact admin to create accounts.' } as ApiError;
     },
 
     logout: async (): Promise<void> => {
-        try {
-            await api.post('/auth/logout/');
-        } catch (error) {
-            // Ignore logout errors
-        } finally {
-            clearTokens();
-        }
+        clearTokens();
     },
 
     getCurrentUser: async (): Promise<User> => {
         try {
-            const response: AxiosResponse<User> = await api.get('/auth/user/');
+            const response: AxiosResponse<User> = await api.get('/users/me/');
             return response.data;
         } catch (error) {
             throw handleApiError(error as AxiosError);
@@ -239,7 +236,112 @@ export const pickupsApi = {
 
     updatePickupStatus: async (id: number, status: string): Promise<PickupRequest> => {
         try {
-            const response: AxiosResponse<PickupRequest> = await api.patch(`/pickups/${id}/`, { status });
+            const response: AxiosResponse<PickupRequest> = await api.patch(`/pickups/${id}/update_status/`, { status });
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    // Worker specific methods
+    myPickups: async (): Promise<PickupRequest[]> => {
+        try {
+            const response: AxiosResponse<PickupRequest[]> = await api.get('/pickups/my_pickups/');
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    available: async (): Promise<{
+        available_pickups: PickupRequest[];
+        worker_status: {
+            pending_count: number;
+            max_pickups: number;
+            can_accept_more: boolean;
+            service_radius_km: number;
+        };
+    }> => {
+        try {
+            const response = await api.get('/pickups/available/');
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    markDelivered: async (id: number): Promise<{ message: string; payment_status: string; requires_customer_confirmation: boolean }> => {
+        try {
+            const response = await api.post(`/pickups/${id}/mark_delivered/`);
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    confirmPayment: async (id: number): Promise<{ message: string; can_leave_review: boolean }> => {
+        try {
+            const response = await api.post(`/pickups/${id}/confirm_payment/`);
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    // Dashboard
+    dashboard: async (): Promise<any> => {
+        try {
+            const response = await api.get('/pickups/dashboard/');
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    // Proof capture endpoints
+    listProofs: async (id: number): Promise<any[]> => {
+        try {
+            const response = await api.get(`/pickups/${id}/proofs/`);
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    uploadProof: async (id: number, payload: { file: File; type: 'before' | 'after'; latitude?: number; longitude?: number }) => {
+        try {
+            const form = new FormData();
+            form.append('type', payload.type);
+            form.append('image', payload.file);
+            if (payload.latitude !== undefined) form.append('latitude', String(payload.latitude));
+            if (payload.longitude !== undefined) form.append('longitude', String(payload.longitude));
+
+            const response = await api.post(`/pickups/${id}/upload_proof/`, form, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    // Admin verification endpoints
+    pendingVerifications: async (): Promise<{ proofs: any[] }> => {
+        try {
+            const response = await api.get('/pickups/pending_verifications/');
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    verifyProof: async (pickupId: number, proofId: number, decision: 'approve' | 'reject', notes?: string) => {
+        try {
+            const response = await api.post(`/pickups/${pickupId}/verify_proof/`, {
+                proof_id: proofId,
+                decision,
+                notes
+            });
             return response.data;
         } catch (error) {
             throw handleApiError(error as AxiosError);
