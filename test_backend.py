@@ -11,7 +11,7 @@ from pathlib import Path
 
 # Setup Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-sys.path.append('/home/bigtee/Klynaa-v2-1/backend')
+sys.path.append(str(Path(__file__).parent / 'backend'))
 django.setup()
 
 from django.test.utils import get_runner
@@ -126,7 +126,7 @@ def run_unit_tests():
     print("\n🧪 Running Unit Tests...")
     try:
         # Change to backend directory
-        os.chdir('/home/bigtee/Klynaa-v2-1/backend')
+        os.chdir(str(Path(__file__).parent / 'backend'))
 
         # Run Django tests
         result = subprocess.run([
@@ -152,7 +152,7 @@ def test_migrations():
         # Check migration status
         result = subprocess.run([
             'python', 'manage.py', 'showmigrations', '--plan'
-        ], capture_output=True, text=True, cwd='/home/bigtee/Klynaa-v2-1/backend')
+        ], capture_output=True, text=True, cwd=str(Path(__file__).parent / 'backend'))
 
         if result.returncode == 0:
             applied_count = result.stdout.count('[X]')

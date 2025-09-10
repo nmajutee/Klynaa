@@ -31,7 +31,9 @@ def main():
     print("🔍 Klynaa-v2 Codebase Health Check")
     print("=" * 50)
 
-    os.chdir('/home/bigtee/Klynaa-v2-1')
+    # Use current directory instead of hardcoded path
+    base_dir = Path(__file__).parent
+    os.chdir(base_dir)
 
     # Check Python syntax
     print("\n📁 Python Files:")
@@ -52,13 +54,13 @@ def main():
     run_command('node -c next.config.js', 'Next.js config syntax')
 
     os.chdir('../blockchain')
-    run_command('node -c hardhat.config.ts', 'Hardhat config syntax')
+    run_command('npx tsc --noEmit --skipLibCheck hardhat.config.ts', 'Hardhat config syntax')
 
     # Check JSON files
     print("\n📄 Configuration Files:")
     os.chdir('..')
     run_command(
-        'find . -name "package.json" -not -path "./node_modules/*" | xargs -I {} node -e "JSON.parse(require(\\"fs\\").readFileSync(\\"{}\", \\"utf8\\"))"',
+        'find . -name "package.json" -not -path "./node_modules/*" -exec node -e "JSON.parse(require(\\"fs\\").readFileSync(process.argv[1], \\"utf8\\"))" {} \\;',
         'package.json files validation'
     )
 
@@ -70,12 +72,12 @@ for file in files_to_check:
     try:
         with open(file, "r") as f:
             yaml.safe_load(f)
-        print(f"✅ {file} is valid")
+        print("✅ " + file + " is valid")
     except Exception as e:
-        print(f"❌ {file} error: {e}")
+        print("❌ " + file + " error: " + str(e))
 '''
 
-    run_command(f'python -c "{python_yaml_check}"', 'YAML configuration files')
+    run_command(f'python -c \'{python_yaml_check}\'', 'YAML configuration files')
 
     print("\n" + "=" * 50)
     print("🎯 Summary:")

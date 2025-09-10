@@ -125,7 +125,6 @@ class PickupRequest(models.Model):
         ]
 
     def __str__(self):
-        def __str__(self):
         return f"Week {self.week_start} - {self.total_pickups} pickups"
 
 

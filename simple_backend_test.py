@@ -5,7 +5,8 @@ Tests Django backend without needing a running server
 """
 import os
 import sys
-sys.path.append('/home/bigtee/Klynaa-v2-1/backend')
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent / 'backend'))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 import django
