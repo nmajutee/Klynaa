@@ -21,6 +21,28 @@ body {
     line-height: 1.6;
 }
 
+/* Floating Animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+}
+
+.delay-400 {
+    animation-delay: 0.4s;
+}
+
+.delay-1000 {
+    animation-delay: 1s;
+}
+
 /* Button Components */
 .btn-primary {
     display: inline-flex;
@@ -147,6 +169,7 @@ body {
     border-radius: 0.5rem;
     font-size: 1rem;
     transition: all 0.2s ease;
+    background-color: white;
 }
 
 .form-input:focus {
@@ -155,17 +178,255 @@ body {
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
 }
 
+.form-input:disabled {
+    background-color: #f9fafb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 .form-label {
     display: block;
     font-weight: 500;
     color: #374151;
     margin-bottom: 0.5rem;
+    font-size: 0.875rem;
 }
 
 .form-error {
     color: #ef4444;
     font-size: 0.875rem;
     margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-error::before {
+    content: "⚠";
+    margin-right: 0.25rem;
+    font-size: 0.75rem;
+}
+
+/* Enhanced Form Styles for Auth Pages */
+.auth-form-container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.auth-input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    font-weight: 400;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    background-color: white;
+}
+
+.auth-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #16a34a 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-button:hover {
+    background: linear-gradient(135deg, #15803d 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+}
+
+.auth-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.auth-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.auth-button:hover::before {
+    left: 100%;
+}
+
+/* Social Login Buttons */
+.social-login-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background-color: white;
+    color: #6b7280;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-login-button:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.social-login-button:active {
+    transform: translateY(0);
+}
+
+/* Password Strength Indicator */
+.password-strength-bar {
+    height: 0.25rem;
+    border-radius: 0.125rem;
+    transition: all 0.3s ease;
+}
+
+.password-strength-weak {
+    background-color: #ef4444;
+}
+
+.password-strength-medium {
+    background-color: #f59e0b;
+}
+
+.password-strength-strong {
+    background-color: #10b981;
+}
+
+.password-strength-very-strong {
+    background-color: #059669;
+}
+
+/* Loading Spinner */
+.spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #ffffff33;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Checkbox Styling */
+.auth-checkbox {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.25rem;
+    border: 2px solid #d1d5db;
+    background-color: white;
+    transition: all 0.2s ease;
+}
+
+.auth-checkbox:checked {
+    background-color: #16a34a;
+    border-color: #16a34a;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='m13.854 3.646-7.5 7.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6 10.293l7.146-7.147a.5.5 0 0 1 .708.708z'/%3e%3c/svg%3e");
+}
+
+.auth-checkbox:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .auth-form-container {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+
+    .auth-input {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .auth-button {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .form-input, .auth-input {
+        border-width: 2px;
+        border-color: #000000;
+    }
+
+    .form-input:focus, .auth-input:focus {
+        border-color: #16a34a;
+        box-shadow: 0 0 0 3px #16a34a;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .form-input, .auth-input, .auth-button, .social-login-button {
+        transition: none;
+    }
+
+    .auth-button::before {
+        display: none;
+    }
+
+    .spinner {
+        animation: none;
+    }
 }
 
 /* Badge Styles */

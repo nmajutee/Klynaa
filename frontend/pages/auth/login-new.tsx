@@ -82,7 +82,7 @@ const Login: React.FC = () => {
                                     <div className="w-6 h-6 bg-[#1E40AF] rounded flex items-center justify-center">
                                         <div className="w-3 h-3 bg-white rounded-sm"></div>
                                     </div>
-                                    <span className="text-lg font-semibold text-gray-900">Klynaa</span>
+                                    <span className="text-lg font-semibold text-gray-900">dotwork</span>
                                 </div>
 
                                 {/* Heading */}
