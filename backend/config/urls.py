@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.frontend_views import frontend_app, api_status
 
 
 def health(_request):
@@ -28,12 +29,15 @@ def api_root(_request):
 
 urlpatterns = [
     path("", api_root),  # Root endpoint
+    path("frontend/", frontend_app),  # Simple frontend
     path("admin/", admin.site.urls),
     path("api/health/", health),
+    path("api/status/", api_status),  # Frontend API status
     path("api/users/", include("apps.users.urls")),
     path("api/", include("apps.bins.urls")),
     path("api/", include("apps.reviews.urls")),
     path("api/payments/", include("apps.payments.urls")),
+    path("api/", include("apps.notifications.urls")),
 ]
 
 # Serve media files in development

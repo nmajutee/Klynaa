@@ -3,6 +3,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from decimal import Decimal
+import uuid
+import qrcode
+import io
+import base64
+from django.core.files.base import ContentFile
 
 User = get_user_model()
 
@@ -19,6 +24,8 @@ class Bin(models.Model):
     # Ownership and identification
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bins', null=True, blank=True)
     bin_id = models.CharField(max_length=20, unique=True, help_text="Physical bin identifier")
+    qr_code_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, help_text="Unique QR code identifier")
+    qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True, help_text="Generated QR code image")
     label = models.CharField(max_length=100, default="Smart Bin", help_text="User-friendly name")
 
     # Location
@@ -54,6 +61,36 @@ class Bin(models.Model):
     @property
     def needs_pickup(self):
         return self.status == self.BinStatus.FULL
+
+    def generate_qr_code(self):
+        """Generate QR code for this bin."""
+        if not self.qr_code_uuid:
+            self.qr_code_uuid = uuid.uuid4()
+
+        qr_data = f"klynaa://bin/{self.qr_code_uuid}"
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+
+        img = qr.make_image(fill_color="black", back_color="white")
+        buffer = io.BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+
+        filename = f"qr_{self.qr_code_uuid}.png"
+        self.qr_code_image.save(filename, ContentFile(buffer.getvalue()), save=False)
+        buffer.close()
+
+    def save(self, *args, **kwargs):
+        """Override save to generate QR code if needed."""
+        if not self.qr_code_image:
+            self.generate_qr_code()
+        super().save(*args, **kwargs)
 
 
 class PickupRequest(models.Model):
@@ -125,7 +162,6 @@ class PickupRequest(models.Model):
         ]
 
     def __str__(self):
-        def __str__(self):
         return f"Week {self.week_start} - {self.total_pickups} pickups"
 
 

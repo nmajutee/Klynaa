@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klynaa Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-semibold text-gray-900">Klynaa Admin Dashboard</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-500">Welcome, Admin</span>
+                        <a href="/admin/" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Django Admin</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">U</span>
+                                </div>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Total Users</dt>
+                                    <dd class="text-lg font-medium text-gray-900">{{ total_users }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-sm text-green-600">+{{ new_users_today }} today</div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">B</span>
+                                </div>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Total Bins</dt>
+                                    <dd class="text-lg font-medium text-gray-900">{{ total_bins }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-sm text-blue-600">{{ active_pickups }} active pickups</div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">P</span>
+                                </div>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Pickups Today</dt>
+                                    <dd class="text-lg font-medium text-gray-900">{{ pickups_today }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-sm text-green-600">{{ completed_today }} completed</div>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="p-5">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium">₣</span>
+                                </div>
+                            </div>
+                            <div class="ml-5 w-0 flex-1">
+                                <dl>
+                                    <dt class="text-sm font-medium text-gray-500 truncate">Weekly Revenue</dt>
+                                    <dd class="text-lg font-medium text-gray-900">{{ weekly_revenue }} XAF</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-sm text-blue-600">{{ weekly_pickups }} pickups</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts and Tables Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Real-time Metrics -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">System Health</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Pending Verifications</span>
+                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">{{ pending_verifications }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Unread Notifications</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">{{ unread_notifications }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-600">Active Bins</span>
+                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">{{ total_bins }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white shadow rounded-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="refreshMetrics()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm">
+                            Refresh Metrics
+                        </button>
+                        <button onclick="viewPendingVerifications()" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 text-sm">
+                            View Verifications
+                        </button>
+                        <button onclick="exportData()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 text-sm">
+                            Export Data
+                        </button>
+                        <button onclick="systemMaintenance()" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm">
+                            Maintenance
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium text-gray-900">Recent Activity</h3>
+                </div>
+                <div class="p-6">
+                    <div id="recent-activity">
+                        <div class="text-center py-4">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+                            <p class="mt-2 text-sm text-gray-500">Loading recent activity...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Auto-refresh dashboard every 30 seconds
+        setInterval(refreshMetrics, 30000);
+
+        async function refreshMetrics() {
+            try {
+                const response = await fetch('/api/admin/metrics/');
+                const data = await response.json();
+                updateDashboard(data);
+                loadRecentActivity();
+            } catch (error) {
+                console.error('Failed to refresh metrics:', error);
+            }
+        }
+
+        async function loadRecentActivity() {
+            try {
+                const response = await fetch('/api/admin/activity/');
+                const data = await response.json();
+                updateRecentActivity(data);
+            } catch (error) {
+                console.error('Failed to load recent activity:', error);
+            }
+        }
+
+        function updateDashboard(data) {
+            // Update stats cards (basic implementation)
+            console.log('Dashboard updated with:', data);
+        }
+
+        function updateRecentActivity(data) {
+            const container = document.getElementById('recent-activity');
+
+            let html = '<div class="space-y-4">';
+
+            // Recent Pickups
+            if (data.recent_pickups && data.recent_pickups.length > 0) {
+                html += '<div><h4 class="font-medium text-gray-900 mb-2">Recent Pickups</h4>';
+                data.recent_pickups.slice(0, 5).forEach(pickup => {
+                    html += `
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <div>
+                                <span class="text-sm font-medium">${pickup.customer}</span>
+                                <span class="text-xs text-gray-500 ml-2">${pickup.status}</span>
+                            </div>
+                            <div class="text-xs text-gray-400">
+                                ${new Date(pickup.created_at).toLocaleDateString()}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            // Pending Verifications
+            if (data.pending_verifications && data.pending_verifications.length > 0) {
+                html += '<div><h4 class="font-medium text-gray-900 mb-2">Pending Verifications</h4>';
+                data.pending_verifications.slice(0, 3).forEach(verification => {
+                    html += `
+                        <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                            <div>
+                                <span class="text-sm font-medium">${verification.worker}</span>
+                                <span class="text-xs text-gray-500 ml-2">${verification.type} photo</span>
+                            </div>
+                            <button onclick="viewVerification(${verification.id})" class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                Review
+                            </button>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function viewPendingVerifications() {
+            window.location.href = '/admin/bins/pickupproof/?status=pending';
+        }
+
+        function viewVerification(id) {
+            window.location.href = `/admin/bins/pickupproof/${id}/change/`;
+        }
+
+        function exportData() {
+            alert('Export functionality would be implemented here');
+        }
+
+        function systemMaintenance() {
+            alert('System maintenance panel would be implemented here');
+        }
+
+        // Load initial data
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshMetrics();
+        });
+    </script>
+</body>
+</html>

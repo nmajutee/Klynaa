@@ -6,6 +6,8 @@ from .views import (
     BinViewSet, PickupRequestViewSet, ServerlessIntegrationViewSet,
     ReportsViewSet, AnalyticsViewSet, WorkersViewSet, UsersViewSet, CleanupViewSet
 )
+from .views_qr import QRCodeViewSet
+from . import admin_views
 
 router = DefaultRouter()
 router.register(r'bins', BinViewSet, basename='bin')
@@ -18,6 +20,7 @@ router.register(r'analytics', AnalyticsViewSet, basename='analytics')
 router.register(r'workers', WorkersViewSet, basename='workers')
 router.register(r'users', UsersViewSet, basename='users-api')
 router.register(r'cleanup', CleanupViewSet, basename='cleanup')
+router.register(r'qr', QRCodeViewSet, basename='qr-code')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -27,6 +30,13 @@ urlpatterns = [
     path('serverless/log-notification/', ServerlessIntegrationViewSet.as_view({'post': 'log_notification'})),
     path('serverless/log-geo-event/', ServerlessIntegrationViewSet.as_view({'post': 'log_geo_event'})),
     path('serverless/log-escrow-event/', ServerlessIntegrationViewSet.as_view({'post': 'log_escrow_event'})),
+
+    # Admin dashboard
+    path('admin/dashboard/', admin_views.admin_dashboard, name='admin_dashboard'),
+    path('admin/metrics/', admin_views.admin_metrics_api, name='admin_metrics'),
+    path('admin/activity/', admin_views.admin_recent_activity, name='admin_activity'),
+
+    # Analytics endpoints
 
     # Hyphenated report endpoints
     path('reports/daily-stats/', ReportsViewSet.as_view({'get': 'daily_stats'})),
