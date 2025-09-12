@@ -28,7 +28,7 @@ const AdminVerificationPage: React.FC = () => {
 
     useEffect(() => {
         if (!isAuthenticated || user?.role !== 'admin') {
-            router.replace('/auth/login');
+            router.push('/auth/login');
             return;
         }
         loadPendingProofs();

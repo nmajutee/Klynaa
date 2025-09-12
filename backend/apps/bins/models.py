@@ -24,7 +24,7 @@ class Bin(models.Model):
     # Ownership and identification
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bins', null=True, blank=True)
     bin_id = models.CharField(max_length=20, unique=True, help_text="Physical bin identifier")
-    qr_code_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False, help_text="Unique QR code identifier")
+    qr_code_uuid = models.UUIDField(unique=True, editable=False, null=True, blank=True, help_text="Unique QR code identifier")
     qr_code_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True, help_text="Generated QR code image")
     label = models.CharField(max_length=100, default="Smart Bin", help_text="User-friendly name")
 

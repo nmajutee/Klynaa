@@ -46,11 +46,11 @@ const Blog: React.FC = () => {
         <meta name="description" content="Insights, updates, and stories from the Klynaa waste management platform." />
       </Head>
       <div className="min-h-screen bg-gray-50">
-        <div className="relative bg-green-600 py-16 mb-12">
+        <div className="relative bg-klynaa-darkgreen py-16 mb-12">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1459802071246-377c0346da93?auto=format&fit=crop&w=1350&q=80')] mix-blend-multiply bg-center bg-cover" />
           <div className="relative max-w-5xl mx-auto px-6 text-center text-white">
-            <h1 className="text-4xl font-bold mb-4">Blog & Updates</h1>
-            <p className="text-lg text-green-100 max-w-2xl mx-auto">Sustainability insights, platform updates, and stories from the frontline of waste transformation.</p>
+            <h1 className="text-4xl klynaa-heading text-white mb-4">Blog & Updates</h1>
+            <p className="text-lg text-green-100 max-w-2xl mx-auto klynaa-body">Sustainability insights, platform updates, and stories from the frontline of waste transformation.</p>
           </div>
         </div>
 

@@ -24,7 +24,7 @@ const WorkerJobsPage: React.FC = () => {
 
     useEffect(() => {
         if (!isAuthenticated || user?.role !== 'worker') {
-            router.replace('/auth/login');
+            router.push('/auth/login');
             return;
         }
         loadData();

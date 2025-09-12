@@ -122,14 +122,14 @@ const Dashboard: React.FC = () => {
                         title="Total Pickups"
                         value={stats.total_pickups}
                         icon={TruckIcon}
-                        color="bg-blue-500"
+                        color="bg-klynaa-secondary"
                         subtitle="All time"
                     />
                     <StatCard
                         title="Active Bins"
                         value={stats.active_bins}
                         icon={TrashIcon}
-                        color="bg-green-500"
+                        color="bg-klynaa-primary"
                         subtitle="Currently monitored"
                     />
                     <StatCard

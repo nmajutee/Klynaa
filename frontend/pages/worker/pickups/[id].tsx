@@ -17,7 +17,7 @@ const PickupDetailPage: React.FC = () => {
 
     useEffect(() => {
         if (!isAuthenticated || user?.role !== 'worker') {
-            router.replace('/auth/login');
+            router.push('/auth/login');
             return;
         }
 
@@ -43,7 +43,7 @@ const PickupDetailPage: React.FC = () => {
         }
     };
 
-    const handlePhotoCapture = async (file: File, location?: { lat: number; lng: number }, type: 'before' | 'after') => {
+    const handlePhotoCapture = async (file: File, type: 'before' | 'after', location?: { lat: number; lng: number }) => {
         if (!pickup) return;
 
         setUploading(true);
@@ -117,7 +117,7 @@ const PickupDetailPage: React.FC = () => {
         <div className="container mx-auto px-4 py-8">
             <div className="mb-6">
                 <button
-                    onClick={() => router.back()}
+                    onClick={() => router.push('/worker/jobs')}
                     className="text-green-600 hover:text-green-700 mb-4"
                 >
                     ← Back to Jobs
@@ -223,12 +223,12 @@ const PickupDetailPage: React.FC = () => {
                     <div className="grid md:grid-cols-2 gap-6">
                         <PhotoCapture
                             type="before"
-                            onCapture={(file, location) => handlePhotoCapture(file, location, 'before')}
+                            onCapture={(file, location) => handlePhotoCapture(file, 'before', location)}
                             disabled={uploading || hasBeforeProof}
                         />
                         <PhotoCapture
                             type="after"
-                            onCapture={(file, location) => handlePhotoCapture(file, location, 'after')}
+                            onCapture={(file, location) => handlePhotoCapture(file, 'after', location)}
                             disabled={uploading || hasAfterProof}
                         />
                     </div>

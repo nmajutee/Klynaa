@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 
-const Profile: React.FC = () => {
+const Profile = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [formData, setFormData] = useState({
     firstName: 'John',
@@ -20,7 +20,7 @@ const Profile: React.FC = () => {
   const handleInputChange = (field: string, value: string | boolean) => {
     if (field.startsWith('notifications.')) {
       const notifField = field.split('.')[1];
-      setFormData(prev => ({
+      setFormData((prev: any) => ({
         ...prev,
         notifications: {
           ...prev.notifications,
@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
         }
       }));
     } else {
-      setFormData(prev => ({ ...prev, [field]: value }));
+      setFormData((prev: any) => ({ ...prev, [field]: value }));
     }
   };
 
@@ -39,9 +39,9 @@ const Profile: React.FC = () => {
         <meta name="description" content="Manage your Klynaa account profile, settings, and preferences." />
       </Head>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-green-600 py-12 text-center text-white">
-          <h1 className="text-3xl font-bold mb-2">My Profile</h1>
-          <p className="text-green-100">Manage your account settings and preferences</p>
+        <div className="bg-klynaa-darkgreen py-12 text-center text-white">
+          <h1 className="text-3xl klynaa-heading text-white mb-2">My Profile</h1>
+          <p className="text-green-100 klynaa-body">Manage your account settings and preferences</p>
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-12">
@@ -76,14 +76,14 @@ const Profile: React.FC = () => {
                 <div className="space-y-6">
                   <div className="flex items-center space-x-6">
                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-2xl font-bold text-green-600">
+                      <span className="text-2xl font-bold text-klynaa-primary">
                         {formData.firstName[0]}{formData.lastName[0]}
                       </span>
                     </div>
                     <div>
-                      <h3 className="text-lg font-medium text-gray-900">Profile Picture</h3>
-                      <p className="text-sm text-gray-500">Update your avatar</p>
-                      <button className="mt-2 px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+                      <h3 className="text-lg font-medium text-klynaa-dark">Profile Picture</h3>
+                      <p className="text-sm text-klynaa-graylabel">Update your avatar</p>
+                      <button className="mt-2 klynaa-btn-secondary text-sm">
                         Upload Photo
                       </button>
                     </div>

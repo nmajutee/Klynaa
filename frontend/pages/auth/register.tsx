@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { authApi } from '../../services/api';
 import { useAuthStore } from '../../stores';
 import { RegisterData, ApiError } from '../../types';
-import { EyeIcon, EyeSlashIcon, EnvelopeIcon, LockClosedIcon, UserIcon, PhoneIcon } from '@heroicons/react/24/outline';
+import { Icons, WasteIcons } from '../../components/ui/Icons';
 
 interface FormData extends RegisterData {
     password_confirm: string;
@@ -96,22 +96,23 @@ const Register: React.FC = () => {
                             <div className="max-w-[320px] w-full">
                                 {/* Branding */}
                                 <div className="flex items-center space-x-2 mb-10">
-                                    <div className="w-6 h-6 bg-[#1E40AF] rounded flex items-center justify-center">
-                                        <div className="w-3 h-3 bg-white rounded-sm"></div>
+                                    <div className="w-6 h-6 bg-klynaa-primary rounded flex items-center justify-center">
+                                        <WasteIcons.recycling className="w-3 h-3 text-white" />
                                     </div>
-                                    <span className="text-lg font-semibold text-gray-900">Klynaa</span>
+                                    <span className="text-lg font-semibold text-klynaa-dark font-sans">Klynaa</span>
                                 </div>
 
                                 {/* Heading */}
-                                <h2 className="text-[28px] leading-tight font-semibold text-gray-900 mb-2">Create your Account</h2>
-                                <p className="text-[15px] text-gray-600 mb-8">Get started with Klynaa today:</p>
+                                <h1 className="text-2xl font-bold text-klynaa-primary mb-2 font-sans">Create your Account</h1>
+                                <p className="text-base text-gray-600 mb-8 font-sans">Get started with Klynaa today:</p>
 
                                 {/* Social Buttons */}
                                 <div className="grid grid-cols-2 gap-3 mb-6">
                                     <button
                                         type="button"
                                         onClick={handleGoogleLogin}
-                                        className="flex items-center justify-center h-11 rounded-[8px] bg-white border border-gray-200 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
+                                        className="flex items-center justify-center h-11 rounded-[8px] bg-white border border-gray-300 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-klynaa-primary focus:ring-offset-2"
+                                        aria-label="Sign up with Google"
                                     >
                                         <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -125,7 +126,8 @@ const Register: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={handleFacebookLogin}
-                                        className="flex items-center justify-center h-11 rounded-[8px] bg-white border border-gray-200 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700"
+                                        className="flex items-center justify-center h-11 rounded-[8px] bg-white border border-gray-300 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-klynaa-primary focus:ring-offset-2"
+                                        aria-label="Sign up with Facebook"
                                     >
                                         <svg className="w-4 h-4 mr-2" fill="#1877F2" viewBox="0 0 24 24">
                                             <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -147,7 +149,7 @@ const Register: React.FC = () => {
                                 {/* Form */}
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate aria-describedby={error ? 'register-error' : undefined}>
                                     {error && (
-                                        <div id="register-error" role="alert" className="rounded-lg p-3 bg-red-50 border border-red-200 text-sm text-red-800">{error}</div>
+                                        <div id="register-error" role="alert" className="rounded-lg p-3 bg-red-50 border border-red-200 text-sm text-red-800 font-sans">{error}</div>
                                     )}
 
                                     {/* Name Fields */}
@@ -155,7 +157,7 @@ const Register: React.FC = () => {
                                         <div>
                                             <div className="relative">
                                                 <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                                    <UserIcon className="h-4 w-4 text-gray-400" />
+                                                    <Icons.user className="h-4 w-4 text-gray-400" />
                                                 </span>
                                                 <input
                                                     {...register('first_name', {
@@ -165,19 +167,19 @@ const Register: React.FC = () => {
                                                     type="text"
                                                     autoComplete="given-name"
                                                     placeholder="First name"
-                                                    className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                    className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-klynaa-dark text-sm font-sans focus:outline-none focus:ring-1 focus:ring-klynaa-primary focus:border-klynaa-primary"
                                                     aria-invalid={errors.first_name ? 'true' : 'false'}
                                                 />
                                             </div>
                                             {errors.first_name && (
-                                                <p className="mt-1 text-sm text-red-600">{errors.first_name.message}</p>
+                                                <p className="mt-1 text-sm text-red-600 font-sans">{errors.first_name.message}</p>
                                             )}
                                         </div>
 
                                         <div>
                                             <div className="relative">
                                                 <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                                    <UserIcon className="h-4 w-4 text-gray-400" />
+                                                    <Icons.user className="h-4 w-4 text-gray-400" />
                                                 </span>
                                                 <input
                                                     {...register('last_name', {
@@ -187,12 +189,12 @@ const Register: React.FC = () => {
                                                     type="text"
                                                     autoComplete="family-name"
                                                     placeholder="Last name"
-                                                    className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                    className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-klynaa-dark text-sm font-sans focus:outline-none focus:ring-1 focus:ring-klynaa-primary focus:border-klynaa-primary"
                                                     aria-invalid={errors.last_name ? 'true' : 'false'}
                                                 />
                                             </div>
                                             {errors.last_name && (
-                                                <p className="mt-1 text-sm text-red-600">{errors.last_name.message}</p>
+                                                <p className="mt-1 text-sm text-red-600 font-sans">{errors.last_name.message}</p>
                                             )}
                                         </div>
                                     </div>
@@ -201,7 +203,7 @@ const Register: React.FC = () => {
                                     <div>
                                         <div className="relative">
                                             <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                                <EnvelopeIcon className="h-4 w-4 text-gray-400" />
+                                                <Icons.mail className="h-4 w-4 text-gray-400" />
                                             </span>
                                             <input
                                                 {...register('email', {
@@ -214,12 +216,12 @@ const Register: React.FC = () => {
                                                 type="email"
                                                 autoComplete="email"
                                                 placeholder="Email"
-                                                className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-klynaa-dark text-sm font-sans focus:outline-none focus:ring-1 focus:ring-klynaa-primary focus:border-klynaa-primary"
                                                 aria-invalid={errors.email ? 'true' : 'false'}
                                             />
                                         </div>
                                         {errors.email && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                                            <p className="mt-1 text-sm text-red-600 font-sans">{errors.email.message}</p>
                                         )}
                                     </div>
 
@@ -227,7 +229,7 @@ const Register: React.FC = () => {
                                     <div>
                                         <div className="relative">
                                             <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                                <PhoneIcon className="h-4 w-4 text-gray-400" />
+                                                <Icons.phone className="h-4 w-4 text-gray-400" />
                                             </span>
                                             <input
                                                 {...register('phone_number', {
@@ -239,12 +241,12 @@ const Register: React.FC = () => {
                                                 type="tel"
                                                 autoComplete="tel"
                                                 placeholder="Phone number (optional)"
-                                                className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                className="block w-full h-11 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-klynaa-dark text-sm font-sans focus:outline-none focus:ring-1 focus:ring-klynaa-primary focus:border-klynaa-primary"
                                                 aria-invalid={errors.phone_number ? 'true' : 'false'}
                                             />
                                         </div>
                                         {errors.phone_number && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.phone_number.message}</p>
+                                            <p className="mt-1 text-sm text-red-600 font-sans">{errors.phone_number.message}</p>
                                         )}
                                     </div>
 
@@ -252,25 +254,23 @@ const Register: React.FC = () => {
                                     <div>
                                         <div className="relative">
                                             <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none z-10">
-                                                <UserIcon className="h-4 w-4 text-gray-400" />
+                                                <Icons.users className="h-4 w-4 text-gray-400" />
                                             </span>
                                             <select
                                                 {...register('role', { required: 'Please select an account type' })}
-                                                className="block w-full h-11 pl-9 pr-8 rounded-[8px] border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 appearance-none cursor-pointer"
+                                                className="block w-full h-11 pl-9 pr-8 rounded-[8px] border border-gray-200 bg-white text-klynaa-dark text-sm font-sans focus:outline-none focus:ring-1 focus:ring-klynaa-primary focus:border-klynaa-primary appearance-none cursor-pointer"
                                                 aria-invalid={errors.role ? 'true' : 'false'}
                                             >
-                                                <option value="" disabled className="text-gray-400">Select account type</option>
-                                                <option value="customer" className="text-gray-900">Customer - Request waste pickup</option>
-                                                <option value="worker" className="text-gray-900">Worker - Provide waste management services</option>
+                                                <option value="" disabled className="text-gray-400">Customer - Request waste pickup</option>
+                                                <option value="customer" className="text-klynaa-dark">Customer - Request waste pickup</option>
+                                                <option value="worker" className="text-klynaa-dark">Worker - Provide waste management services</option>
                                             </select>
                                             <div className="absolute inset-y-0 right-2 flex items-center pointer-events-none">
-                                                <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                                                </svg>
+                                                <Icons.chevronDown className="h-4 w-4 text-gray-400" />
                                             </div>
                                         </div>
                                         {errors.role && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.role.message}</p>
+                                            <p className="mt-1 text-sm text-red-600 font-sans">{errors.role.message}</p>
                                         )}
                                     </div>
 
@@ -278,7 +278,7 @@ const Register: React.FC = () => {
                                     <div>
                                         <div className="relative">
                                             <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                                <LockClosedIcon className="h-4 w-4 text-gray-400" />
+                                                <Icons.lock className="h-4 w-4 text-gray-400" />
                                             </span>
                                             <input
                                                 {...register('password', {
@@ -292,7 +292,7 @@ const Register: React.FC = () => {
                                                 type={showPassword ? 'text' : 'password'}
                                                 autoComplete="new-password"
                                                 placeholder="Password"
-                                                className="block w-full h-11 pl-9 pr-10 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                className="block w-full h-11 pl-9 pr-10 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-klynaa-dark text-sm font-sans focus:outline-none focus:ring-1 focus:ring-klynaa-primary focus:border-klynaa-primary"
                                                 aria-invalid={errors.password ? 'true' : 'false'}
                                             />
                                             <button
@@ -302,14 +302,14 @@ const Register: React.FC = () => {
                                                 aria-label={showPassword ? 'Hide password' : 'Show password'}
                                             >
                                                 {showPassword ? (
-                                                    <EyeSlashIcon className="h-4 w-4" />
+                                                    <Icons.eyeOff className="h-4 w-4" />
                                                 ) : (
-                                                    <EyeIcon className="h-4 w-4" />
+                                                    <Icons.eye className="h-4 w-4" />
                                                 )}
                                             </button>
                                         </div>
                                         {errors.password && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                                            <p className="mt-1 text-sm text-red-600 font-sans">{errors.password.message}</p>
                                         )}
                                     </div>
 
@@ -317,7 +317,7 @@ const Register: React.FC = () => {
                                     <div>
                                         <div className="relative">
                                             <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                                                <LockClosedIcon className="h-4 w-4 text-gray-400" />
+                                                <Icons.lock className="h-4 w-4 text-gray-400" />
                                             </span>
                                             <input
                                                 {...register('password_confirm', {
@@ -327,7 +327,7 @@ const Register: React.FC = () => {
                                                 type={showConfirmPassword ? 'text' : 'password'}
                                                 autoComplete="new-password"
                                                 placeholder="Confirm password"
-                                                className="block w-full h-11 pl-9 pr-10 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-gray-900 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                className="block w-full h-11 pl-9 pr-10 rounded-[8px] border border-gray-200 bg-white placeholder-gray-400 text-klynaa-dark text-sm font-sans focus:outline-none focus:ring-1 focus:ring-klynaa-primary focus:border-klynaa-primary"
                                                 aria-invalid={errors.password_confirm ? 'true' : 'false'}
                                             />
                                             <button
@@ -337,14 +337,14 @@ const Register: React.FC = () => {
                                                 aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                                             >
                                                 {showConfirmPassword ? (
-                                                    <EyeSlashIcon className="h-4 w-4" />
+                                                    <Icons.eyeOff className="h-4 w-4" />
                                                 ) : (
-                                                    <EyeIcon className="h-4 w-4" />
+                                                    <Icons.eye className="h-4 w-4" />
                                                 )}
                                             </button>
                                         </div>
                                         {errors.password_confirm && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.password_confirm.message}</p>
+                                            <p className="mt-1 text-sm text-red-600 font-sans">{errors.password_confirm.message}</p>
                                         )}
                                     </div>
 
@@ -354,9 +354,9 @@ const Register: React.FC = () => {
                                             {...register('terms', { required: 'You must agree to the terms' })}
                                             id="terms"
                                             type="checkbox"
-                                            className="h-4 w-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                            className="h-4 w-4 mt-0.5 rounded border-gray-300 text-klynaa-primary focus:ring-klynaa-primary focus:ring-1"
                                         />
-                                        <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
+                                        <label htmlFor="terms" className="ml-2 text-sm text-gray-700 font-sans">
                                             I agree to the{' '}
                                             <Link href="/terms" className="text-blue-600 hover:text-blue-500">Terms of Service</Link>
                                             {' '}and{' '}
@@ -364,21 +364,18 @@ const Register: React.FC = () => {
                                         </label>
                                     </div>
                                     {errors.terms && (
-                                        <p className="text-sm text-red-600">{errors.terms.message}</p>
+                                        <p className="text-sm text-red-600 font-sans">{errors.terms.message}</p>
                                     )}
 
                                     {/* Submit */}
                                     <button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="w-full h-11 mt-6 flex justify-center items-center rounded-[8px] bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                                        className="w-full h-11 mt-6 flex justify-center items-center rounded-[8px] bg-klynaa-primary hover:bg-klynaa-darkgreen text-white font-medium text-sm disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-sans"
                                     >
                                         {isLoading ? (
                                             <>
-                                                <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                </svg>
+                                                <Icons.loader className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" />
                                                 Creating account...
                                             </>
                                         ) : (
@@ -388,7 +385,7 @@ const Register: React.FC = () => {
                                 </form>
 
                                 {/* Bottom Link */}
-                                <p className="mt-6 text-center text-sm text-gray-600">
+                                <p className="mt-6 text-center text-sm text-gray-600 font-sans">
                                     Already have an account?
                                     {' '}
                                     <Link href="/auth/login" className="text-blue-600 hover:text-blue-500">Sign in</Link>
@@ -397,7 +394,7 @@ const Register: React.FC = () => {
                         </div>
 
                         {/* Right: Visual Panel */}
-                        <div className="relative bg-[#4F46E5] flex items-center justify-center overflow-hidden">
+                        <div className="relative bg-klynaa-primary flex items-center justify-center overflow-hidden">
                             {/* Background decorative elements */}
                             <div className="absolute inset-0">
                                 {/* Large background circle */}
@@ -407,24 +404,24 @@ const Register: React.FC = () => {
                                 {/* Floating app icons */}
                                 <div className="absolute top-20 right-32">
                                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
-                                        <div className="w-6 h-6 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
-                                            <div className="w-3 h-3 bg-white rounded-sm"></div>
+                                        <div className="w-6 h-6 bg-gradient-to-br from-klynaa-darkgreen to-klynaa-primary rounded-lg flex items-center justify-center">
+                                            <WasteIcons.recycling className="w-3 h-3 text-white" />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="absolute top-36 right-20">
                                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
-                                        <div className="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center">
-                                            <span className="text-white text-xs font-bold">✓</span>
+                                        <div className="w-6 h-6 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
+                                            <span className="text-white text-xs font-bold font-sans">f</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="absolute top-52 right-36">
                                     <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/30">
-                                        <div className="w-6 h-6 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center">
-                                            <span className="text-white text-xs font-bold">K</span>
+                                        <div className="w-6 h-6 bg-gradient-to-br from-red-400 to-red-600 rounded-lg flex items-center justify-center">
+                                            <span className="text-white text-xs font-bold font-sans">G</span>
                                         </div>
                                     </div>
                                 </div>
@@ -445,18 +442,18 @@ const Register: React.FC = () => {
                                             <div className="h-2 bg-gray-200 rounded flex-1"></div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-green-100"></div>
+                                            <div className="w-6 h-6 rounded-full bg-purple-100"></div>
                                             <div className="h-2 bg-gray-200 rounded flex-1"></div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-full bg-orange-100"></div>
+                                            <div className="w-6 h-6 rounded-full bg-green-100"></div>
                                             <div className="h-2 bg-gray-200 rounded flex-1"></div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <h3 className="text-2xl font-semibold mb-2">Join thousands of users.</h3>
-                                <p className="text-white/80 text-base mb-8">Start your journey with Klynaa today.</p>
+                                <h3 className="text-2xl font-semibold mb-2 font-sans">Join thousands of users.</h3>
+                                <p className="text-white/80 text-base mb-8 font-sans">Start your journey with Klynaa today.</p>
 
                                 {/* Pagination dots */}
                                 <div className="flex justify-center gap-2">

@@ -58,25 +58,25 @@ const About: React.FC = () => {
             title: "Environmental Impact",
             description: "We're committed to reducing waste and promoting sustainable practices across Cameroon.",
             icon: GlobeAltIcon,
-            color: "bg-green-500"
+            color: "bg-klynaa-primary"
         },
         {
             title: "Community First",
             description: "Creating economic opportunities while serving our communities with excellence.",
             icon: HeartIcon,
-            color: "bg-red-500"
+            color: "bg-klynaa-secondary"
         },
         {
             title: "Innovation",
             description: "Leveraging technology to solve complex waste management challenges efficiently.",
             icon: ChartBarIcon,
-            color: "bg-blue-500"
+            color: "bg-klynaa-tertiary"
         },
         {
             title: "Reliability",
             description: "Consistent, dependable service that customers and workers can trust.",
             icon: CheckCircleIcon,
-            color: "bg-purple-500"
+            color: "bg-klynaa-dark"
         }
     ];
 
@@ -118,7 +118,7 @@ const About: React.FC = () => {
                         <div className="flex justify-between items-center h-16">
                             <div className="flex items-center">
                                 <Link href="/" className="flex items-center">
-                                    <ArrowPathIcon className="h-8 w-8 text-green-600 mr-2" />
+                                    <ArrowPathIcon className="h-8 w-8 text-klynaa-primary mr-2" />
                                     <span className="text-2xl font-bold text-gray-900">Klynaa</span>
                                 </Link>
                             </div>
@@ -161,7 +161,7 @@ const About: React.FC = () => {
                         <div className="text-center">
                             <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                                 <span className="block">Building a Cleaner</span>
-                                <span className="block text-green-600">Future for Cameroon</span>
+                                <span className="block text-klynaa-primary">Future for Cameroon</span>
                             </h1>
                             <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
                                 Klynaa is revolutionizing waste management across Cameroon through innovative technology,
@@ -336,20 +336,20 @@ const About: React.FC = () => {
                 </section>
 
                 {/* CTA Section */}
-                <section className="py-16 bg-green-600">
+                <section className="py-16 bg-klynaa-darkgreen">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+                        <h2 className="text-3xl klynaa-heading text-white sm:text-4xl">
                             Join Our Mission
                         </h2>
-                        <p className="mt-4 text-xl text-green-100 max-w-2xl mx-auto">
+                        <p className="mt-4 text-xl text-green-100 max-w-2xl mx-auto klynaa-body">
                             Whether you're a customer seeking reliable waste pickup or someone looking to earn income,
                             we'd love to have you as part of the Klynaa community.
                         </p>
                         <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                            <Link href="/auth/register" className="bg-white text-green-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors">
+                            <Link href="/auth/register" className="bg-white text-klynaa-darkgreen hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors klynaa-btn-secondary">
                                 Book a Pickup
                             </Link>
-                            <Link href="/workers" className="border-2 border-white text-white hover:bg-white hover:text-green-600 font-semibold py-3 px-8 rounded-lg transition-colors">
+                            <Link href="/workers" className="border-2 border-white text-white hover:bg-white hover:text-klynaa-darkgreen font-semibold py-3 px-8 rounded-lg transition-colors klynaa-btn-outline">
                                 Become a Worker
                             </Link>
                         </div>

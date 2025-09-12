@@ -26,7 +26,7 @@ const Services: React.FC = () => {
             ],
             pricing: "From 15,000 XAF/month",
             href: "/services/household",
-            color: "bg-green-500"
+            color: "bg-klynaa-primary"
         },
         {
             title: "Commercial Waste",
@@ -40,7 +40,7 @@ const Services: React.FC = () => {
             ],
             pricing: "From 50,000 XAF/month",
             href: "/services/commercial",
-            color: "bg-blue-500"
+            color: "bg-klynaa-secondary"
         },
         {
             title: "Recycling Services",
@@ -54,7 +54,7 @@ const Services: React.FC = () => {
             ],
             pricing: "From 8,000 XAF/pickup",
             href: "/services/recycling",
-            color: "bg-emerald-500"
+            color: "bg-klynaa-primary"
         },
         {
             title: "Urgent Pickup",

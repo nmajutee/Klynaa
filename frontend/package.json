@@ -14,29 +14,33 @@
         "@heroicons/react": "^2.2.0",
         "@hookform/resolvers": "^5.2.1",
         "@tailwindcss/forms": "^0.5.10",
-        "@types/react-dom": "^19.1.9",
         "autoprefixer": "^10.4.21",
-        "axios": "^1.6.8",
+        "axios": "^1.12.0",
         "clsx": "^2.1.1",
         "leaflet": "^1.9.4",
         "leaflet.markercluster": "^1.5.3",
         "lucide-react": "^0.542.0",
         "next": "^14.2.32",
         "postcss": "^8.5.6",
-        "react": "18.2.0",
-        "react-dom": "18.2.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
         "react-hook-form": "^7.62.0",
+        "react-icons": "^5.5.0",
         "tailwindcss": "^3.4.17",
-        "zod": "^4.1.5",
+        "zod": "^4.1.8",
         "zustand": "^5.0.8"
     },
     "devDependencies": {
         "@types/leaflet": "^1.9.20",
         "@types/leaflet.markercluster": "^1.5.6",
         "@types/node": "^20.12.12",
-        "@types/react": "19.1.12",
+        "@types/react": "^18.3.5",
+        "@types/react-dom": "^18.3.0",
         "eslint": "^8.57.0",
         "eslint-config-next": "14.2.3",
         "prettier": "^3.2.5"
+    },
+    "engines": {
+        "node": ">=18.17.0"
     }
 }

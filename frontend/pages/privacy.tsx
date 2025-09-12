@@ -10,15 +10,15 @@ const Privacy: React.FC = () => {
         <meta name="description" content="Klynaa Privacy Policy explaining how we collect, use, and protect data." />
       </Head>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-green-700 py-16 text-center text-white">
-          <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-green-100 max-w-2xl mx-auto">Transparency in how we protect user, operational, and environmental data.</p>
+        <div className="bg-klynaa-darkgreen py-16 text-center text-white">
+          <h1 className="text-4xl klynaa-heading text-white mb-4">Privacy Policy</h1>
+          <p className="text-green-100 max-w-2xl mx-auto klynaa-body">Transparency in how we protect user, operational, and environmental data.</p>
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-16 space-y-12">
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">1. Data We Collect</h2>
-            <ul className="list-disc ml-6 text-gray-600 space-y-2">
+            <h2 className="text-xl font-semibold text-klynaa-darkgreen mb-4">1. Data We Collect</h2>
+            <ul className="list-disc ml-6 text-klynaa-neutral space-y-2">
               <li>Account info: name, email, role, and verification status.</li>
               <li>Operational data: bin capacity readings, pickup timestamps, route activity.</li>
               <li>Geolocation (workers): only during active pickup sessions for validation.</li>

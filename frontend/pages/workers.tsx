@@ -21,25 +21,25 @@ const Workers: React.FC = () => {
             title: "Flexible Schedule",
             description: "Work when you want, where you want. Set your own hours.",
             icon: ClockIcon,
-            color: "bg-blue-500"
+            color: "bg-klynaa-secondary"
         },
         {
             title: "Good Earnings",
             description: "Earn competitive rates with tips and bonuses.",
             icon: CurrencyDollarIcon,
-            color: "bg-green-500"
+            color: "bg-klynaa-primary"
         },
         {
             title: "Growing Community",
             description: "Join thousands of workers across Cameroon.",
             icon: UserGroupIcon,
-            color: "bg-purple-500"
+            color: "bg-klynaa-tertiary"
         },
         {
             title: "Local Work",
             description: "Work in your neighborhood and nearby areas.",
             icon: MapPinIcon,
-            color: "bg-orange-500"
+            color: "bg-klynaa-dark"
         }
     ];
 

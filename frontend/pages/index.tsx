@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
@@ -235,7 +235,7 @@ export default function Home() {
             description: "Schedule fast and reliable waste pickups right from your home. Eco-friendly disposal guaranteed.",
             icon: HomeIcon,
             href: "/services/household",
-            color: "bg-green-500"
+            color: "bg-klynaa-primary"
         },
         {
             title: "Commercial Waste Management",
@@ -249,7 +249,7 @@ export default function Home() {
             description: "Turn your recyclable waste into new opportunities. Helping the community and environment.",
             icon: ArrowPathIcon,
             href: "/services/recycling",
-            color: "bg-emerald-500"
+            color: "bg-klynaa-primary"
         },
         {
             title: "Urgent Waste Pickup",
@@ -275,7 +275,7 @@ export default function Home() {
     ];
 
     // Auto-advance carousel
-    React.useEffect(() => {
+    useEffect(() => {
         if (!isAutoPlaying) return;
 
         const interval = setInterval(() => {
@@ -634,7 +634,7 @@ export default function Home() {
                                 <div className="metric-circle">
                                     <div className="metric-circle-progress"></div>
                                     <div className="metric-circle-center">
-                                        <SparklesIcon className="w-12 h-12 text-green-500" />
+                                        <SparklesIcon className="w-12 h-12 text-klynaa-primary" />
                                     </div>
                                 </div>
                             </div>
@@ -823,20 +823,20 @@ export default function Home() {
                 </section>
 
                 {/* Join Our Growing Network CTA */}
-                <section className="py-16 bg-green-600">
+                <section className="py-16 bg-klynaa-darkgreen">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
+                        <h2 className="text-3xl klynaa-heading text-white sm:text-4xl">
                             Join Our Growing Network
                         </h2>
-                        <p className="mt-4 text-xl text-green-100 max-w-2xl mx-auto">
+                        <p className="mt-4 text-xl text-green-100 max-w-2xl mx-auto klynaa-body">
                             Whether you're a waste management professional or a bin owner, become part of our community building a cleaner Cameroon.
                         </p>
                         <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                            <Link href="/auth/register?role=worker" className="bg-white text-green-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors flex items-center justify-center">
+                            <Link href="/auth/register?role=worker" className="bg-white text-klynaa-darkgreen hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg transition-colors flex items-center justify-center klynaa-btn-secondary">
                                 <Briefcase className="w-5 h-5 mr-2" />
                                 Become a Worker
                             </Link>
-                            <Link href="/auth/register?role=customer" className="bg-green-700 text-white hover:bg-green-800 font-semibold py-3 px-8 rounded-lg transition-colors border-2 border-white flex items-center justify-center">
+                            <Link href="/auth/register?role=customer" className="bg-klynaa-primary text-white hover:bg-klynaa-dark font-semibold py-3 px-8 rounded-lg transition-colors border-2 border-white flex items-center justify-center klynaa-btn-primary">
                                 <UserPlus className="w-5 h-5 mr-2" />
                                 Register Your Bin
                             </Link>
@@ -850,7 +850,7 @@ export default function Home() {
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                             <div className="col-span-1 md:col-span-2">
                                 <div className="flex items-center mb-4">
-                                    <ArrowPathIcon className="h-8 w-8 text-green-500 mr-2" />
+                                    <ArrowPathIcon className="h-8 w-8 text-klynaa-primary mr-2" />
                                     <span className="text-2xl font-bold">Klynaa</span>
                                 </div>
                                 <p className="text-gray-300 mb-4">

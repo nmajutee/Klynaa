@@ -10,15 +10,15 @@ const Terms: React.FC = () => {
         <meta name="description" content="Klynaa Terms of Service agreement covering platform use, responsibilities, and limitations." />
       </Head>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-green-600 py-16 text-center text-white">
-          <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
-          <p className="text-green-100 max-w-2xl mx-auto">Effective Date: Sept 1, 2025</p>
+        <div className="bg-klynaa-darkgreen py-16 text-center text-white">
+          <h1 className="text-4xl klynaa-heading text-white mb-4">Terms of Service</h1>
+          <p className="text-green-100 max-w-2xl mx-auto klynaa-body">Effective Date: Sept 1, 2025</p>
         </div>
 
         <div className="max-w-4xl mx-auto px-6 py-16 space-y-12">
           <section>
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">1. Introduction</h2>
-            <p className="text-gray-600">These Terms govern your access to and use of the Klynaa platform, including mobile, web, and API services for waste management, bin monitoring, pickup coordination, and payments.</p>
+            <h2 className="text-xl font-semibold text-klynaa-darkgreen mb-4">1. Introduction</h2>
+            <p className="text-klynaa-neutral">These Terms govern your access to and use of the Klynaa platform, including mobile, web, and API services for waste management, bin monitoring, pickup coordination, and payments.</p>
           </section>
 
             <section>

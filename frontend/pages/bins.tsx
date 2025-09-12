@@ -14,7 +14,14 @@ import {
 } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
 
-interface BinFormData extends BinCreateData { }
+interface BinFormData {
+    bin_id: string;
+    label: string;
+    address: string;
+    capacity_liters: number;
+    latitude: number;
+    longitude: number;
+}
 
 const BinsPage: React.FC = () => {
     const { user } = useAuthStore();
@@ -95,10 +102,10 @@ const BinsPage: React.FC = () => {
                         <TrashIcon className={`h-6 w-6 ${getFillLevelColor(bin.fill_level)}`} />
                     </div>
                     <div className="ml-4">
-                        <h3 className="text-lg font-semibold text-gray-900">{bin.name}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{bin.label}</h3>
                         <div className="flex items-center text-sm text-gray-500 mt-1">
                             <MapPinIcon className="h-4 w-4 mr-1" />
-                            {bin.location}
+                            {bin.address}
                         </div>
                     </div>
                 </div>
@@ -137,7 +144,7 @@ const BinsPage: React.FC = () => {
                     </span>
                 </div>
                 <div className="text-sm text-gray-500">
-                    Capacity: {bin.capacity}L
+                    Capacity: {bin.capacity_liters}L
                 </div>
             </div>
 
@@ -160,26 +167,26 @@ const BinsPage: React.FC = () => {
                         <div>
                             <label className="form-label">Bin Name</label>
                             <input
-                                {...register('name', { required: 'Bin name is required' })}
+                                {...register('label', { required: 'Bin name is required' })}
                                 type="text"
                                 className="form-input"
                                 placeholder="e.g., Kitchen Bin"
                             />
-                            {errors.name && (
-                                <p className="form-error">{errors.name.message}</p>
+                            {errors.label && (
+                                <p className="form-error">{errors.label.message}</p>
                             )}
                         </div>
 
                         <div>
                             <label className="form-label">Location</label>
                             <input
-                                {...register('location', { required: 'Location is required' })}
+                                {...register('address', { required: 'Address is required' })}
                                 type="text"
                                 className="form-input"
                                 placeholder="e.g., Kitchen, Garden"
                             />
-                            {errors.location && (
-                                <p className="form-error">{errors.location.message}</p>
+                            {errors.address && (
+                                <p className="form-error">{errors.address.message}</p>
                             )}
                         </div>
 
@@ -219,27 +226,12 @@ const BinsPage: React.FC = () => {
                             </div>
                         </div>
 
-                        <div>
-                            <label className="form-label">Bin Type</label>
-                            <select
-                                {...register('bin_type', { required: 'Bin type is required' })}
-                                className="form-input form-select"
-                            >
-                                <option value="">Select bin type</option>
-                                <option value="general">General Waste</option>
-                                <option value="recycling">Recycling</option>
-                                <option value="organic">Organic Waste</option>
-                                <option value="electronic">Electronic Waste</option>
-                            </select>
-                            {errors.bin_type && (
-                                <p className="form-error">{errors.bin_type.message}</p>
-                            )}
-                        </div>
+
 
                         <div>
                             <label className="form-label">Capacity (Liters)</label>
                             <input
-                                {...register('capacity', {
+                                {...register('capacity_liters', {
                                     required: 'Capacity is required',
                                     valueAsNumber: true,
                                     min: { value: 1, message: 'Capacity must be at least 1 liter' }
@@ -248,8 +240,8 @@ const BinsPage: React.FC = () => {
                                 className="form-input"
                                 placeholder="50"
                             />
-                            {errors.capacity && (
-                                <p className="form-error">{errors.capacity.message}</p>
+                            {errors.capacity_liters && (
+                                <p className="form-error">{errors.capacity_liters.message}</p>
                             )}
                         </div>
 

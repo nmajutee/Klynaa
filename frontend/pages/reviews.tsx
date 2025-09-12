@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -14,7 +14,7 @@ interface Review {
   pickupId?: string;
 }
 
-const Reviews: React.FC = () => {
+const Reviews = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [showWriteReview, setShowWriteReview] = useState(false);
   const [newReview, setNewReview] = useState({
@@ -100,9 +100,9 @@ const Reviews: React.FC = () => {
         <meta name="description" content="Read and write reviews for waste pickup services on Klynaa platform." />
       </Head>
       <div className="min-h-screen bg-gray-50">
-        <div className="bg-green-600 py-16 text-center text-white">
-          <h1 className="text-4xl font-bold mb-4">Community Reviews</h1>
-          <p className="text-green-100 max-w-2xl mx-auto">
+        <div className="bg-klynaa-darkgreen py-16 text-center text-white">
+          <h1 className="text-4xl klynaa-heading text-white mb-4">Community Reviews</h1>
+          <p className="text-green-100 max-w-2xl mx-auto klynaa-body">
             Building trust through transparent feedback between workers and bin owners
           </p>
         </div>
@@ -195,7 +195,7 @@ const Reviews: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Review Type</label>
                   <select
                     value={newReview.targetType}
-                    onChange={(e) => setNewReview(prev => ({ ...prev, targetType: e.target.value }))}
+                    onChange={(e) => setNewReview((prev: any) => ({ ...prev, targetType: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   >
                     <option value="worker">Review a Worker</option>
@@ -208,7 +208,7 @@ const Reviews: React.FC = () => {
                   <input
                     type="text"
                     value={newReview.targetId}
-                    onChange={(e) => setNewReview(prev => ({ ...prev, targetId: e.target.value }))}
+                    onChange={(e) => setNewReview((prev: any) => ({ ...prev, targetId: e.target.value }))}
                     placeholder="Enter pickup ID or user ID"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
@@ -217,7 +217,7 @@ const Reviews: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Rating</label>
                   {renderStars(newReview.rating, true, (rating) =>
-                    setNewReview(prev => ({ ...prev, rating }))
+                    setNewReview((prev: any) => ({ ...prev, rating }))
                   )}
                 </div>
 
@@ -225,7 +225,7 @@ const Reviews: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Comment</label>
                   <textarea
                     value={newReview.comment}
-                    onChange={(e) => setNewReview(prev => ({ ...prev, comment: e.target.value }))}
+                    onChange={(e) => setNewReview((prev: any) => ({ ...prev, comment: e.target.value }))}
                     rows={4}
                     placeholder="Share your experience..."
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
