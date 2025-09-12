@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import { customerDashboardApi, PickupRequest } from '../../services/customerDashboardApi';
-import { useAuth } from '../../stores/authStore';
+import { useAuthStore } from '../../stores';
 
 interface FilterState {
   status: string;
@@ -24,7 +24,7 @@ interface RatingModalState {
 
 const CustomerPickups: React.FC = () => {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
   const [pickups, setPickups] = useState<PickupRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +32,7 @@ const CustomerPickups: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const [filters, setFilters] = useState<FilterState>({
     status: 'all',
     waste_type: 'all',
@@ -73,7 +73,7 @@ const CustomerPickups: React.FC = () => {
       if (filters.status !== 'all') params.status = filters.status;
 
       const response = await customerDashboardApi.getPickups(params);
-      
+
       setPickups(response.results);
       setTotalCount(response.count);
       setTotalPages(Math.ceil(response.count / 10));
@@ -98,10 +98,10 @@ const CustomerPickups: React.FC = () => {
 
   const handleCancelPickup = async (pickup: PickupRequest) => {
     if (!pickup.can_cancel) return;
-    
+
     const reason = prompt('Please provide a reason for cancellation (optional):');
     if (reason === null) return; // User cancelled the prompt
-    
+
     try {
       await customerDashboardApi.cancelPickup(pickup.id, reason);
       await refreshPickups();
@@ -113,7 +113,7 @@ const CustomerPickups: React.FC = () => {
 
   const handleRateWorker = (pickup: PickupRequest) => {
     if (!pickup.can_rate) return;
-    
+
     setRatingModal({
       isOpen: true,
       pickup,
@@ -124,13 +124,13 @@ const CustomerPickups: React.FC = () => {
 
   const submitRating = async () => {
     if (!ratingModal.pickup) return;
-    
+
     try {
       await customerDashboardApi.rateWorker(ratingModal.pickup.id, {
         rating: ratingModal.rating,
         comment: ratingModal.comment || undefined
       });
-      
+
       setRatingModal({ isOpen: false, pickup: null, rating: 5, comment: '' });
       await refreshPickups();
     } catch (err) {
@@ -283,7 +283,7 @@ const CustomerPickups: React.FC = () => {
                 <div className="text-blue-500 text-2xl">📊</div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -295,7 +295,7 @@ const CustomerPickups: React.FC = () => {
                 <div className="text-green-500 text-2xl">🔄</div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -307,7 +307,7 @@ const CustomerPickups: React.FC = () => {
                 <div className="text-purple-500 text-2xl">✅</div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -340,7 +340,7 @@ const CustomerPickups: React.FC = () => {
               <div className="text-gray-400 text-6xl mb-4">📋</div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">No Pickups Found</h3>
               <p className="text-gray-600 mb-4">
-                {Object.values(filters).some(f => f !== 'all') 
+                {Object.values(filters).some(f => f !== 'all')
                   ? 'No pickups match your current filters.'
                   : "You haven't requested any pickups yet."}
               </p>
@@ -507,7 +507,7 @@ const CustomerPickups: React.FC = () => {
               <h3 className="text-lg font-semibold mb-4">
                 Rate Worker: {ratingModal.pickup.worker_info?.full_name}
               </h3>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Rating (1-5 stars)

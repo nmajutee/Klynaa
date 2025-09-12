@@ -37,6 +37,7 @@ const Register: React.FC = () => {
         try {
             // Create the register data with the required fields
             const registerData: RegisterData = {
+                username: data.email, // Use email as username
                 email: data.email,
                 password: data.password,
                 password_confirm: data.password_confirm,

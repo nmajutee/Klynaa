@@ -42,10 +42,13 @@ const WorkerTasksPage: React.FC = () => {
                 const response = await workerDashboardApi.getAvailablePickups();
                 setAvailableTasks(response);
             } else {
-                const response = await workerDashboardApi.getWorkerPickups({
-                    status: statusFilter === 'all' ? undefined : statusFilter
-                });
-                setMyTasks(response.results);
+                // For now, filter available pickups to show accepted ones
+                // TODO: Implement proper getMyTasks API endpoint
+                const response = await workerDashboardApi.getAvailablePickups();
+                const myTasksFiltered = response.filter((task: PickupTask) =>
+                    task.status !== 'open' && (statusFilter === 'all' || task.status === statusFilter)
+                );
+                setMyTasks(myTasksFiltered);
             }
         } catch (err: any) {
             console.error('Failed to load tasks:', err);
@@ -70,7 +73,7 @@ const WorkerTasksPage: React.FC = () => {
 
     const startPickup = async (pickupId: string) => {
         try {
-            await workerDashboardApi.updatePickupStatus(pickupId, 'in_progress');
+            await workerDashboardApi.acceptPickup(pickupId);
             loadTasks();
             alert('Pickup started successfully!');
         } catch (err: any) {
@@ -111,16 +114,16 @@ const WorkerTasksPage: React.FC = () => {
     };
 
     const getDistanceToPickup = (task: PickupTask): string => {
-        if (!user?.latitude || !user?.longitude || !task.pickup_latitude || !task.pickup_longitude) {
+        if (!user?.latitude || !user?.longitude || !task.bin_latitude || !task.bin_longitude) {
             return 'Unknown';
         }
-        const distance = calculateDistance(user.latitude, user.longitude, task.pickup_latitude, task.pickup_longitude);
+        const distance = calculateDistance(user.latitude, user.longitude, task.bin_latitude, task.bin_longitude);
         return `${distance.toFixed(1)} km`;
     };
 
     const filteredTasks = (activeTab === 'available' ? availableTasks : myTasks).filter(task =>
-        task.pickup_address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.waste_types?.join(' ').toLowerCase().includes(searchQuery.toLowerCase())
+        task.bin_address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.waste_type?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const renderTaskCard = (task: PickupTask) => (
@@ -128,7 +131,7 @@ const WorkerTasksPage: React.FC = () => {
             <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
                     <h3 className="font-semibold text-gray-900">Pickup #{task.id}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{task.waste_types?.join(', ') || 'General Waste'}</p>
+                    <p className="text-sm text-gray-600 mt-1">{task.waste_type || 'General Waste'}</p>
                 </div>
                 <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(task.status)}`}>
                     {task.status.replace('_', ' ').toUpperCase()}
@@ -138,7 +141,7 @@ const WorkerTasksPage: React.FC = () => {
             <div className="space-y-2 mb-4">
                 <div className="flex items-center text-sm text-gray-600">
                     <MapPinIcon className="h-4 w-4 mr-2" />
-                    <span>{task.pickup_address}</span>
+                    <span>{task.bin_address}</span>
                     {activeTab === 'available' && (
                         <span className="ml-2 text-xs text-blue-600">
                             ({getDistanceToPickup(task)} away)
@@ -148,21 +151,21 @@ const WorkerTasksPage: React.FC = () => {
 
                 <div className="flex items-center text-sm text-gray-600">
                     <ClockIcon className="h-4 w-4 mr-2" />
-                    <span>{new Date(task.scheduled_pickup_time).toLocaleString()}</span>
+                    <span>{task.time_window ? `${new Date(task.time_window.start).toLocaleString()} - ${new Date(task.time_window.end).toLocaleString()}` : new Date(task.created_at).toLocaleString()}</span>
                 </div>
 
                 <div className="flex items-center text-sm text-gray-600">
                     <CurrencyDollarIcon className="h-4 w-4 mr-2" />
                     <span className="font-medium text-green-600">
-                        {formatCurrency(Number(task.estimated_cost))}
+                        {formatCurrency(Number(task.expected_fee))}
                     </span>
                 </div>
             </div>
 
-            {task.description && (
+            {task.notes && (
                 <div className="mb-4 p-3 bg-gray-50 rounded-md">
                     <p className="text-sm text-gray-700">
-                        <strong>Instructions:</strong> {task.description}
+                        <strong>Instructions:</strong> {task.notes}
                     </p>
                 </div>
             )}

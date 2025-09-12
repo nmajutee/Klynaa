@@ -3,7 +3,7 @@
  * Handles all API calls related to customer functionality
  */
 
-import { apiClient } from './api';
+import api from './api';
 
 // Types
 export interface CustomerStats {
@@ -119,12 +119,12 @@ class CustomerDashboardAPI {
 
   // Dashboard Stats
   async getDashboardStats(): Promise<CustomerStats> {
-    const response = await apiClient.get(`${this.baseUrl}/dashboard/stats/`);
+    const response = await api.get(`${this.baseUrl}/dashboard/stats/`);
     return response.data;
   }
 
   async getRecentActivity(): Promise<PickupRequest[]> {
-    const response = await apiClient.get(`${this.baseUrl}/dashboard/recent_activity/`);
+    const response = await api.get(`${this.baseUrl}/dashboard/recent_activity/`);
     return response.data;
   }
 
@@ -139,29 +139,29 @@ class CustomerDashboardAPI {
     previous: string | null;
     results: PickupRequest[];
   }> {
-    const response = await apiClient.get(`${this.baseUrl}/pickups/`, { params });
+    const response = await api.get(`${this.baseUrl}/pickups/`, { params });
     return response.data;
   }
 
   async getPickup(id: number): Promise<PickupRequest> {
-    const response = await apiClient.get(`${this.baseUrl}/pickups/${id}/`);
+    const response = await api.get(`${this.baseUrl}/pickups/${id}/`);
     return response.data;
   }
 
   async createPickup(data: CreatePickupRequest): Promise<PickupRequest> {
-    const response = await apiClient.post(`${this.baseUrl}/pickups/`, data);
+    const response = await api.post(`${this.baseUrl}/pickups/`, data);
     return response.data;
   }
 
   async cancelPickup(id: number, reason?: string): Promise<PickupRequest> {
-    const response = await apiClient.post(`${this.baseUrl}/pickups/${id}/cancel/`, {
+    const response = await api.post(`${this.baseUrl}/pickups/${id}/cancel/`, {
       cancellation_reason: reason
     });
     return response.data;
   }
 
   async rateWorker(pickupId: number, rating: ReviewCreate): Promise<void> {
-    await apiClient.post(`${this.baseUrl}/pickups/${pickupId}/rate_worker/`, rating);
+    await api.post(`${this.baseUrl}/pickups/${pickupId}/rate_worker/`, rating);
   }
 
   // Bin Management
@@ -175,52 +175,52 @@ class CustomerDashboardAPI {
     previous: string | null;
     results: Bin[];
   }> {
-    const response = await apiClient.get(`${this.baseUrl}/bins/`, { params });
+    const response = await api.get(`${this.baseUrl}/bins/`, { params });
     return response.data;
   }
 
   async getBin(id: number): Promise<Bin> {
-    const response = await apiClient.get(`${this.baseUrl}/bins/${id}/`);
+    const response = await api.get(`${this.baseUrl}/bins/${id}/`);
     return response.data;
   }
 
   async createBin(data: CreateBin): Promise<Bin> {
-    const response = await apiClient.post(`${this.baseUrl}/bins/`, data);
+    const response = await api.post(`${this.baseUrl}/bins/`, data);
     return response.data;
   }
 
   async updateBin(id: number, data: Partial<CreateBin>): Promise<Bin> {
-    const response = await apiClient.patch(`${this.baseUrl}/bins/${id}/`, data);
+    const response = await api.patch(`${this.baseUrl}/bins/${id}/`, data);
     return response.data;
   }
 
   async deleteBin(id: number): Promise<void> {
-    await apiClient.delete(`${this.baseUrl}/bins/${id}/`);
+    await api.delete(`${this.baseUrl}/bins/${id}/`);
   }
 
   async reportFullBin(id: number): Promise<Bin> {
-    const response = await apiClient.post(`${this.baseUrl}/bins/${id}/report_full/`);
+    const response = await api.post(`${this.baseUrl}/bins/${id}/report_full/`);
     return response.data;
   }
 
   async getBinPickupHistory(id: number): Promise<PickupRequest[]> {
-    const response = await apiClient.get(`${this.baseUrl}/bins/${id}/pickup_history/`);
+    const response = await api.get(`${this.baseUrl}/bins/${id}/pickup_history/`);
     return response.data;
   }
 
   // Profile Management
   async getProfile(): Promise<CustomerProfile> {
-    const response = await apiClient.get(`${this.baseUrl}/profile/profile/`);
+    const response = await api.get(`${this.baseUrl}/profile/profile/`);
     return response.data;
   }
 
   async updateProfile(data: Partial<CustomerProfile>): Promise<CustomerProfile> {
-    const response = await apiClient.patch(`${this.baseUrl}/profile/profile/`, data);
+    const response = await api.patch(`${this.baseUrl}/profile/profile/`, data);
     return response.data;
   }
 
   async updateLocation(latitude: number, longitude: number): Promise<CustomerProfile> {
-    const response = await apiClient.post(`${this.baseUrl}/profile/update_location/`, {
+    const response = await api.post(`${this.baseUrl}/profile/update_location/`, {
       latitude,
       longitude
     });
@@ -228,7 +228,7 @@ class CustomerDashboardAPI {
   }
 
   async getPaymentMethods(): Promise<PaymentMethod[]> {
-    const response = await apiClient.get(`${this.baseUrl}/profile/payment_methods/`);
+    const response = await api.get(`${this.baseUrl}/profile/payment_methods/`);
     return response.data;
   }
 

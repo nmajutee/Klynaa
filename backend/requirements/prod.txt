@@ -2,3 +2,4 @@
 
 # Prod-only
 gunicorn>=21.2.0
+daphne>=4.1.0

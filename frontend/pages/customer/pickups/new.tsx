@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../../components/Layout';
 import { customerDashboardApi, Bin, CreatePickupRequest } from '../../../services/customerDashboardApi';
-import { useAuth } from '../../../stores/authStore';
+import { useAuthStore } from '../../../stores';
 
 interface FormErrors {
   bin_id?: string;
@@ -14,12 +14,13 @@ interface FormErrors {
   estimated_weight_kg?: string;
   preferred_pickup_time?: string;
   payment_method?: string;
+  notes?: string;
   general?: string;
 }
 
 const NewPickupRequest: React.FC = () => {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
   const [bins, setBins] = useState<Bin[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -53,7 +54,7 @@ const NewPickupRequest: React.FC = () => {
       setLoading(true);
       const response = await customerDashboardApi.getBins({ status: 'active' });
       setBins(response.results);
-      
+
       // Auto-select first bin if available
       if (response.results.length > 0) {
         setFormData(prev => ({ ...prev, bin_id: response.results[0].id }));
@@ -86,11 +87,11 @@ const NewPickupRequest: React.FC = () => {
     if (formData.preferred_pickup_time) {
       const pickupDate = new Date(formData.preferred_pickup_time);
       const now = new Date();
-      
+
       if (pickupDate <= now) {
         newErrors.preferred_pickup_time = 'Pickup time must be in the future';
       }
-      
+
       // Check if pickup time is within reasonable limits (not more than 30 days)
       const maxDate = new Date();
       maxDate.setDate(maxDate.getDate() + 30);
@@ -109,26 +110,26 @@ const NewPickupRequest: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
       setSubmitting(true);
       setErrors({});
-      
+
       const pickup = await customerDashboardApi.createPickup(formData);
-      
+
       // Redirect to pickup details or pickups list
       router.push(`/customer/pickups?created=${pickup.id}`);
     } catch (err: any) {
       console.error('Failed to create pickup:', err);
-      
+
       // Handle validation errors from backend
       if (err.response?.data) {
         const backendErrors: FormErrors = {};
         Object.keys(err.response.data).forEach(key => {
-          backendErrors[key as keyof FormErrors] = Array.isArray(err.response.data[key]) 
-            ? err.response.data[key][0] 
+          backendErrors[key as keyof FormErrors] = Array.isArray(err.response.data[key])
+            ? err.response.data[key][0]
             : err.response.data[key];
         });
         setErrors(backendErrors);
@@ -142,7 +143,7 @@ const NewPickupRequest: React.FC = () => {
 
   const handleInputChange = (field: keyof CreatePickupRequest, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // Clear error for this field when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
@@ -156,7 +157,7 @@ const NewPickupRequest: React.FC = () => {
   const getEstimatedFee = (): number => {
     const baseRate = 20; // Base rate per kg
     const weight = formData.estimated_weight_kg || 0;
-    
+
     const wasteMultipliers = {
       'organic': 1.0,
       'plastic': 1.2,
@@ -164,7 +165,7 @@ const NewPickupRequest: React.FC = () => {
       'electronic': 2.0,
       'general': 1.0
     };
-    
+
     const multiplier = wasteMultipliers[formData.waste_type as keyof typeof wasteMultipliers] || 1.0;
     return weight * baseRate * multiplier;
   };
@@ -260,7 +261,7 @@ const NewPickupRequest: React.FC = () => {
                 {/* Bin Selection */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Select Bin</h3>
-                  
+
                   <div className="space-y-3">
                     {bins.map(bin => (
                       <label key={bin.id} className="flex items-center p-4 border rounded-lg cursor-pointer hover:border-green-500">
@@ -287,7 +288,7 @@ const NewPickupRequest: React.FC = () => {
                               </span>
                               <div className="mt-1">
                                 <div className="w-16 h-2 bg-gray-200 rounded-full">
-                                  <div 
+                                  <div
                                     className={`h-full rounded-full ${customerDashboardApi.getFillLevelBgColor(bin.fill_level)}`}
                                     style={{ width: `${bin.fill_level}%` }}
                                   ></div>
@@ -299,7 +300,7 @@ const NewPickupRequest: React.FC = () => {
                       </label>
                     ))}
                   </div>
-                  
+
                   {errors.bin_id && (
                     <p className="mt-2 text-sm text-red-600">{errors.bin_id}</p>
                   )}
@@ -308,7 +309,7 @@ const NewPickupRequest: React.FC = () => {
                 {/* Pickup Details */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Pickup Details</h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Waste Type */}
                     <div>

@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import { customerDashboardApi, Bin, CreateBin, PickupRequest } from '../../services/customerDashboardApi';
-import { useAuth } from '../../stores/authStore';
+import { useAuthStore } from '../../stores';
 
 interface FilterState {
   status: string;
@@ -25,12 +25,12 @@ interface NewBinFormData extends CreateBin {
 
 const CustomerBins: React.FC = () => {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
   const [bins, setBins] = useState<Bin[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  
+
   const [filters, setFilters] = useState<FilterState>({
     status: 'all',
     search: ''
@@ -99,10 +99,10 @@ const CustomerBins: React.FC = () => {
 
   const filteredBins = bins.filter(bin => {
     const matchesStatus = filters.status === 'all' || bin.status === filters.status;
-    const matchesSearch = !filters.search || 
+    const matchesSearch = !filters.search ||
       bin.label.toLowerCase().includes(filters.search.toLowerCase()) ||
       bin.address.toLowerCase().includes(filters.search.toLowerCase());
-    
+
     return matchesStatus && matchesSearch;
   });
 
@@ -113,12 +113,12 @@ const CustomerBins: React.FC = () => {
     }
 
     setLocationLoading(true);
-    
+
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
         setBinForm(prev => ({ ...prev, latitude, longitude }));
-        
+
         // Try to get address from coordinates (reverse geocoding)
         try {
           const response = await fetch(
@@ -131,7 +131,7 @@ const CustomerBins: React.FC = () => {
         } catch (err) {
           console.error('Failed to get address:', err);
         }
-        
+
         setLocationLoading(false);
       },
       (error) => {
@@ -145,7 +145,7 @@ const CustomerBins: React.FC = () => {
 
   const openBinModal = (mode: 'create' | 'edit' | 'view', bin?: Bin) => {
     setBinModal({ isOpen: true, mode, bin: bin || null });
-    
+
     if (mode === 'create') {
       setBinForm({
         label: '',
@@ -165,7 +165,7 @@ const CustomerBins: React.FC = () => {
         use_current_location: false
       });
     }
-    
+
     setFormErrors({});
   };
 
@@ -197,7 +197,7 @@ const CustomerBins: React.FC = () => {
       errors.location = 'Location coordinates are required';
     }
 
-    if (binForm.capacity_liters < 10 || binForm.capacity_liters > 1000) {
+    if (!binForm.capacity_liters || binForm.capacity_liters < 10 || binForm.capacity_liters > 1000) {
       errors.capacity = 'Capacity must be between 10 and 1000 liters';
     }
 
@@ -207,12 +207,12 @@ const CustomerBins: React.FC = () => {
 
   const handleSubmitBin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateBinForm()) return;
 
     try {
       setSubmitting(true);
-      
+
       const binData: CreateBin = {
         label: binForm.label,
         latitude: binForm.latitude,
@@ -231,12 +231,12 @@ const CustomerBins: React.FC = () => {
       closeBinModal();
     } catch (err: any) {
       console.error('Failed to save bin:', err);
-      
+
       if (err.response?.data) {
         const backendErrors: Record<string, string> = {};
         Object.keys(err.response.data).forEach(key => {
-          backendErrors[key] = Array.isArray(err.response.data[key]) 
-            ? err.response.data[key][0] 
+          backendErrors[key] = Array.isArray(err.response.data[key])
+            ? err.response.data[key][0]
             : err.response.data[key];
         });
         setFormErrors(backendErrors);
@@ -274,7 +274,7 @@ const CustomerBins: React.FC = () => {
 
   const loadBinHistory = async (binId: number) => {
     setSelectedBinHistory({ binId, history: [], loading: true });
-    
+
     try {
       const history = await customerDashboardApi.getBinPickupHistory(binId);
       setSelectedBinHistory({ binId, history, loading: false });
@@ -383,7 +383,7 @@ const CustomerBins: React.FC = () => {
                 <div className="text-blue-500 text-2xl">🗑️</div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -395,7 +395,7 @@ const CustomerBins: React.FC = () => {
                 <div className="text-green-500 text-2xl">✅</div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -407,7 +407,7 @@ const CustomerBins: React.FC = () => {
                 <div className="text-red-500 text-2xl">🚨</div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow-sm p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -440,7 +440,7 @@ const CustomerBins: React.FC = () => {
                 {bins.length === 0 ? 'No Bins Added' : 'No Bins Found'}
               </h3>
               <p className="text-gray-600 mb-4">
-                {bins.length === 0 
+                {bins.length === 0
                   ? "Add your first bin to start managing waste collection."
                   : "No bins match your current filters."}
               </p>
@@ -479,7 +479,7 @@ const CustomerBins: React.FC = () => {
                       </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div 
+                      <div
                         className={`h-2 rounded-full ${customerDashboardApi.getFillLevelBgColor(bin.fill_level)}`}
                         style={{ width: `${bin.fill_level}%` }}
                       ></div>
@@ -509,7 +509,7 @@ const CustomerBins: React.FC = () => {
                       >
                         📋 Request Pickup
                       </button>
-                      
+
                       {bin.fill_level < 80 && bin.status === 'active' && (
                         <button
                           onClick={() => handleReportFull(bin)}
@@ -519,7 +519,7 @@ const CustomerBins: React.FC = () => {
                         </button>
                       )}
                     </div>
-                    
+
                     <div className="space-y-2">
                       <button
                         onClick={() => loadBinHistory(bin.id)}
@@ -527,7 +527,7 @@ const CustomerBins: React.FC = () => {
                       >
                         📊 History
                       </button>
-                      
+
                       <div className="flex gap-1">
                         <button
                           onClick={() => openBinModal('edit', bin)}
@@ -555,10 +555,10 @@ const CustomerBins: React.FC = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-screen overflow-y-auto">
               <h3 className="text-lg font-semibold mb-4">
-                {binModal.mode === 'create' ? 'Add New Bin' : 
+                {binModal.mode === 'create' ? 'Add New Bin' :
                  binModal.mode === 'edit' ? 'Edit Bin' : 'Bin Details'}
               </h3>
-              
+
               {formErrors.general && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
                   <p className="text-red-700">{formErrors.general}</p>
@@ -599,7 +599,7 @@ const CustomerBins: React.FC = () => {
                       </button>
                     )}
                   </div>
-                  
+
                   <div className="grid grid-cols-2 gap-2 mb-2">
                     <div>
                       <input
@@ -668,7 +668,7 @@ const CustomerBins: React.FC = () => {
                   >
                     {binModal.mode === 'view' ? 'Close' : 'Cancel'}
                   </button>
-                  
+
                   {binModal.mode !== 'view' && (
                     <button
                       type="submit"

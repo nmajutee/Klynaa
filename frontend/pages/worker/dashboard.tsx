@@ -1,288 +1,173 @@
-import React, { useEffect, useState } from 'react';
+/**
+ * Worker Dashboard - Main Overview Page
+ * Mobile-first design with profile status, overview cards, and quick actions
+ */
+
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Link from 'next/link';
-import {
-    MapPinIcon,
-    CurrencyDollarIcon,
-    ClockIcon,
-    TruckIcon,
-    ChatBubbleLeftIcon,
-    BellIcon,
-    CheckCircleIcon,
-    ExclamationTriangleIcon
-} from '@heroicons/react/24/outline';
-import { workerDashboardApi } from '../../services/workerDashboardApi';
-import { useAuthStore } from '../../stores';
-import Layout from '../../components/Layout';
-import type { WorkerStats, PickupTask } from '../../types';
+import PrivateRoute from '../../components/PrivateRoute';
+import { enhancedWorkerDashboardApi } from '../../services/enhancedWorkerDashboardApi';
+import WorkerLayout from '../../components/layout/WorkerLayout';
+import PickupSidebar from '../../components/worker/PickupSidebar';
+import dynamic from 'next/dynamic';
+
+const WorkerMap = dynamic(() => import('../../components/WorkerMap'), {
+  ssr: false,
+  loading: () => <div className="h-full bg-gray-100 animate-pulse" />
+});
+
+interface WorkerStatus {
+  status: 'active' | 'offline' | 'verification_required' | 'disabled';
+  color: string;
+  label: string;
+}
+
+interface OverviewCard {
+  value: number;
+  currency?: string;
+  formatted: string;
+  icon: string;
+  color: string;
+  label?: string;
+  total_reviews?: number;
+}
+
+interface DashboardData {
+  profile: {
+    id: number;
+    name: string;
+    profile_picture: string | null;
+    status: WorkerStatus;
+    location: {
+      latitude: number | null;
+      longitude: number | null;
+    };
+  };
+  overview_cards: {
+    total_earnings: OverviewCard;
+    pending_pickups: OverviewCard;
+    completed_pickups: OverviewCard;
+    average_rating: OverviewCard;
+  };
+  quick_stats: {
+    completed_today: number;
+    completed_this_week: number;
+    completed_this_month: number;
+  };
+}
 
 const WorkerDashboard: React.FC = () => {
-    const router = useRouter();
-    const { user, isAuthenticated } = useAuthStore();
-    const [stats, setStats] = useState<WorkerStats | null>(null);
-    const [recentTasks, setRecentTasks] = useState<PickupTask[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [locationEnabled, setLocationEnabled] = useState(false);
+  const [selectedPickupId, setSelectedPickupId] = useState<number | null>(null);
 
-    useEffect(() => {
-        if (!isAuthenticated || user?.role !== 'worker') {
-            router.push('/auth/login');
-            return;
-        }
-        loadDashboardData();
-    }, [isAuthenticated, user, router]);
-
-    const loadDashboardData = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            // Load stats and recent tasks in parallel
-            const [statsResponse, tasksResponse] = await Promise.all([
-                workerDashboardApi.getWorkerStats(),
-                workerDashboardApi.getMyPickups({ status: 'all', limit: 5 })
-            ]);
-
-            setStats(statsResponse);
-            setRecentTasks(tasksResponse.results);
-        } catch (err: any) {
-            console.error('Failed to load dashboard data:', err);
-            setError(err.message || 'Failed to load dashboard');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const toggleAvailability = async () => {
-        try {
-            await workerDashboardApi.toggleWorkerStatus(!user?.is_available);
-            // Refresh user data or update local state
-            window.location.reload(); // Simple refresh for now
-        } catch (err: any) {
-            console.error('Failed to update availability:', err);
-            alert('Failed to update availability: ' + err.message);
-        }
-    };
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'pending': return 'text-yellow-600 bg-yellow-50';
-            case 'accepted': return 'text-blue-600 bg-blue-50';
-            case 'in_progress': return 'text-purple-600 bg-purple-50';
-            case 'completed': return 'text-green-600 bg-green-50';
-            case 'cancelled': return 'text-red-600 bg-red-50';
-            default: return 'text-gray-600 bg-gray-50';
-        }
-    };
-
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-KE', {
-            style: 'currency',
-            currency: 'KES'
-        }).format(amount);
-    };
-
-    if (loading) {
-        return (
-            <Layout>
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
-                </div>
-            </Layout>
-        );
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true);
+      const response = await enhancedWorkerDashboardApi.getOverview();
+      setDashboardData(response.data);
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (error) {
-        return (
-            <Layout>
-                <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                        <ExclamationTriangleIcon className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                        <p className="text-red-600 mb-4">{error}</p>
-                        <button
-                            onClick={loadDashboardData}
-                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                </div>
-            </Layout>
-        );
+  const requestLocationPermission = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        () => setLocationEnabled(true),
+        () => setLocationEnabled(false)
+      );
     }
+  };
 
-    return (
-        <Layout>
-            <div className="min-h-screen bg-gray-50">
-                {/* Header */}
-                <div className="bg-white shadow-sm border-b">
-                    <div className="px-4 py-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900">
-                                    Welcome, {user?.first_name}!
-                                </h1>
-                                <p className="text-gray-600 mt-1">
-                                    {user?.is_available ? 'You are available for pickups' : 'You are currently offline'}
-                                </p>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <button className="p-2 text-gray-600 hover:text-gray-900">
-                                    <BellIcon className="h-6 w-6" />
-                                </button>
-                                <button
-                                    onClick={toggleAvailability}
-                                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                        user?.is_available
-                                            ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                            : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                    }`}
-                                >
-                                    {user?.is_available ? 'Go Offline' : 'Go Online'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+  const toggleAvailability = async () => {
+    try {
+      await enhancedWorkerDashboardApi.updateStatus({ is_available: !isAvailable });
+      setIsAvailable(!isAvailable);
+    } catch (error) {
+      console.error('Failed to update availability:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadDashboardData();
+    requestLocationPermission();
+  }, []);
+
+  return (
+    <PrivateRoute requiredRole="worker">
+      <Head>
+        <title>Worker Dashboard - Klynaa</title>
+        <meta name="description" content="Klynaa Worker Dashboard" />
+      </Head>
+      <WorkerLayout
+        sidebar={
+          <div className="flex flex-col h-full">
+            {/* Profile / Status Card */}
+            <div className="p-6 border-b bg-white/80 backdrop-blur">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="relative">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center text-green-600 font-semibold">
+                    {dashboardData?.profile.name.charAt(0).toUpperCase() || 'W'}
+                  </div>
+                  <span className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full ring-2 ring-white ${isAvailable ? 'bg-green-500' : 'bg-gray-400'}`}></span>
                 </div>
-
-                {/* Stats Cards */}
-                <div className="px-4 py-6">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                        <div className="bg-white p-4 rounded-lg shadow-sm">
-                            <div className="flex items-center">
-                                <TruckIcon className="h-8 w-8 text-blue-600" />
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-gray-600">Total Pickups</p>
-                                    <p className="text-2xl font-bold text-gray-900">{stats?.total_pickups || 0}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white p-4 rounded-lg shadow-sm">
-                            <div className="flex items-center">
-                                <CurrencyDollarIcon className="h-8 w-8 text-green-600" />
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-gray-600">Total Earnings</p>
-                                    <p className="text-2xl font-bold text-gray-900">
-                                        {formatCurrency(Number(stats?.total_earnings) || 0)}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white p-4 rounded-lg shadow-sm">
-                            <div className="flex items-center">
-                                <ClockIcon className="h-8 w-8 text-purple-600" />
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-gray-600">This Week</p>
-                                    <p className="text-2xl font-bold text-gray-900">{stats?.this_week_pickups || 0}</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white p-4 rounded-lg shadow-sm">
-                            <div className="flex items-center">
-                                <CheckCircleIcon className="h-8 w-8 text-yellow-600" />
-                                <div className="ml-3">
-                                    <p className="text-sm font-medium text-gray-600">Rating</p>
-                                    <p className="text-2xl font-bold text-gray-900">
-                                        {user?.rating_average?.toFixed(1) || '0.0'}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Quick Actions */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                        <Link href="/worker/tasks">
-                            <a className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                <div className="text-center">
-                                    <TruckIcon className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                                    <p className="font-medium text-gray-900">View Tasks</p>
-                                    <p className="text-sm text-gray-600">Available pickups</p>
-                                </div>
-                            </a>
-                        </Link>
-
-                        <Link href="/worker/map">
-                            <a className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                <div className="text-center">
-                                    <MapPinIcon className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                                    <p className="font-medium text-gray-900">Map View</p>
-                                    <p className="text-sm text-gray-600">See nearby jobs</p>
-                                </div>
-                            </a>
-                        </Link>
-
-                        <Link href="/worker/chat">
-                            <a className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                <div className="text-center">
-                                    <ChatBubbleLeftIcon className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                                    <p className="font-medium text-gray-900">Messages</p>
-                                    <p className="text-sm text-gray-600">Customer chat</p>
-                                </div>
-                            </a>
-                        </Link>
-
-                        <Link href="/worker/earnings">
-                            <a className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                <div className="text-center">
-                                    <CurrencyDollarIcon className="h-8 w-8 text-yellow-600 mx-auto mb-2" />
-                                    <p className="font-medium text-gray-900">Earnings</p>
-                                    <p className="text-sm text-gray-600">Payment history</p>
-                                </div>
-                            </a>
-                        </Link>
-                    </div>
-
-                    {/* Recent Tasks */}
-                    <div className="bg-white rounded-lg shadow-sm">
-                        <div className="px-4 py-3 border-b border-gray-200">
-                            <h2 className="text-lg font-medium text-gray-900">Recent Tasks</h2>
-                        </div>
-                        <div className="p-4">
-                            {recentTasks.length === 0 ? (
-                                <p className="text-gray-500 text-center py-4">No recent tasks</p>
-                            ) : (
-                                <div className="space-y-3">
-                                    {recentTasks.map((task) => (
-                                        <div key={task.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                            <div className="flex-1">
-                                                <p className="font-medium text-gray-900">
-                                                    Pickup #{task.id}
-                                                </p>
-                                                <p className="text-sm text-gray-600">
-                                                    {task.pickup_location}
-                                                </p>
-                                                <p className="text-xs text-gray-500">
-                                                    {new Date(task.pickup_time).toLocaleString()}
-                                                </p>
-                                            </div>
-                                            <div className="ml-4">
-                                                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(task.status)}`}>
-                                                    {task.status.replace('_', ' ').toUpperCase()}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                        {recentTasks.length > 0 && (
-                            <div className="px-4 py-3 border-t border-gray-200">
-                                <Link href="/worker/tasks">
-                                    <a className="text-green-600 text-sm font-medium hover:text-green-700">
-                                        View all tasks →
-                                    </a>
-                                </Link>
-                            </div>
-                        )}
-                    </div>
+                <div className="flex-1 min-w-0">
+                  <h1 className="font-semibold text-gray-900 truncate">{dashboardData?.profile.name || 'Worker'}</h1>
+                  <p className="text-xs text-gray-500 truncate">{dashboardData?.profile.status.label || 'Active'}</p>
                 </div>
+                <button
+                  onClick={toggleAvailability}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${isAvailable ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 hover:text-gray-800 border-gray-200'}`}
+                >
+                  {isAvailable ? 'Online' : 'Offline'}
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="p-2 rounded-lg bg-gray-50">
+                  <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">Earned</div>
+                  <div className="text-sm font-semibold text-gray-800">{dashboardData?.overview_cards.total_earnings.formatted || '0 XAF'}</div>
+                </div>
+                <div className="p-2 rounded-lg bg-gray-50">
+                  <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">Rating</div>
+                  <div className="text-sm font-semibold text-gray-800">{dashboardData?.overview_cards.average_rating.value || '0'}</div>
+                </div>
+              </div>
             </div>
-        </Layout>
-    );
+            {/* Pickup list tabs */}
+            <PickupSidebar onSelectPickup={(p:any)=> setSelectedPickupId(p.id)} activePickupId={selectedPickupId || undefined} />
+          </div>
+        }
+      >
+        {/* Map + Overlay Metrics */}
+        <div className="h-full relative">
+          <WorkerMap pickups={[]} selectedPickupId={selectedPickupId} className="h-full" />
+          <div className="absolute top-4 left-4 right-4 lg:left-8 lg:right-8 flex flex-wrap gap-4 pointer-events-none">
+            {['pending_pickups','completed_pickups','average_rating'].map((k) => {
+              const card: any = dashboardData?.overview_cards ? (dashboardData.overview_cards as any)[k] : null;
+              if (!card) return null;
+              return (
+                <div key={k} className="pointer-events-auto bg-white/90 backdrop-blur rounded-xl px-4 py-3 shadow-sm border flex items-center gap-3">
+                  <span className="text-xl">{card.icon}</span>
+                  <div>
+                    <div className="text-xs text-gray-400 uppercase tracking-wide">{card.label || k.replace('_',' ')}</div>
+                    <div className="text-sm font-semibold text-gray-800">{card.formatted || card.value}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </WorkerLayout>
+    </PrivateRoute>
+  );
 };
 
 export default WorkerDashboard;

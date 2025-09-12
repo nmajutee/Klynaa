@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import { customerDashboardApi, CustomerStats, PickupRequest } from '../../services/customerDashboardApi';
-import { useAuth } from '../../stores/authStore';
+import { useAuthStore } from '../../stores';
 
 interface DashboardCard {
   title: string;
@@ -19,7 +19,7 @@ interface DashboardCard {
 
 const CustomerDashboard: React.FC = () => {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuthStore();
   const [stats, setStats] = useState<CustomerStats | null>(null);
   const [recentActivity, setRecentActivity] = useState<PickupRequest[]>([]);
   const [loading, setLoading] = useState(true);
