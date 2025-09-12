@@ -112,10 +112,13 @@ const handleApiError = (error: AxiosError): ApiError => {
 export const authApi = {
     login: async (credentials: LoginCredentials): Promise<AuthResponse> => {
         try {
-            const response = await api.post('/users/token/', {
-                username: credentials.email,
+            // Send either email or username to the backend
+            const loginData = {
+                username: credentials.username || credentials.email,
                 password: credentials.password,
-            });
+            };
+
+            const response = await api.post('/users/token/', loginData);
             const { access, refresh } = response.data;
 
             // Get user profile after login
@@ -131,8 +134,15 @@ export const authApi = {
     },
 
     register: async (data: RegisterData): Promise<AuthResponse> => {
-        // Registration endpoint not implemented in backend yet
-        throw { message: 'Registration endpoint not available. Contact admin to create accounts.' } as ApiError;
+        try {
+            const response = await api.post('/users/register/', data);
+            const { user, access, refresh } = response.data;
+
+            setTokens(access, refresh);
+            return { access, refresh, user };
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
     },
 
     logout: async (): Promise<void> => {

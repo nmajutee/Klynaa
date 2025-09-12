@@ -143,6 +143,17 @@ class PickupRequest(models.Model):
     notes = models.TextField(blank=True, help_text="Special instructions")
     cancellation_reason = models.TextField(blank=True)
 
+    # Worker dashboard fields
+    waste_type = models.CharField(max_length=50, default='general', help_text="Type of waste (organic, plastic, etc.)")
+    estimated_weight_kg = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    pickup_time_window_start = models.DateTimeField(null=True, blank=True)
+    pickup_time_window_end = models.DateTimeField(null=True, blank=True)
+
+    # Drop-off location (for dashboard)
+    dropoff_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    dropoff_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    dropoff_address = models.TextField(blank=True)
+
     class Meta:
         ordering = ['-created_at']
         indexes = [
@@ -162,13 +173,15 @@ class PickupRequest(models.Model):
         ]
 
     def __str__(self):
-        return f"Week {self.week_start} - {self.total_pickups} pickups"
+        return f"Pickup {self.id} - {self.bin.label} ({self.get_status_display()})"
 
 
 class PickupProof(models.Model):
     """Photo proof for pickup verification."""
 
     class ProofType(models.TextChoices):
+        PICKUP = 'pickup', 'Pickup'
+        DROPOFF = 'dropoff', 'Drop-off'
         BEFORE = 'before', 'Before'
         AFTER = 'after', 'After'
 
@@ -188,6 +201,12 @@ class PickupProof(models.Model):
     verified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='verified_proofs')
     created_at = models.DateTimeField(auto_now_add=True)
     verified_at = models.DateTimeField(null=True, blank=True)
+
+    # AI Verification fields
+    ai_verification_result = models.JSONField(default=dict, blank=True, help_text="AI vision service results")
+    confidence_score = models.FloatField(null=True, blank=True, help_text="AI confidence score 0-1")
+    needs_manual_review = models.BooleanField(default=False)
+    geofence_check_passed = models.BooleanField(null=True, blank=True)
 
     class Meta:
         ordering = ['-created_at']

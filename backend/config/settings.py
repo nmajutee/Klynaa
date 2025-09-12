@@ -29,6 +29,7 @@ LOCAL_APPS = [
     'apps.reviews',
     'apps.payments',
     'apps.notifications',
+    'apps.chat',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -66,6 +67,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Custom user model
 AUTH_USER_MODEL = 'users.User'
+
+# Custom authentication backends
+AUTHENTICATION_BACKENDS = [
+    'apps.users.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 DB_ENGINE = os.getenv("DJANGO_DB_ENGINE", "sqlite").lower()
 if DB_ENGINE == "sqlite":

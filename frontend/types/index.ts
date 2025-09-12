@@ -6,14 +6,17 @@ export interface User {
     last_name: string;
     role: 'admin' | 'worker' | 'customer';
     phone_number?: string;
-    location?: string;
+    is_verified: boolean;
     latitude?: number;
     longitude?: number;
-    is_active: boolean;
-    date_joined: string;
-    rating?: number;
+    rating_average?: number;
     rating_count?: number;
-    is_verified: boolean;
+    wallet_balance?: number;
+    is_available?: boolean;
+    pending_pickups_count?: number;
+    service_radius_km?: number;
+    date_joined: string;
+    last_login?: string;
 }
 
 export interface AuthResponse {
@@ -23,11 +26,13 @@ export interface AuthResponse {
 }
 
 export interface LoginCredentials {
-    email: string;
+    email?: string;
+    username?: string;
     password: string;
 }
 
 export interface RegisterData {
+    username: string;
     email: string;
     password: string;
     password_confirm: string;
@@ -38,6 +43,93 @@ export interface RegisterData {
     location?: string;
     latitude?: number;
     longitude?: number;
+}
+
+// Worker Dashboard Types
+export interface WorkerStats {
+    total_pickups: number;
+    completed_today: number;
+    completed_this_week: number;
+    completion_rate: number;
+    average_rating: number;
+    total_earnings: string;
+    pending_earnings: string;
+    today_earnings: string;
+    current_status: 'ACTIVE' | 'OFFLINE';
+    active_pickups: number;
+    available_pickups_nearby: number;
+}
+
+export interface PickupTask {
+    id: string;
+    status: 'open' | 'accepted' | 'in_progress' | 'delivered' | 'completed' | 'cancelled';
+    waste_type: string;
+    estimated_weight_kg?: number;
+    expected_fee: string;
+    owner_name: string;
+    owner_phone: string;
+    bin_address: string;
+    bin_latitude: number;
+    bin_longitude: number;
+    distance_km: number;
+    can_accept: boolean;
+    time_window?: {
+        start: string;
+        end: string;
+    };
+    notes?: string;
+    created_at: string;
+    accepted_at?: string;
+    picked_at?: string;
+    completed_at?: string;
+}
+
+export interface PickupTaskDetail extends PickupTask {
+    chat_room_id?: string;
+    proofs: PickupProof[];
+}
+
+export interface PickupProof {
+    id: number;
+    type: 'pickup' | 'dropoff' | 'before' | 'after';
+    image_url?: string;
+    status: 'pending' | 'approved' | 'rejected';
+    created_at: string;
+}
+
+export interface WorkerEarning {
+    id: number;
+    pickup_id: string;
+    pickup_date: string;
+    owner_name: string;
+    base_amount: string;
+    bonus_amount: string;
+    platform_fee: string;
+    net_amount: string;
+    status: 'pending' | 'paid' | 'held' | 'disputed';
+    payout_method: string;
+    payout_reference?: string;
+    earned_at: string;
+    paid_at?: string;
+}
+
+export interface ChatMessage {
+    message_id: string;
+    message_type: 'text' | 'image' | 'quick_reply' | 'system' | 'status_update';
+    content: string;
+    image?: string;
+    sender_name: string;
+    is_own_message: boolean;
+    is_read: boolean;
+    created_at: string;
+    client_message_id?: string;
+}
+
+export interface QuickReply {
+    id: number;
+    text: string;
+    category: string;
+    usage_count: number;
 }
 
 // Bin Types - Updated to match backend
@@ -183,20 +275,32 @@ export interface Notification {
     data?: Record<string, any>;
 }
 
-// Proof Types
-export interface PickupProof {
-    id: number;
-    pickup: number;
-    type: 'before' | 'after';
-    image: string;
-    image_url: string;
-    latitude?: string | null;
-    longitude?: string | null;
-    captured_by: number;
-    captured_by_name?: string;
-    status: 'pending' | 'approved' | 'rejected';
-    notes?: string;
-    verified_by?: number | null;
+// Chat Types
+export interface ChatRoom {
+    id: string;
+    pickup: PickupTask;
+    worker: User;
+    customer: User;
     created_at: string;
-    verified_at?: string | null;
+    last_message_at?: string;
 }
+
+export interface ChatMessage {
+    id: string;
+    room: ChatRoom;
+    sender: User;
+    message: string;
+    message_type: 'text' | 'image' | 'quick_reply' | 'system' | 'status_update';
+    image?: string;
+    is_read: boolean;
+    created_at: string;
+}
+
+export interface SendMessageData {
+    content: string;
+    message_type?: 'text' | 'quick_reply';
+    client_message_id?: string;
+    image?: File;
+}
+
+// Proof Types - Unified with Worker Dashboard

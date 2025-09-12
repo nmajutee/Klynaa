@@ -16,10 +16,14 @@ def api_root(_request):
         "endpoints": {
             "health": "/api/health/",
             "admin": "/admin/",
+            "register": "/api/users/register/",
             "auth": "/api/users/token/",
             "user_profile": "/api/users/me/",
             "bins": "/api/bins/",
             "pickups": "/api/pickups/",
+            "worker_dashboard": "/api/v1/workers/me/",
+            "worker_pickups": "/api/v1/pickups/",
+            "worker_earnings": "/api/v1/workers/{id}/transactions/",
             "serverless": "/api/serverless/",
             "reports": "/api/reports/",
             "analytics": "/api/analytics/",
@@ -34,6 +38,7 @@ urlpatterns = [
     path("api/health/", health),
     path("api/status/", api_status),  # Frontend API status
     path("api/users/", include("apps.users.urls")),
+    path("api/v1/", include("apps.users.worker_urls")),
     path("api/", include("apps.bins.urls")),
     path("api/", include("apps.reviews.urls")),
     path("api/payments/", include("apps.payments.urls")),

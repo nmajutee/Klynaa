@@ -22,6 +22,7 @@ class User(AbstractUser):
     # Contact and profile
     phone_number = models.CharField(max_length=20, unique=True, null=True, blank=True)
     role = models.CharField(max_length=20, choices=UserRole.choices, default=UserRole.CUSTOMER)
+    is_verified = models.BooleanField(default=False, help_text="Email verification status")
 
     # Location (stored as lat/lng for simplicity)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
