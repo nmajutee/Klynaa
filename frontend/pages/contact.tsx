@@ -58,7 +58,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-klynaa-dark mb-1">Phone</h3>
-                    <p className="klynaa-body">+237 680 123 456</p>
+                    <p className="klynaa-body">+237 672 601 638</p>
                     <p className="klynaa-caption">Available during business hours</p>
                   </div>
                 </div>
@@ -69,7 +69,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-klynaa-dark mb-1">Head Office</h3>
-                    <p className="klynaa-body">Douala, Cameroon</p>
+                    <p className="klynaa-body">Buea, Cameroon</p>
                     <p className="klynaa-caption">Environmental Technology Hub</p>
                   </div>
                 </div>

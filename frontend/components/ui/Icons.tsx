@@ -1,10 +1,17 @@
 /**
- * Klynaa Iconography Design System
+ * Klynaa MVP Icon Strategy - Optimal Performance & UX
  *
- * This file implements the comprehensive icon strategy for Klynaa:
- * - Lucide React: Primary UI library (navigation, dashboards, forms)
- * - React Icons (Remix): Domain-specific waste management icons
- * - Phosphor (via React Icons): Mobile-friendly rounded icons
+ * Web App (Admin, Worker, Bin Owner Dashboards):
+ * ✅ Lucide React → All UI/system icons (navigation, analytics, payouts)
+ * ✅ Remix Icons → Waste/environment icons (bins, trucks, recycling)
+ *
+ * Benefits:
+ * - Fast load time (Lucide = lightest + tree-shakeable)
+ * - Modern consistency (Lucide for UI, Remix for domain)
+ * - User-friendly relevance (icons clearly represent waste management actions)
+ *
+ * Mobile App (Future Enhancement):
+ * 🚀 Ready to add Phosphor Icons for tap-friendly, flexible weight icons
  */
 
 import React from 'react';
@@ -47,6 +54,8 @@ import {
   CheckCircle,
   Info,
   Lock,
+  Shield,
+  Key,
 
   // Analytics & Data
   BarChart3,
@@ -392,6 +401,19 @@ export const WasteIcons = {
       ) : (
         <RiPlantLine size={typeof props.size === 'number' ? props.size : IconSizes[props.size || 'md']} />
       )}
+    </IconWrapper>
+  ),
+
+  // Security Icons
+  shield: (props: BaseIconProps) => (
+    <IconWrapper {...props} aria-label={props['aria-label'] || 'Security Shield'}>
+      <Shield size={typeof props.size === 'number' ? props.size : IconSizes[props.size || 'md']} />
+    </IconWrapper>
+  ),
+
+  key: (props: BaseIconProps) => (
+    <IconWrapper {...props} aria-label={props['aria-label'] || 'Key'}>
+      <Key size={typeof props.size === 'number' ? props.size : IconSizes[props.size || 'md']} />
     </IconWrapper>
   ),
 };
