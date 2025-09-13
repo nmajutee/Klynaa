@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Head from 'next/head';
 import PrivateRoute from '../../components/PrivateRoute';
 import WorkerLayout from '../../components/layout/WorkerLayout';
@@ -27,10 +27,74 @@ interface UnifiedPickup {
   phone?: string;
 }
 
+interface WorkerStatus {
+  status: 'active' | 'offline' | 'verification_required' | 'disabled';
+  color: string;
+  label: string;
+}
+
+interface OverviewCard {
+  value: number;
+  currency?: string;
+  formatted: string;
+  icon: string;
+  color: string;
+  label?: string;
+  total_reviews?: number;
+}
+
+interface DashboardData {
+  profile: {
+    id: number;
+    name: string;
+    profile_picture: string | null;
+    status: WorkerStatus;
+    location: {
+      latitude: number | null;
+      longitude: number | null;
+    };
+  };
+  overview_cards: {
+    total_earnings: OverviewCard;
+    pending_pickups: OverviewCard;
+    completed_pickups: OverviewCard;
+    average_rating: OverviewCard;
+  };
+  quick_stats: {
+    completed_today: number;
+    completed_this_week: number;
+    completed_this_month: number;
+  };
+}
+
 const WorkerMapPage: React.FC = () => {
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [isAvailable, setIsAvailable] = useState(true);
   const [allPickups, setAllPickups] = useState<{ pending: UnifiedPickup[]; available: UnifiedPickup[]; completed: UnifiedPickup[]}>({ pending: [], available: [], completed: [] });
   const [selectedPickupId, setSelectedPickupId] = useState<number | null>(null);
   const [workerLocation, setWorkerLocation] = useState<{ latitude: number; longitude: number } | undefined>();
+
+  const loadDashboardData = async () => {
+    try {
+      const response = await enhancedWorkerDashboardApi.getOverview();
+      setDashboardData(response.data);
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    }
+  };
+
+  const toggleAvailability = async () => {
+    try {
+      await enhancedWorkerDashboardApi.updateStatus({ is_available: !isAvailable });
+      setIsAvailable(!isAvailable);
+    } catch (error) {
+      console.error('Failed to update availability:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
   const [refreshing, setRefreshing] = useState(false);
   const [lastSync, setLastSync] = useState<number | null>(null);
   // const { push: pushToast } = useToasts();
@@ -175,7 +239,15 @@ const WorkerMapPage: React.FC = () => {
       </Head>
       {/* <ToastHost> */}
         <WorkerLayout
-          sidebar={<PickupSidebar onSelectPickup={(p:any)=> setSelectedPickupId(p.id)} activePickupId={selectedPickupId} onPickupsUpdate={handlePickupsUpdate} workerLocation={workerLocation} />}
+          sidebar={<PickupSidebar
+            onSelectPickup={(p:any)=> setSelectedPickupId(p.id)}
+            activePickupId={selectedPickupId}
+            onPickupsUpdate={handlePickupsUpdate}
+            workerLocation={workerLocation}
+            dashboardData={dashboardData}
+            isAvailable={isAvailable}
+            toggleAvailability={toggleAvailability}
+          />}
         >
         <div className="h-full relative">
           <WorkerMap

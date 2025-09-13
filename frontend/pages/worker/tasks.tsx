@@ -25,15 +25,7 @@ const WorkerTasksPage: React.FC = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
 
-    useEffect(() => {
-        if (!isAuthenticated || user?.role !== 'worker') {
-            router.push('/auth/login');
-            return;
-        }
-        loadTasks();
-    }, [isAuthenticated, user, router, activeTab, statusFilter]);
-
-    const loadTasks = async () => {
+    const loadTasks = React.useCallback(async () => {
         try {
             setLoading(true);
             setError(null);
@@ -56,7 +48,15 @@ const WorkerTasksPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [activeTab, statusFilter]);
+
+    useEffect(() => {
+        if (!isAuthenticated || user?.role !== 'worker') {
+            router.push('/auth/login');
+            return;
+        }
+        loadTasks();
+    }, [isAuthenticated, user, router, loadTasks]);
 
     const acceptPickup = async (pickupId: string) => {
         try {

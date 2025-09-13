@@ -2,103 +2,310 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Arimo:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-/* Klynaa Design System CSS Variables */
+/* Klynaa Two-Pane Dashboard Design Tokens */
 :root {
-    --klynaa-primary: #4CAF50;
-    --klynaa-darkgreen: #2E7D32;
-    --klynaa-yellow: #FBC02D;
-    --klynaa-dark: #1C1C1C;
-    --klynaa-neutral: #6E6E6E;
-    --klynaa-lightgray: #F5F5F5;
-    --klynaa-graylabel: #9E9E9E;
+    /* Core color palette */
+    --bg: #F7FBFB;                /* page background pastel */
+    --surface: #FFFFFF;           /* card background */
+    --muted: #6B7280;             /* secondary text */
+    --accent: #0FA6A6;            /* Klynaa primary teal */
+    --success: #22C55E;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+
+    /* Layout and spacing */
+    --card-radius: 14px;
+    --card-padding: 18px;
+    --shadow: 0 6px 18px rgba(10,20,25,0.06);
+    --sidebar-width: 340px; /* desktop */
+
+    /* Typography */
+    --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --h1: 20px;
+    --h2: 16px;
+    --body: 14px;
 
     /* Legacy variables for compatibility */
-    --primary-color: #4CAF50;
-    --primary-dark: #2E7D32;
-    --green-light: #dcfce7;
-    --danger-color: #ef4444;
-    --warning-color: #FBC02D;
-    --blue-color: #3b82f6;
-    --purple-color: #8b5cf6;
+    --klynaa-primary: #0FA6A6;
+    --klynaa-darkgreen: #0D8B8B;
+    --klynaa-yellow: #F59E0B;
+    --klynaa-dark: #1F2937;
+    --klynaa-neutral: #6B7280;
+    --klynaa-lightgray: #F7FBFB;
+    --klynaa-graylabel: #9CA3AF;
+    --primary-color: #0FA6A6;
+    --primary-dark: #0D8B8B;
+    --green-light: #ECFDF5;
+    --danger-color: #EF4444;
+    --warning-color: #F59E0B;
+    --blue-color: #3B82F6;
+    --purple-color: #8B5CF6;
 }
 
 /* Klynaa Base Styles */
 body {
-    font-family: 'Arimo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: var(--font-sans);
     line-height: 1.6;
-    color: var(--klynaa-neutral);
-    background-color: var(--klynaa-lightgray);
+    color: var(--muted);
+    background-color: var(--bg);
+}
+
+/* Two-Pane Dashboard Layout */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    background-color: var(--bg);
+}
+
+.dashboard-sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--surface);
+    border-right: 1px solid #E5E7EB;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.dashboard-map-pane {
+    flex: 1;
+    padding: 1rem;
+    overflow: hidden;
+}
+
+.dashboard-map-container {
+    height: 100%;
+    background-color: var(--surface);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Mobile Responsive Layout */
+@media (max-width: 1024px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .dashboard-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 50vh;
+        position: relative;
+    }
+
+    .dashboard-map-pane {
+        flex: 1;
+        min-height: 50vh;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-sidebar {
+        max-height: 60vh;
+    }
+
+    .dashboard-map-pane {
+        min-height: 40vh;
+        padding: 0.25rem;
+    }
 }
 
 /* Klynaa Component Styles */
 @layer components {
     /* Typography Classes */
-    .klynaa-heading {
-        font-family: 'Arimo', sans-serif;
-        font-weight: 700;
+    .klynaa-h1 {
+        font-family: var(--font-sans);
+        font-size: var(--h1);
+        font-weight: 600;
         color: var(--klynaa-dark);
+        line-height: 1.4;
     }
 
-    .klynaa-subheading {
-        font-family: 'Arimo', sans-serif;
+    .klynaa-h2 {
+        font-family: var(--font-sans);
+        font-size: var(--h2);
         font-weight: 600;
-        color: var(--klynaa-primary);
+        color: var(--klynaa-dark);
+        line-height: 1.4;
     }
 
     .klynaa-body {
-        font-family: 'Arimo', sans-serif;
+        font-family: var(--font-sans);
+        font-size: var(--body);
         font-weight: 400;
-        color: var(--klynaa-neutral);
+        color: var(--muted);
+        line-height: 1.5;
     }
 
     .klynaa-caption {
-        font-family: 'Arimo', sans-serif;
+        font-family: var(--font-sans);
+        font-size: 12px;
         font-weight: 400;
-        font-size: 0.875rem;
         color: var(--klynaa-graylabel);
+        line-height: 1.4;
+    }
+
+    /* Card Components */
+    .klynaa-card {
+        background-color: var(--surface);
+        border-radius: var(--card-radius);
+        padding: var(--card-padding);
+        box-shadow: var(--shadow);
+        border: 1px solid #F3F4F6;
+    }
+
+    .klynaa-kpi-card {
+        background-color: var(--surface);
+        border-radius: var(--card-radius);
+        padding: 16px;
+        box-shadow: var(--shadow);
+        border: 1px solid #F3F4F6;
+        transition: all 0.2s ease;
+    }
+
+    .klynaa-kpi-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(10,20,25,0.08);
     }
 
     /* Button Components */
     .klynaa-btn-primary {
-        background-color: var(--klynaa-primary);
+        background-color: var(--accent);
         color: white;
         border: none;
-        border-radius: 0.375rem;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-        transition: all 0.2s;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-family: var(--font-sans);
+        font-size: var(--body);
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .klynaa-btn-primary:hover {
-        background-color: var(--klynaa-darkgreen);
+        background-color: #0D8B8B;
         transform: translateY(-1px);
     }
 
     .klynaa-btn-secondary {
         background-color: white;
-        color: var(--klynaa-primary);
-        border: 1px solid var(--klynaa-primary);
-        border-radius: 0.375rem;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-        transition: all 0.2s;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-family: var(--font-sans);
+        font-size: var(--body);
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .klynaa-btn-secondary:hover {
-        background-color: var(--klynaa-primary);
+        background-color: var(--accent);
         color: white;
     }
 
-    .klynaa-btn-warning {
-        background-color: var(--klynaa-yellow);
-        color: var(--klynaa-dark);
-        border: none;
-        border-radius: 0.375rem;
-        padding: 0.5rem 1rem;
-        font-weight: 600;
-        transition: all 0.2s;
+    .klynaa-btn-danger {
+        background-color: transparent;
+        color: var(--danger);
+        border: 1px solid var(--danger);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-family: var(--font-sans);
+        font-size: var(--body);
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .klynaa-btn-danger:hover {
+        background-color: var(--danger);
+        color: white;
+    }
+
+    /* Status Pills */
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .status-pill.awaiting {
+        background-color: #FEF3C7;
+        color: #92400E;
+    }
+
+    .status-pill.accepted {
+        background-color: #DBEAFE;
+        color: #1E40AF;
+    }
+
+    .status-pill.in-progress {
+        background-color: #E0E7FF;
+        color: #5B21B6;
+    }
+
+    .status-pill.completed {
+        background-color: #D1FAE5;
+        color: #047857;
+    }
+
+    .status-pill.reported {
+        background-color: #FEE2E2;
+        color: #991B1B;
+    }
+
+    /* Waste Type Tags */
+    .waste-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .waste-tag.general {
+        background-color: #F3F4F6;
+        color: #374151;
+    }
+
+    .waste-tag.recyclable {
+        background-color: #ECFDF5;
+        color: #047857;
+    }
+
+    .waste-tag.green {
+        background-color: #F0FDF4;
+        color: #166534;
+    }
+
+    .waste-tag.hazardous {
+        background-color: #FEF2F2;
+        color: #B91C1C;
     }
 
     /* Card Components */

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { pickupsApi } from '../../../services/api';
 import { useAuthStore } from '../../../stores';
@@ -15,18 +16,7 @@ const PickupDetailPage: React.FC = () => {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!isAuthenticated || user?.role !== 'worker') {
-            router.push('/auth/login');
-            return;
-        }
-
-        if (id) {
-            loadPickupData();
-        }
-    }, [id, isAuthenticated, user?.role, router]);
-
-    const loadPickupData = async () => {
+    const loadPickupData = React.useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -41,7 +31,18 @@ const PickupDetailPage: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [id]);
+
+    useEffect(() => {
+        if (!isAuthenticated || user?.role !== 'worker') {
+            router.push('/auth/login');
+            return;
+        }
+
+        if (id) {
+            loadPickupData();
+        }
+    }, [id, isAuthenticated, user?.role, router, loadPickupData]);
 
     const handlePhotoCapture = async (file: File, type: 'before' | 'after', location?: { lat: number; lng: number }) => {
         if (!pickup) return;
@@ -253,9 +254,11 @@ const PickupDetailPage: React.FC = () => {
                                 </div>
 
                                 {proof.image_url && (
-                                    <img
+                                    <Image
                                         src={proof.image_url}
                                         alt={`${proof.type} proof`}
+                                        width={500}
+                                        height={192}
                                         className="w-full h-48 object-cover rounded-lg mb-3"
                                     />
                                 )}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { enhancedWorkerDashboardApi } from '../../services/enhancedWorkerDashboardApi';
 
 interface BasePickup {
@@ -18,6 +19,9 @@ interface PickupSidebarProps {
   activePickupId?: number | null;
   workerLocation?: { latitude: number; longitude: number };
   onPickupsUpdate?: (data: { pending: BasePickup[]; available: BasePickup[]; completed: BasePickup[] }) => void;
+  dashboardData: any;
+  isAvailable: boolean;
+  toggleAvailability: () => void;
 }
 
 const tabDefs = [
@@ -28,7 +32,8 @@ const tabDefs = [
 
 type TabKey = (typeof tabDefs)[number]['key'];
 
-const PickupSidebar: React.FC<PickupSidebarProps> = ({ onSelectPickup, activePickupId, workerLocation, onPickupsUpdate }) => {
+const PickupSidebar: React.FC<PickupSidebarProps> = ({ onSelectPickup, activePickupId, workerLocation, onPickupsUpdate, dashboardData, isAvailable, toggleAvailability }) => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabKey>('pending');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,6 +44,14 @@ const PickupSidebar: React.FC<PickupSidebarProps> = ({ onSelectPickup, activePic
   const [statusFilters, setStatusFilters] = useState<string[]>([]); // empty => all
   const [wasteFilters, setWasteFilters] = useState<string[]>([]); // derived from data
   const [distanceBucket, setDistanceBucket] = useState<string | null>(null); // '<2','2-5','5-10','>10'
+
+  const navItems = [
+    { href: '/worker/dashboard', label: 'Dashboard', icon: '🏠' },
+    { href: '/worker/pickups', label: 'Pickups', icon: '📋' },
+    { href: '/worker/map', label: 'Map', icon: '🗺️' },
+    { href: '/worker/earnings', label: 'Earnings', icon: '💰' },
+    { href: '/worker/profile', label: 'Profile', icon: '👤' },
+  ];
 
   useEffect(() => {
     // Restore persisted filter state
@@ -99,7 +112,7 @@ const PickupSidebar: React.FC<PickupSidebarProps> = ({ onSelectPickup, activePic
     }
   };
 
-  const calcDistance = (p: any) => {
+  const calcDistance = React.useCallback((p: any) => {
     if (!workerLocation || !p.location || !p.location.latitude || !p.location.longitude) return undefined;
     const { latitude, longitude } = workerLocation;
     const lat1 = latitude * Math.PI/180; const lat2 = p.location.latitude * Math.PI/180;
@@ -108,9 +121,9 @@ const PickupSidebar: React.FC<PickupSidebarProps> = ({ onSelectPickup, activePic
     const a = Math.sin(dLat/2)**2 + Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     return 6371 * c; // km
-  };
+  }, [workerLocation]);
 
-  const dataMap: Record<TabKey, BasePickup[]> = { pending, available, completed };
+  const dataMap: Record<TabKey, BasePickup[]> = React.useMemo(() => ({ pending, available, completed }), [pending, available, completed]);
 
   // When activePickupId changes, ensure the correct tab is selected & scroll into view
   useEffect(() => {
@@ -155,7 +168,7 @@ const PickupSidebar: React.FC<PickupSidebarProps> = ({ onSelectPickup, activePic
       }
       return (new Date(b.created_at || '').getTime()) - (new Date(a.created_at || '').getTime());
     });
-  }, [activeTab, dataMap, search, sort, workerLocation, statusFilters, wasteFilters, distanceBucket]);
+  }, [activeTab, dataMap, search, sort, statusFilters, wasteFilters, distanceBucket, calcDistance]);
 
   const uniqueWasteTypes = useMemo(() => {
     const all = [...pending, ...available, ...completed].map(p => (p as any).waste_type).filter(Boolean);
@@ -182,6 +195,55 @@ const PickupSidebar: React.FC<PickupSidebarProps> = ({ onSelectPickup, activePic
 
   return (
     <div className="flex flex-col h-full">
+      {/* Profile / Status Card */}
+      <div className="p-6 border-b bg-white/80 backdrop-blur">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="relative">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-100 to-green-50 flex items-center justify-center text-green-600 font-semibold">
+              {dashboardData?.profile.name.charAt(0).toUpperCase() || 'W'}
+            </div>
+            <span className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full ring-2 ring-white ${isAvailable ? 'bg-green-500' : 'bg-gray-400'}`}></span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-semibold text-gray-900 truncate">{dashboardData?.profile.name || 'Worker'}</h1>
+            <p className="text-xs text-gray-500 truncate">{dashboardData?.profile.status.label || 'Active'}</p>
+          </div>
+          <button
+            onClick={toggleAvailability}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors border ${isAvailable ? 'bg-green-600 text-white border-green-600' : 'bg-white text-gray-600 hover:text-gray-800 border-gray-200'}`}
+          >
+            {isAvailable ? 'Online' : 'Offline'}
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-3 text-center">
+          <div className="p-2 rounded-lg bg-gray-50">
+            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">Earned</div>
+            <div className="text-sm font-semibold text-gray-800">{dashboardData?.overview_cards.total_earnings.formatted || '0 XAF'}</div>
+          </div>
+          <div className="p-2 rounded-lg bg-gray-50">
+            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">Rating</div>
+            <div className="text-sm font-semibold text-gray-800">{dashboardData?.overview_cards.average_rating.value || '0'}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Menu */}
+      <nav className="p-4">
+        <ul className="space-y-2">
+          {navItems.map(item => {
+            const active = router.pathname.startsWith(item.href);
+            return (
+              <li key={item.href}>
+                <Link href={item.href} className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${active ? 'bg-green-100 text-green-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}>
+                  <span className="text-xl">{item.icon}</span>
+                  <span>{item.label}</span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
       {/* Brand / Top Bar */}
       <div className="px-6 pt-6 pb-4 border-b">
         <div className="flex items-center justify-between mb-4">

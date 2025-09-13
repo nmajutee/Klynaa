@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import PrivateRoute from '../../../components/PrivateRoute';
 import { enhancedWorkerDashboardApi } from '../../../services/enhancedWorkerDashboardApi';
@@ -364,11 +365,12 @@ const WorkerChat: React.FC = () => {
                 }`}>
                   {message.image_url && (
                     <div className="mb-2">
-                      <img
+                      <Image
                         src={message.image_url}
                         alt="Shared image"
+                        width={300}
+                        height={200}
                         className="max-w-full h-auto rounded"
-                        style={{ maxHeight: '200px' }}
                       />
                     </div>
                   )}
@@ -417,10 +419,13 @@ const WorkerChat: React.FC = () => {
           <div className="bg-white border-t max-w-md mx-auto w-full px-4 py-3">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <img
+                <Image
                   src={imagePreview}
                   alt="Preview"
+                  width={64}
+                  height={64}
                   className="w-16 h-16 object-cover rounded"
+                  unoptimized={true}
                 />
                 <button
                   onClick={removeImage}

@@ -32,13 +32,13 @@ const Login: React.FC = () => {
             // Redirect based on user role
             switch (response.user.role) {
                 case 'admin':
-                    router.push('/dashboard');
+                    router.push('/admin/dashboard');
                     break;
                 case 'worker':
-                    router.push('/dashboard');
+                    router.push('/worker/dashboard');
                     break;
                 case 'customer':
-                    router.push('/dashboard');
+                    router.push('/customer/dashboard');
                     break;
                 default:
                     router.push('/dashboard');

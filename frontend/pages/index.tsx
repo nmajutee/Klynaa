@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
+import Image from 'next/image';
 import { useAuthStore } from '../stores';
 import { Button } from '../components/ui/buttons';
 import LanguageSwitcher from '../components/ui/LanguageSwitcher';
@@ -736,9 +737,11 @@ export default function Home() {
 
                             <div className="featured-story-visual">
                                 <div className="story-image-container">
-                                    <img
+                                    <Image
                                         src="/api/placeholder/400/300"
                                         alt="Douala Market Transformation"
+                                        width={400}
+                                        height={300}
                                         className="story-image"
                                     />
                                     <div className="story-image-overlay">

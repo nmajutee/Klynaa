@@ -114,20 +114,15 @@ export const authApi = {
         try {
             // Send either email or username to the backend
             const loginData = {
-                username: credentials.username || credentials.email,
+                email: credentials.email,
                 password: credentials.password,
             };
 
             const response = await api.post('/users/token/', loginData);
-            const { access, refresh } = response.data;
-
-            // Get user profile after login
-            const userResponse = await api.get('/users/me/', {
-                headers: { Authorization: `Bearer ${access}` }
-            });
+            const { user, access, refresh } = response.data;
 
             setTokens(access, refresh);
-            return { access, refresh, user: userResponse.data };
+            return { access, refresh, user };
         } catch (error) {
             throw handleApiError(error as AxiosError);
         }

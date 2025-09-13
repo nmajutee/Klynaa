@@ -47,21 +47,7 @@ const CustomerPickups: React.FC = () => {
     comment: ''
   });
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/auth/login');
-      return;
-    }
-
-    if (user?.role !== 'customer') {
-      router.push('/dashboard');
-      return;
-    }
-
-    loadPickups();
-  }, [isAuthenticated, user, router, currentPage, filters]);
-
-  const loadPickups = async () => {
+  const loadPickups = React.useCallback(async () => {
     try {
       setLoading(true);
       const params: any = {
@@ -83,7 +69,21 @@ const CustomerPickups: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, filters]);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/auth/login');
+      return;
+    }
+
+    if (user?.role !== 'customer') {
+      router.push('/dashboard');
+      return;
+    }
+
+    loadPickups();
+  }, [isAuthenticated, user, router, loadPickups]);
 
   const refreshPickups = async () => {
     setRefreshing(true);

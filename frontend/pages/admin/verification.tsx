@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { pickupsApi } from '../../services/api';
 import { useAuthStore } from '../../stores';
@@ -124,9 +125,11 @@ const AdminVerificationPage: React.FC = () => {
                     <div key={proof.id} className="card overflow-hidden">
                         {/* Image */}
                         <div className="relative">
-                            <img
+                            <Image
                                 src={proof.image_url}
                                 alt={`${proof.type} proof`}
+                                width={500}
+                                height={192}
                                 className="w-full h-48 object-cover"
                             />
                             <div className="absolute top-2 left-2">

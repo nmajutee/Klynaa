@@ -44,21 +44,21 @@ const CustomerProfilePage: React.FC = () => {
     address: ''
   });
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/auth/login');
-      return;
+  const loadAddressFromCoordinates = React.useCallback(async (lat: number, lng: number) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      );
+      const data = await response.json();
+      if (data.display_name) {
+        setLocationState(prev => ({ ...prev, address: data.display_name }));
+      }
+    } catch (err) {
+      console.error('Failed to load address:', err);
     }
+  }, []);
 
-    if (user?.role !== 'customer') {
-      router.push('/dashboard');
-      return;
-    }
-
-    loadProfileData();
-  }, [isAuthenticated, user, router]);
-
-  const loadProfileData = async () => {
+  const loadProfileData = React.useCallback(async () => {
     try {
       setLoading(true);
       const [profileData, paymentData] = await Promise.all([
@@ -88,21 +88,21 @@ const CustomerProfilePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loadAddressFromCoordinates]);
 
-  const loadAddressFromCoordinates = async (lat: number, lng: number) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
-      );
-      const data = await response.json();
-      if (data.display_name) {
-        setLocationState(prev => ({ ...prev, address: data.display_name }));
-      }
-    } catch (err) {
-      console.error('Failed to load address:', err);
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/auth/login');
+      return;
     }
-  };
+
+    if (user?.role !== 'customer') {
+      router.push('/dashboard');
+      return;
+    }
+
+    loadProfileData();
+  }, [isAuthenticated, user, router, loadProfileData]);
 
   const getCurrentLocation = async () => {
     if (!navigator.geolocation) {

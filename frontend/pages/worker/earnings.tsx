@@ -23,11 +23,7 @@ const WorkerEarnings: React.FC = () => {
     name: '',
   });
 
-  useEffect(() => {
-    loadEarnings();
-  }, [selectedPeriod]);
-
-  const loadEarnings = async () => {
+  const loadEarnings = React.useCallback(async () => {
     try {
       setLoading(true);
       const response = await enhancedWorkerDashboardApi.getEarnings(selectedPeriod);
@@ -37,7 +33,11 @@ const WorkerEarnings: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedPeriod]);
+
+  useEffect(() => {
+    loadEarnings();
+  }, [loadEarnings]);
 
   const handleRequestPayout = async () => {
     try {

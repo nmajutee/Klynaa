@@ -68,8 +68,28 @@ const Dashboard: React.FC = () => {
             return;
         }
 
-        // Load dashboard data based on user role
-        const loadDashboardData = async () => {
+        // Redirect to role-specific dashboard
+        if (user?.role) {
+            switch (user.role) {
+                case 'admin':
+                    router.push('/admin/dashboard');
+                    break;
+                case 'worker':
+                    router.push('/worker/dashboard');
+                    break;
+                case 'customer':
+                    router.push('/customer/dashboard');
+                    break;
+                default:
+                    // Keep current dashboard for unknown roles
+                    loadDashboardData();
+            }
+        } else {
+            loadDashboardData();
+        }
+
+        // Load dashboard data based on user role (fallback for unknown roles)
+        async function loadDashboardData() {
             try {
                 setLoading(true);
 
@@ -87,9 +107,7 @@ const Dashboard: React.FC = () => {
                 setLoading(false);
                 setLocalLoading(false);
             }
-        };
-
-        loadDashboardData();
+        }
     }, [user, isAuthenticated, router, setStats, setWorkerStats, setLoading, setError]);
 
     if (loading) {
@@ -444,7 +462,16 @@ const Dashboard: React.FC = () => {
             case 'admin':
                 return <AdminDashboard />;
             case 'worker':
-                return <WorkerDashboard />;
+                // Redirect to the enhanced worker dashboard
+                router.push('/worker/dashboard');
+                return (
+                    <div className="flex items-center justify-center min-h-screen">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-klynaa-primary mx-auto"></div>
+                            <p className="mt-2 text-gray-600">Redirecting to your dashboard...</p>
+                        </div>
+                    </div>
+                );
             case 'customer':
                 return <CustomerDashboard />;
             default:

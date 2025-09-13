@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import PrivateRoute from '../../components/PrivateRoute';
 import { enhancedWorkerDashboardApi } from '../../services/enhancedWorkerDashboardApi';
@@ -131,9 +132,11 @@ const WorkerProfile: React.FC = () => {
               <div className="relative inline-block">
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                   {profileData.profile_picture ? (
-                    <img
+                    <Image
                       src={profileData.profile_picture}
                       alt={profileData.name}
+                      width={80}
+                      height={80}
                       className="w-20 h-20 rounded-full object-cover"
                     />
                   ) : (

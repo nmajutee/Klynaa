@@ -23,7 +23,7 @@ const WorkerLayout: React.FC<WorkerLayoutProps> = ({ sidebar, children, classNam
     <div className={`min-h-screen bg-gray-50 flex flex-col ${className}`}>
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="hidden lg:flex w-[420px] flex-shrink-0 flex-col border-r bg-white/70 backdrop-blur-sm overflow-y-auto">
+        <aside className="hidden lg:flex lg:w-1/4 max-w-md flex-shrink-0 flex-col border-r bg-white/70 backdrop-blur-sm overflow-y-auto">
           {sidebar}
         </aside>
 
