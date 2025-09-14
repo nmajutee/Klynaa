@@ -12,7 +12,7 @@ import {
     ChatMessage,
     QuickReply,
     ApiError,
-} from '../types';
+} from '../src/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
@@ -41,6 +41,7 @@ const handleApiError = (error: AxiosError): ApiError => {
 
     return {
         message: responseData?.message || responseData?.error || responseData?.detail || error.message || 'An error occurred',
+        status: response?.status || 500,
         detail: responseData?.detail,
         errors: responseData?.errors,
     };

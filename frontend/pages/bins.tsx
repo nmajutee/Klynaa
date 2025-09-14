@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import PrivateRoute from '../components/PrivateRoute';
 import { useBinsStore, useAuthStore } from '../stores';
 import { binsApi } from '../services/api';
-import { Bin, BinCreateData } from '../types';
+import { Bin, BinCreateData } from '../types/global';
 import {
     TrashIcon,
     PlusIcon,
@@ -15,10 +15,9 @@ import {
 import { useForm } from 'react-hook-form';
 
 interface BinFormData {
-    bin_id: string;
-    label: string;
     address: string;
-    capacity_liters: number;
+    waste_type: 'organic' | 'recyclable' | 'general' | 'hazardous';
+    capacity: number;
     latitude: number;
     longitude: number;
 }
@@ -40,7 +39,8 @@ const BinsPage: React.FC = () => {
         try {
             setLoading(true);
             const response = await binsApi.getBins();
-            setBins(response.results);
+            // Handle both array and paginated response structures
+            setBins(Array.isArray(response.data) ? response.data : [response.data]);
         } catch (error) {
             console.error('Failed to load bins:', error);
             setError('Failed to load bins');
@@ -102,7 +102,7 @@ const BinsPage: React.FC = () => {
                         <TrashIcon className={`h-6 w-6 ${getFillLevelColor(bin.fill_level)}`} />
                     </div>
                     <div className="ml-4">
-                        <h3 className="text-lg font-semibold text-gray-900">{bin.label}</h3>
+                        <h3 className="text-lg font-semibold text-gray-900">{bin.address}</h3>
                         <div className="flex items-center text-sm text-gray-500 mt-1">
                             <MapPinIcon className="h-4 w-4 mr-1" />
                             {bin.address}
@@ -144,7 +144,7 @@ const BinsPage: React.FC = () => {
                     </span>
                 </div>
                 <div className="text-sm text-gray-500">
-                    Capacity: {bin.capacity_liters}L
+                    Capacity: {bin.capacity}L
                 </div>
             </div>
 
@@ -167,13 +167,13 @@ const BinsPage: React.FC = () => {
                         <div>
                             <label className="form-label">Bin Name</label>
                             <input
-                                {...register('label', { required: 'Bin name is required' })}
+                                {...register('address', { required: 'Bin address is required' })}
                                 type="text"
                                 className="form-input"
                                 placeholder="e.g., Kitchen Bin"
                             />
-                            {errors.label && (
-                                <p className="form-error">{errors.label.message}</p>
+                            {errors.address && (
+                                <p className="form-error">{errors.address.message}</p>
                             )}
                         </div>
 
@@ -231,7 +231,7 @@ const BinsPage: React.FC = () => {
                         <div>
                             <label className="form-label">Capacity (Liters)</label>
                             <input
-                                {...register('capacity_liters', {
+                                {...register('capacity', {
                                     required: 'Capacity is required',
                                     valueAsNumber: true,
                                     min: { value: 1, message: 'Capacity must be at least 1 liter' }
@@ -240,8 +240,8 @@ const BinsPage: React.FC = () => {
                                 className="form-input"
                                 placeholder="50"
                             />
-                            {errors.capacity_liters && (
-                                <p className="form-error">{errors.capacity_liters.message}</p>
+                            {errors.capacity && (
+                                <p className="form-error">{errors.capacity.message}</p>
                             )}
                         </div>
 

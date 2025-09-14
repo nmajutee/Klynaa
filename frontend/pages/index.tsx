@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useAuthStore } from '../stores';
-import { Button } from '../components/ui/buttons';
+import Button from '../components/ui/Button';
 import LanguageSwitcher from '../components/ui/LanguageSwitcher';
 import {
     MagnifyingGlassIcon,

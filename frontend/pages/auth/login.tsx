@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 import { authApi } from '../../services/api';
 import { useAuthStore } from '../../stores';
-import { LoginCredentials, ApiError } from '../../types';
+import { LoginCredentials, ApiError } from '../../types/global';
 import { Icons, WasteIcons } from '../../components/ui/Icons';
 
 const Login: React.FC = () => {
@@ -45,7 +45,7 @@ const Login: React.FC = () => {
             }
         } catch (err) {
             const apiError = err as ApiError;
-            setError(apiError.detail || apiError.message || 'Login failed. Please try again.');
+            setError(apiError.message || 'Login failed. Please try again.');
         } finally {
             setIsLoading(false);
         }

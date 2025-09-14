@@ -1,0 +1,210 @@
+/* WithdrawalModal Component Styles */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modalContent {
+  background: white;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.modalTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-900);
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: var(--color-gray-500);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.closeButton:hover:not(:disabled) {
+  color: var(--color-gray-700);
+  background: var(--color-gray-100);
+}
+
+.closeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modalBody {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.balanceInfo {
+  text-align: center;
+  padding: 1rem;
+  background: var(--color-success-light);
+  border-radius: 8px;
+  border: 1px solid var(--color-success-200);
+}
+
+.balanceLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-success-dark);
+  margin: 0 0 0.25rem 0;
+}
+
+.balanceAmount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-success-dark);
+  margin: 0;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-gray-700);
+  margin: 0;
+}
+
+.select {
+  padding: 0.75rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.select:disabled {
+  background: var(--color-gray-50);
+  color: var(--color-gray-500);
+  cursor: not-allowed;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: var(--color-gray-600);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.processingInfo {
+  background: var(--color-blue-50);
+  border: 1px solid var(--color-blue-200);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.processingText {
+  font-size: 0.75rem;
+  color: var(--color-blue-700);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.modalFooter {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-gray-200);
+  margin-top: auto;
+}
+
+.modalFooter button {
+  flex: 1;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .modalOverlay {
+    padding: 0.5rem;
+  }
+
+  .modalContent {
+    max-height: 95vh;
+  }
+
+  .modalHeader {
+    padding: 1rem 1rem 0.75rem;
+  }
+
+  .modalBody {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .balanceInfo {
+    padding: 0.75rem;
+  }
+
+  .balanceAmount {
+    font-size: 1.25rem;
+  }
+
+  .modalFooter {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .modalFooter button {
+    flex: none;
+  }
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalContent {
+  animation: modalFadeIn 0.2s ease-out;
+}

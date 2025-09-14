@@ -1,22 +1,25 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import {
     User,
+    Bin,
+    PickupRequest,
+    PickupRequestForm,
+    ApiResponse,
+    ApiError,
+    WorkerStats,
+    CustomerStats,
+    AdminStats,
+    Notification,
     AuthResponse,
     LoginCredentials,
     RegisterData,
-    Bin,
     BinCreateData,
-    PickupRequest,
     PickupCreateData,
+    DashboardStats,
     Payment,
     Review,
     ReviewCreateData,
-    DashboardStats,
-    WorkerStats,
-    ApiResponse,
-    ApiError,
-    Notification,
-} from '../types';
+} from '../src/types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
@@ -105,7 +108,10 @@ const handleApiError = (error: AxiosError): ApiError => {
     if (error.response?.data) {
         return error.response.data as ApiError;
     }
-    return { message: error.message || 'An unexpected error occurred' };
+    return {
+        message: error.message || 'An unexpected error occurred',
+        status: error.response?.status || 500
+    };
 };
 
 // Auth API
@@ -359,6 +365,15 @@ export const analyticsApi = {
     getDashboardStats: async (): Promise<DashboardStats> => {
         try {
             const response: AxiosResponse<DashboardStats> = await api.get('/analytics/dashboard/');
+            return response.data;
+        } catch (error) {
+            throw handleApiError(error as AxiosError);
+        }
+    },
+
+    getAdminStats: async (): Promise<AdminStats> => {
+        try {
+            const response: AxiosResponse<AdminStats> = await api.get('/analytics/admin/');
             return response.data;
         } catch (error) {
             throw handleApiError(error as AxiosError);

@@ -16,6 +16,7 @@ djangorestframework-simplejwt>=5.3
 # Utils
 requests>=2.31
 qrcode>=7.4
+Pillow>=10.0
 
 # Realtime / WebSockets
 channels>=4.1

@@ -81,3 +81,46 @@ declare module 'lucide-react' {
 }
 
 export {};
+
+// Re-export types from our new location for backwards compatibility
+export type {
+  User,
+  Bin,
+  Pickup,
+  LoginForm as LoginCredentials,
+  RegisterForm as RegisterData,
+  BinForm as BinCreateData,
+  PickupRequestForm as PickupCreateData,
+  PickupRequestForm as PickupRequest,
+  ApiResponse,
+  ApiError,
+  WorkerStats,
+  CustomerStats as DashboardStats,
+  Notification
+} from '../src/types';
+
+// Legacy types for backwards compatibility
+export interface AuthResponse {
+  access: string;
+  refresh: string;
+  user: any;
+}
+
+export interface Payment {
+  id: string;
+  amount: number;
+  status: string;
+  created_at: string;
+}
+
+export interface Review {
+  id: string;
+  rating: number;
+  comment?: string;
+  created_at: string;
+}
+
+export interface ReviewCreateData {
+  rating: number;
+  comment?: string;
+}

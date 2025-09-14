@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { pickupsApi } from '../../services/api';
 import { useAuthStore } from '../../stores';
-import type { PickupRequest } from '../../types';
+import type { PickupRequest } from '../../src/types';
 
 interface WorkerAvailabilityResponse {
     available_pickups: PickupRequest[];
@@ -147,7 +147,7 @@ const WorkerJobsPage: React.FC = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Method:</span>
-                                    <span className="capitalize">{pickup.payment_method.replace('_', ' ')}</span>
+                                    <span className="capitalize">{pickup.payment_method?.replace('_', ' ') || 'N/A'}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Fill Level:</span>
@@ -215,7 +215,7 @@ const WorkerJobsPage: React.FC = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-500">Created:</span>
-                                    <span>{new Date(pickup.created_at).toLocaleDateString()}</span>
+                                    <span>{pickup.created_at ? new Date(pickup.created_at).toLocaleDateString() : 'N/A'}</span>
                                 </div>
                             </div>
 

@@ -23,6 +23,7 @@ node_modules/
 .expo/
 .nyc_output
 coverage
+*.tsbuildinfo
 
 # Docker
 *.log
@@ -33,3 +34,25 @@ coverage
 
 # Project Management (Internal Only)
 PROJECT_STATUS.md
+
+# Temporary files
+*.tmp
+*.temp
+*.zip
+*.tar.gz
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.map
+dist/
+build/
+
+# Documentation temp files
+*_IMPLEMENTATION.md
+*_ANALYSIS.md
+*_COMPLETE.md
+*_GUIDE.md
+*_NOTES.md
+*_SOLUTION.md
+*_SUMMARY.md

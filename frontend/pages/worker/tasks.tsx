@@ -12,7 +12,7 @@ import {
 import { workerDashboardApi } from '../../services/workerDashboardApi';
 import { useAuthStore } from '../../stores';
 import Layout from '../../components/Layout';
-import type { PickupTask, ApiResponse } from '../../types';
+import type { PickupTask, ApiResponse } from '../../src/types';
 
 const WorkerTasksPage: React.FC = () => {
     const router = useRouter();
@@ -58,31 +58,27 @@ const WorkerTasksPage: React.FC = () => {
         loadTasks();
     }, [isAuthenticated, user, router, loadTasks]);
 
-    const acceptPickup = async (pickupId: string) => {
+    const acceptPickup = async (pickupId: number) => {
         try {
-            await workerDashboardApi.acceptPickup(pickupId);
-            // Refresh tasks
-            loadTasks();
-            // Show success message
-            alert('Pickup accepted successfully!');
+            await workerDashboardApi.acceptPickup(pickupId.toString());
+            // Reload tasks after accepting
+            setAvailableTasks(prev => prev.filter(task => task.id !== pickupId));
         } catch (err: any) {
             console.error('Failed to accept pickup:', err);
             alert('Failed to accept pickup: ' + err.message);
         }
     };
 
-    const startPickup = async (pickupId: string) => {
+    const startPickup = async (pickupId: number) => {
         try {
-            await workerDashboardApi.acceptPickup(pickupId);
-            loadTasks();
-            alert('Pickup started successfully!');
+            router.push(`/worker/pickups/${pickupId}`);
         } catch (err: any) {
             console.error('Failed to start pickup:', err);
             alert('Failed to start pickup: ' + err.message);
         }
     };
 
-    const completePickup = async (pickupId: string) => {
+    const completePickup = async (pickupId: number) => {
         try {
             // Navigate to completion page with proof upload
             router.push(`/worker/pickup/${pickupId}/complete`);
@@ -151,7 +147,7 @@ const WorkerTasksPage: React.FC = () => {
 
                 <div className="flex items-center text-sm text-gray-600">
                     <ClockIcon className="h-4 w-4 mr-2" />
-                    <span>{task.time_window ? `${new Date(task.time_window.start).toLocaleString()} - ${new Date(task.time_window.end).toLocaleString()}` : new Date(task.created_at).toLocaleString()}</span>
+                    <span>{task.time_window ? `${new Date(task.time_window.start).toLocaleString()} - ${new Date(task.time_window.end).toLocaleString()}` : (task.created_at ? new Date(task.created_at).toLocaleString() : 'N/A')}</span>
                 </div>
 
                 <div className="flex items-center text-sm text-gray-600">

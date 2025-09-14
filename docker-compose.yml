@@ -1,3 +1,4 @@
+version: '2.2'
 services:
   nginx:
     image: nginx:1.25-alpine

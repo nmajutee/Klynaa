@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User, Bin, PickupRequest, DashboardStats, WorkerStats } from '../types';
+import { User, Bin, PickupTask, AdminStats, WorkerStats } from '../src/types';
 
 // Auth Store
 interface AuthState {
@@ -42,7 +42,7 @@ interface BinsState {
     setBins: (bins: Bin[]) => void;
     addBin: (bin: Bin) => void;
     updateBin: (bin: Bin) => void;
-    deleteBin: (id: number) => void;
+    deleteBin: (id: string) => void;
     setSelectedBin: (bin: Bin | null) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
@@ -72,14 +72,14 @@ export const useBinsStore = create<BinsState>((set, get) => ({
 
 // Pickups Store
 interface PickupsState {
-    pickups: PickupRequest[];
-    selectedPickup: PickupRequest | null;
+    pickups: PickupTask[];
+    selectedPickup: PickupTask | null;
     isLoading: boolean;
     error: string | null;
-    setPickups: (pickups: PickupRequest[]) => void;
-    addPickup: (pickup: PickupRequest) => void;
-    updatePickup: (pickup: PickupRequest) => void;
-    setSelectedPickup: (pickup: PickupRequest | null) => void;
+    setPickups: (pickups: PickupTask[]) => void;
+    addPickup: (pickup: PickupTask) => void;
+    updatePickup: (pickup: PickupTask) => void;
+    setSelectedPickup: (pickup: PickupTask | null) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;
 }
@@ -103,11 +103,11 @@ export const usePickupsStore = create<PickupsState>((set, get) => ({
 
 // Dashboard Store
 interface DashboardState {
-    stats: DashboardStats | null;
+    stats: AdminStats | null;
     workerStats: WorkerStats | null;
     isLoading: boolean;
     error: string | null;
-    setStats: (stats: DashboardStats) => void;
+    setStats: (stats: AdminStats) => void;
     setWorkerStats: (stats: WorkerStats) => void;
     setLoading: (loading: boolean) => void;
     setError: (error: string | null) => void;

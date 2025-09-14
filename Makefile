@@ -3,7 +3,7 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
 PROJECT_NAME ?= klynaa
-DOCKER_COMPOSE ?= docker compose
+DOCKER_COMPOSE ?= docker-compose
 
 help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS=":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'

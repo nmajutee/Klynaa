@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { pickupsApi } from '../../../services/api';
 import { useAuthStore } from '../../../stores';
 import PhotoCapture from '../../../components/PhotoCapture';
-import type { PickupRequest } from '../../../types';
+import type { PickupRequest } from '../../../src/types';
 
 const PickupDetailPage: React.FC = () => {
     const router = useRouter();
@@ -139,7 +139,7 @@ const PickupDetailPage: React.FC = () => {
                     </span>
 
                     <span className="text-sm text-gray-500">
-                        Created: {new Date(pickup.created_at).toLocaleString()}
+                        Created: {pickup.created_at ? new Date(pickup.created_at).toLocaleString() : 'N/A'}
                     </span>
                 </div>
             </div>
@@ -180,11 +180,11 @@ const PickupDetailPage: React.FC = () => {
                         </div>
                         <div>
                             <span className="text-gray-500">Method:</span>
-                            <p className="font-medium capitalize">{pickup.payment_method.replace('_', ' ')}</p>
+                            <p className="font-medium capitalize">{pickup.payment_method?.replace('_', ' ') || 'N/A'}</p>
                         </div>
                         <div>
                             <span className="text-gray-500">Status:</span>
-                            <p className="font-medium capitalize">{pickup.payment_status.replace('_', ' ')}</p>
+                            <p className="font-medium capitalize">{pickup.payment_status?.replace('_', ' ') || 'N/A'}</p>
                         </div>
                     </div>
                 </div>

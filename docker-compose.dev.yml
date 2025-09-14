@@ -1,0 +1,31 @@
+version: '2.2'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: klynaa_backend
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - DJANGO_DEBUG=1
+      - DJANGO_SECRET_KEY=dev-secret-key-for-testing-only
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: klynaa_frontend
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

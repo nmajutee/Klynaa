@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 import { authApi } from '../../services/api';
 import { useAuthStore } from '../../stores';
-import { RegisterData, ApiError } from '../../types';
+import { RegisterData, ApiError } from '../../types/global';
 import { Icons, WasteIcons } from '../../components/ui/Icons';
 
 interface FormData extends RegisterData {
@@ -37,7 +37,6 @@ const Register: React.FC = () => {
         try {
             // Create the register data with the required fields
             const registerData: RegisterData = {
-                username: data.email, // Use email as username
                 email: data.email,
                 password: data.password,
                 password_confirm: data.password_confirm,
@@ -45,9 +44,6 @@ const Register: React.FC = () => {
                 last_name: data.last_name,
                 phone_number: data.phone_number,
                 role: data.role,
-                location: data.location,
-                latitude: data.latitude,
-                longitude: data.longitude,
             };
 
             const response = await authApi.register(registerData);
@@ -62,7 +58,7 @@ const Register: React.FC = () => {
                 const errorMessages = Object.values(apiError.errors).flat();
                 setError(errorMessages.join(', '));
             } else {
-                setError(apiError.detail || apiError.message || 'Registration failed. Please try again.');
+                setError(apiError.message || 'Registration failed. Please try again.');
             }
         } finally {
             setIsLoading(false);

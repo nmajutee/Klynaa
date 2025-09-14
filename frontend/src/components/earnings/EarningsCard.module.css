@@ -1,0 +1,116 @@
+/* EarningsCard Component Styles */
+
+.earningsCard {
+  padding: 1.5rem;
+  min-height: 120px;
+}
+
+.cardContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  height: 100%;
+}
+
+.iconContainer {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+.iconContainer svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary);
+}
+
+.textContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.25;
+}
+
+.amount {
+  font-size: 1.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.trendIcon {
+  font-size: 1rem;
+}
+
+.trendPositive {
+  color: var(--color-success);
+}
+
+.trendNegative {
+  color: var(--color-error);
+}
+
+/* Primary variant (for main balance card) */
+.earningsCard:has(.cardContent .iconContainer svg) {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: white;
+}
+
+.earningsCard:has(.cardContent .iconContainer svg) .iconContainer {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.earningsCard:has(.cardContent .iconContainer svg) .iconContainer svg {
+  color: white;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .earningsCard {
+    padding: 1rem;
+    min-height: 100px;
+  }
+
+  .cardContent {
+    gap: 0.75rem;
+  }
+
+  .iconContainer {
+    width: 40px;
+    height: 40px;
+  }
+
+  .iconContainer svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .amount {
+    font-size: 1.5rem;
+  }
+}

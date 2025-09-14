@@ -94,7 +94,7 @@ const Dashboard: React.FC = () => {
                 setLoading(true);
 
                 if (user?.role === 'admin') {
-                    const dashboardStats = await analyticsApi.getDashboardStats();
+                    const dashboardStats = await analyticsApi.getAdminStats();
                     setStats(dashboardStats);
                 } else if (user?.role === 'worker') {
                     const workerData = await analyticsApi.getWorkerStats();
@@ -183,7 +183,7 @@ const Dashboard: React.FC = () => {
                     />
                     <StatCard
                         title="Monthly Revenue"
-                        value={`${stats.revenue_month} XAF`}
+                        value={`${stats.revenue_this_month} XAF`}
                         icon={ChartBarIcon}
                         color="bg-purple-600"
                     />

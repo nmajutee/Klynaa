@@ -1,0 +1,352 @@
+/**
+ * PickupCard Component Styles
+ * Scoped CSS modules for the PickupCard component
+ */
+
+.pickupCard {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.pickupCard:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-gray-300);
+}
+
+.pickupCard.available {
+  border-left: 4px solid var(--color-blue-500);
+}
+
+.pickupCard.assigned {
+  border-left: 4px solid var(--color-yellow-500);
+}
+
+.pickupCard.completed {
+  border-left: 4px solid var(--color-green-500);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+
+.typeAndPriority {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.typeBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--border-radius-full);
+  text-transform: capitalize;
+}
+
+.typeGeneral {
+  background: var(--color-gray-100);
+  color: var(--color-gray-800);
+}
+
+.typeOrganic {
+  background: var(--color-green-100);
+  color: var(--color-green-800);
+}
+
+.typeRecyclable {
+  background: var(--color-blue-100);
+  color: var(--color-blue-800);
+}
+
+.typeHazardous {
+  background: var(--color-red-100);
+  color: var(--color-red-800);
+}
+
+.priorityBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--border-radius-full);
+  text-transform: capitalize;
+}
+
+.priorityHigh {
+  background: var(--color-red-100);
+  color: var(--color-red-800);
+}
+
+.priorityMedium {
+  background: var(--color-yellow-100);
+  color: var(--color-yellow-800);
+}
+
+.priorityLow {
+  background: var(--color-green-100);
+  color: var(--color-green-800);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--border-radius-full);
+  text-transform: capitalize;
+}
+
+.statusPending {
+  background: var(--color-yellow-100);
+  color: var(--color-yellow-800);
+}
+
+.statusInProgress {
+  background: var(--color-blue-100);
+  color: var(--color-blue-800);
+}
+
+.statusCompleted {
+  background: var(--color-green-100);
+  color: var(--color-green-800);
+}
+
+.statusCancelled {
+  background: var(--color-red-100);
+  color: var(--color-red-800);
+}
+
+.timePosted {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+  white-space: nowrap;
+}
+
+/* Content */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  flex: 1;
+}
+
+.location {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+}
+
+.locationIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-gray-500);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.locationText {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-900);
+  line-height: 1.4;
+}
+
+.customer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.customerIcon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-gray-500);
+  flex-shrink: 0;
+}
+
+.customerName {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-700);
+}
+
+/* Details */
+.details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+}
+
+.detailIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-gray-500);
+  flex-shrink: 0;
+}
+
+/* Feedback */
+.feedback {
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  background: var(--color-gray-50);
+  border-radius: var(--border-radius-md);
+  border-left: 3px solid var(--color-blue-500);
+}
+
+.feedbackText {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-700);
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Actions */
+.actions {
+  margin-top: var(--spacing-sm);
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.actionButton {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+}
+
+.actionButton.available {
+  background: var(--color-blue-600);
+  color: var(--color-white);
+}
+
+.actionButton.available:hover {
+  background: var(--color-blue-700);
+}
+
+.actionButton.assigned {
+  background: var(--color-yellow-600);
+  color: var(--color-white);
+}
+
+.actionButton.assigned:hover {
+  background: var(--color-yellow-700);
+}
+
+.actionButton.completed {
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-300);
+}
+
+.actionButton.completed:hover {
+  background: var(--color-gray-200);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .pickupCard {
+    padding: var(--spacing-sm);
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .typeAndPriority {
+    width: 100%;
+  }
+
+  .details {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .detail {
+    justify-content: flex-start;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .pickupCard {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-700);
+  }
+
+  .locationText {
+    color: var(--color-gray-100);
+  }
+
+  .customerName {
+    color: var(--color-gray-300);
+  }
+
+  .timePosted,
+  .detail {
+    color: var(--color-gray-400);
+  }
+
+  .feedback {
+    background: var(--color-gray-700);
+  }
+
+  .feedbackText {
+    color: var(--color-gray-300);
+  }
+
+  .actions {
+    border-color: var(--color-gray-700);
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .pickupCard {
+    border-width: 2px;
+  }
+
+  .typeBadge,
+  .priorityBadge,
+  .statusBadge {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .pickupCard,
+  .actionButton {
+    transition: none;
+  }
+}
