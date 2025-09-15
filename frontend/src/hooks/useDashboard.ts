@@ -57,7 +57,16 @@ export const useDashboard = (): UseDashboardReturn => {
         earnings_today: 12500,
         earnings_week: 87500,
         earnings_month: 245000,
-        completion_rate: 0.96
+        completion_rate: 0.96,
+        // Additional fields for enhanced dashboard
+        totalEarnings: 245000,
+        activePickups: 2,
+        completedToday: 3,
+        averageRating: 4.8,
+        totalCompleted: 43,
+        monthlyEarnings: 245000,
+        weeklyPickups: 18,
+        completionRate: 96
       });
 
       setAvailablePickups([

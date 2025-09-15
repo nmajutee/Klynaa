@@ -47,6 +47,63 @@ export interface Bin {
 export type WasteType = 'organic' | 'recyclable' | 'general' | 'hazardous';
 export type BinStatus = 'empty' | 'partial' | 'full' | 'overflowing' | 'maintenance';
 
+// Dashboard specific types
+export interface PickupHistoryItem {
+  id: string;
+  date: string;
+  client: string;
+  location: string;
+  status: 'completed' | 'cancelled' | 'disputed' | 'paid';
+  earnings: number;
+  rating?: number;
+  notes?: string;
+}
+
+export interface DashboardReview {
+  id: string;
+  customerName: string;
+  customerAvatar?: string;
+  rating: number;
+  comment: string;
+  date: string;
+  pickupId: string;
+  location: string;
+  isVerified?: boolean;
+  tags?: string[];
+}
+
+export interface ReviewStats {
+  averageRating: number;
+  totalReviews: number;
+  ratingDistribution: {
+    5: number;
+    4: number;
+    3: number;
+    2: number;
+    1: number;
+  };
+  recentTrend: 'up' | 'down' | 'stable';
+}
+
+export interface ActivityData {
+  date: string;
+  pickups: number;
+  earnings: number;
+  ratings: number;
+}
+
+export interface WorkerProfile {
+  id: string;
+  name: string;
+  avatar?: string;
+  status: 'active' | 'offline' | 'busy';
+  rating: number;
+  totalReviews: number;
+  completedPickups: number;
+  joinDate: string;
+  badges: string[];
+}
+
 export interface Pickup {
   id: string;
   bin_id: string;
@@ -161,6 +218,15 @@ export interface WorkerStats {
   earnings_week: number;
   earnings_month: number;
   completion_rate: number;
+  // Additional properties for enhanced dashboard
+  totalEarnings: number;
+  activePickups: number;
+  completedToday: number;
+  averageRating: number;
+  totalCompleted: number;
+  monthlyEarnings: number;
+  weeklyPickups: number;
+  completionRate: number;
 }
 
 export interface StatCardData {
@@ -600,7 +666,11 @@ export interface Notification {
   type: 'success' | 'error' | 'warning' | 'info';
   title: string;
   message: string;
+  date: string;
+  read: boolean;
   duration?: number;
+  actionUrl?: string;
+  actionText?: string;
   action?: {
     label: string;
     onClick: () => void;

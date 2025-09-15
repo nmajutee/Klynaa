@@ -74,6 +74,7 @@ const WorkerDashboard = () => {
                 setLoading(true);
                 // For now, use mock data since we might not have the API endpoint
                 const mockWorkerStats = {
+                    // Snake case properties (original API format)
                     total_earnings: 340000,
                     pending_pickups: 4,
                     completed_today: 3,
@@ -88,7 +89,16 @@ const WorkerDashboard = () => {
                     earnings_today: 15000,
                     earnings_week: 85000,
                     earnings_month: 340000,
-                    completion_rate: 90.5
+                    completion_rate: 90.5,
+                    // Camel case properties (enhanced dashboard format)
+                    totalEarnings: 340000,
+                    activePickups: 4,
+                    completedToday: 3,
+                    averageRating: 4.7,
+                    totalCompleted: 38,
+                    monthlyEarnings: 340000,
+                    weeklyPickups: 12,
+                    completionRate: 90.5
                 };
                 setWorkerStats(mockWorkerStats);
             } catch (error) {
