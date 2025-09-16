@@ -10,37 +10,61 @@
 
 /* Klynaa Two-Pane Dashboard Design Tokens */
 :root {
-    /* Core color palette */
+    /* Core Klynaa color palette - Updated per design document */
     --bg: #F7FBFB;                /* page background pastel */
     --surface: #FFFFFF;           /* card background */
     --muted: #6B7280;             /* secondary text */
-    --accent: #0FA6A6;            /* Klynaa primary teal */
+    --accent: #1B8C34;            /* Klynaa primary green - per design doc */
+    --klynaa-green: #1B8C34;      /* Official Klynaa brand green */
     --success: #22C55E;
     --warning: #F59E0B;
     --danger: #EF4444;
 
-    /* Layout and spacing */
-    --card-radius: 14px;
-    --card-padding: 18px;
+    /* Layout and spacing - 8px spacing system per design doc */
+    --card-radius: 12px;          /* 8px to 12px rounded corners per design */
+    --card-padding: 24px;         /* 8px * 3 = 24px base padding */
     --shadow: 0 6px 18px rgba(10,20,25,0.06);
     --sidebar-width: 340px; /* desktop */
+    
+    /* 8px Spacing System */
+    --spacing-xs: 4px;            /* 0.5 * base */
+    --spacing-sm: 8px;            /* base unit */
+    --spacing-md: 16px;           /* 2 * base */
+    --spacing-lg: 24px;           /* 3 * base */
+    --spacing-xl: 32px;           /* 4 * base */
+    --spacing-xxl: 48px;          /* 6 * base */
 
-    /* Typography */
+    /* Typography - Enterprise standards per design doc */
     --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    
+    /* Typography Scale */
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-base: 16px;
+    --text-lg: 18px;
+    --text-xl: 20px;
+    --text-2xl: 24px;
+    --text-3xl: 30px;
+    
+    /* Legacy variables for compatibility */
     --h1: 20px;
     --h2: 16px;
     --body: 14px;
 
-    /* Legacy variables for compatibility */
-    --klynaa-primary: #0FA6A6;
-    --klynaa-darkgreen: #0D8B8B;
+    /* Legacy variables for compatibility - Updated to Klynaa green */
+    --klynaa-primary: #1B8C34;
+    --klynaa-darkgreen: #16753A;      /* Darker shade of Klynaa green */
     --klynaa-yellow: #F59E0B;
     --klynaa-dark: #1F2937;
     --klynaa-neutral: #6B7280;
     --klynaa-lightgray: #F7FBFB;
     --klynaa-graylabel: #9CA3AF;
-    --primary-color: #0FA6A6;
-    --primary-dark: #0D8B8B;
+    --primary-color: #1B8C34;
+    --primary-dark: #16753A;
     --green-light: #ECFDF5;
     --danger-color: #EF4444;
     --warning-color: #F59E0B;

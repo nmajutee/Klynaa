@@ -54,7 +54,7 @@ export class DashboardService {
 
     try {
       const response: AxiosResponse<DashboardOverviewData> = await dashboardApi.get(
-        '/users/dashboard/overview/',
+        '/analytics/overview/',
         { params }
       );
       return response.data;
@@ -120,7 +120,7 @@ export class DashboardService {
     }
 
     try {
-      const response = await dashboardApi.get('/users/dashboard/overview/', {
+      const response = await dashboardApi.get('/analytics/overview/export/', {
         params,
         responseType: 'blob'
       });

@@ -27,6 +27,8 @@ def api_root(_request):
             "serverless": "/api/serverless/",
             "reports": "/api/reports/",
             "analytics": "/api/analytics/",
+            "dashboard_overview": "/api/dashboard/overview/",
+            "dashboard_kpis": "/api/dashboard/kpis/",
         }
     })
 
@@ -43,6 +45,7 @@ urlpatterns = [
     path("api/", include("apps.reviews.urls")),
     path("api/payments/", include("apps.payments.urls")),
     path("api/", include("apps.notifications.urls")),
+    path("api/analytics/", include("apps.analytics.urls")),
 ]
 
 # Serve media files in development

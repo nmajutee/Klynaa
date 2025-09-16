@@ -1,8 +1,8 @@
 .card {
   background: white;
-  border: 1px solid var(--neutral-200);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid #E5E7EB; /* neutral-200 */
+  border-radius: var(--card-radius); /* Consistent 12px border radius */
+  box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -10,25 +10,26 @@
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: var(--neutral-300);
+  box-shadow: 0 8px 24px rgba(27, 140, 52, 0.12); /* Klynaa green shadow */
+  border-color: var(--klynaa-green);
+  transform: translateY(-1px);
 }
 
 .card.loading {
   pointer-events: none;
 }
 
-/* Padding variants */
+/* Padding variants - Using 8px spacing system */
 .padding-sm {
-  padding: var(--spacing-md);
+  padding: var(--spacing-md); /* 16px */
 }
 
 .padding-md {
-  padding: var(--spacing-lg);
+  padding: var(--spacing-lg); /* 24px */
 }
 
 .padding-lg {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-xl); /* 32px */
 }
 
 /* Header styles */
@@ -36,9 +37,9 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: var(--spacing-md);
-  border-bottom: 1px solid var(--neutral-100);
-  padding-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-md); /* 16px */
+  border-bottom: 1px solid #F3F4F6; /* neutral-100 */
+  padding-bottom: var(--spacing-sm); /* 8px */
 }
 
 .headerContent {

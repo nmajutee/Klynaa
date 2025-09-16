@@ -2,6 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views import MeView, RegisterView, CustomTokenObtainPairView
+from .dashboard_views import dashboard_overview
+from .dashboard_simple import dashboard_overview_simple
 from .worker_views import (
     WorkerDashboardStatsView,
     WorkerStatusToggleView,
@@ -64,6 +66,10 @@ urlpatterns = [
     path("worker/earnings/", WorkerEarningsView.as_view(), name="worker-earnings"),
     path("worker/payout/<int:worker_id>/", WorkerPayoutRequestView.as_view(), name="worker-payout"),
     path("worker/chat/<int:room_id>/", ChatMessageView.as_view(), name="worker-chat"),
+
+    # Dashboard API endpoints
+    path("dashboard/overview/", dashboard_overview, name="dashboard-overview"),
+    path("dashboard/simple/", dashboard_overview_simple, name="dashboard-simple"),
 
     # Customer API endpoints
     path("customer/", include(customer_router.urls)),

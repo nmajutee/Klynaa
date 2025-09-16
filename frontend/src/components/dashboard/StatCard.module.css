@@ -2,7 +2,7 @@
 .statCard {
   position: relative;
   background: var(--klynaa-surface);
-  border-radius: var(--klynaa-radius-lg);
+  border-radius: var(--klynaa-radius-xl);
   padding: var(--klynaa-space-6);
   box-shadow: var(--klynaa-shadow-md);
   border: 1px solid var(--klynaa-border-light);
@@ -37,7 +37,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--klynaa-space-3);
-  border-radius: var(--klynaa-radius-lg);
+  border-radius: var(--klynaa-radius-xl);
   color: white;
 }
 
@@ -223,7 +223,7 @@
   width: var(--klynaa-space-12);
   height: var(--klynaa-space-12);
   background-color: var(--klynaa-bg-secondary);
-  border-radius: var(--klynaa-radius-lg);
+  border-radius: var(--klynaa-radius-xl);
   flex-shrink: 0;
 }
 
@@ -299,7 +299,7 @@
   text-align: center;
   color: var(--klynaa-error);
   background-color: var(--klynaa-error-light);
-  border-radius: var(--klynaa-radius-lg);
+  border-radius: var(--klynaa-radius-xl);
   border: 1px solid var(--klynaa-error);
 }
 

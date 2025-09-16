@@ -1,12 +1,22 @@
+/* KPICard - Updated for Klynaa design system */
 .kpiCard {
-  min-height: 160px;
+  min-height: 180px; /* Increased height per design document */
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(27, 140, 52, 0.12); /* Klynaa green shadow */
 }
 
 .content {
   display: flex;
   flex-direction: column;
   height: 100%;
-  gap: var(--spacing-md);
+  gap: var(--spacing-md); /* 8px spacing system */
+  padding: var(--spacing-lg); /* 24px padding */
 }
 
 .header {
@@ -18,7 +28,7 @@
 .titleRow {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-sm); /* 8px gap */
 }
 
 .iconWrapper {
@@ -27,8 +37,8 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-md);
-  background-color: var(--color-primary);
+  border-radius: var(--spacing-sm); /* 8px border radius */
+  background-color: var(--klynaa-green); /* Klynaa brand green */
   color: white;
 }
 
@@ -38,9 +48,9 @@
 }
 
 .title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--neutral-600);
+  font-size: var(--text-sm); /* 14px */
+  font-weight: var(--font-weight-medium); /* 500 */
+  color: var(--muted); /* #6B7280 */
   margin: 0;
   line-height: 1.4;
   text-transform: uppercase;
@@ -56,31 +66,31 @@
 }
 
 .mainValue {
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--neutral-900);
+  font-size: var(--text-3xl); /* 30px - Enterprise scale */
+  font-weight: var(--font-weight-bold); /* 700 */
+  color: var(--klynaa-dark); /* #1F2937 */
   line-height: 1;
-  font-family: var(--font-secondary);
+  font-family: var(--font-sans);
 }
 
 .trend {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  gap: var(--spacing-xs); /* 4px */
+  padding: var(--spacing-xs) var(--spacing-sm); /* 4px 8px */
+  border-radius: var(--spacing-xs); /* 4px rounded */
+  font-size: var(--text-sm); /* 14px */
+  font-weight: var(--font-weight-medium); /* 500 */
 }
 
 .trendPositive {
-  background-color: #DCFCE7;
-  color: #166534;
+  background-color: rgba(27, 140, 52, 0.1); /* Klynaa green background */
+  color: var(--klynaa-green); /* Klynaa green text */
 }
 
 .trendNegative {
-  background-color: #FEE2E2;
-  color: #991B1B;
+  background-color: rgba(239, 68, 68, 0.1); /* Red background */
+  color: var(--danger-color); /* Red text */
 }
 
 .trendIcon {
@@ -95,20 +105,20 @@
 .footer {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-xs); /* 4px */
   margin-top: auto;
 }
 
 .subtitle {
-  font-size: var(--font-size-sm);
-  color: var(--neutral-600);
+  font-size: var(--text-sm); /* 14px */
+  color: var(--muted); /* #6B7280 */
   margin: 0;
   line-height: 1.4;
 }
 
 .trendLabel {
-  font-size: var(--font-size-xs);
-  color: var(--neutral-500);
+  font-size: var(--text-xs); /* 12px */
+  color: var(--klynaa-graylabel); /* #9CA3AF */
   margin: 0;
   line-height: 1.4;
 }
@@ -116,19 +126,23 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .mainValue {
-    font-size: var(--font-size-3xl);
+    font-size: var(--text-2xl); /* 24px on mobile */
   }
 
   .valueSection {
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-sm); /* 8px */
+  }
+
+  .content {
+    padding: var(--spacing-md); /* 16px padding on mobile */
   }
 }
 
 /* Focus and accessibility */
 .kpiCard:focus-within .iconWrapper {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--klynaa-green); /* Klynaa green focus */
   outline-offset: 2px;
 }
 
