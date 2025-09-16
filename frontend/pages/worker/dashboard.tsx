@@ -18,7 +18,7 @@ const WorkerDashboard: React.FC = () => {
         <meta name="description" content="Worker dashboard for managing pickups, tracking performance, and viewing analytics" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      
+
       <WorkerLayout>
         <DashboardOverview />
       </WorkerLayout>

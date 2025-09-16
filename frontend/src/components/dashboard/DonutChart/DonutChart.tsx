@@ -44,8 +44,8 @@ export const DonutChart: React.FC<DonutChartProps> = ({
       return (
         <div className={styles.tooltip}>
           <div className={styles.tooltipHeader}>
-            <div 
-              className={styles.tooltipColor} 
+            <div
+              className={styles.tooltipColor}
               style={{ backgroundColor: data.color }}
             />
             <span className={styles.tooltipLabel}>{data.label}</span>
@@ -62,13 +62,13 @@ export const DonutChart: React.FC<DonutChartProps> = ({
 
   const renderLegend = (props: any) => {
     if (!showLegend) return null;
-    
+
     return (
       <div className={styles.legend}>
         {chartData.map((item, index) => (
           <div key={index} className={styles.legendItem}>
-            <div 
-              className={styles.legendColor} 
+            <div
+              className={styles.legendColor}
               style={{ backgroundColor: item.color }}
             />
             <span className={styles.legendLabel}>{item.label}</span>
@@ -108,7 +108,7 @@ export const DonutChart: React.FC<DonutChartProps> = ({
               <Tooltip content={renderTooltip} />
             </PieChart>
           </ResponsiveContainer>
-          
+
           {/* Center total value */}
           <div className={styles.centerValue}>
             <div className={styles.totalNumber}>
@@ -117,7 +117,7 @@ export const DonutChart: React.FC<DonutChartProps> = ({
             <div className={styles.totalLabel}>Total</div>
           </div>
         </div>
-        
+
         {renderLegend({})}
       </div>
     </CardContainer>

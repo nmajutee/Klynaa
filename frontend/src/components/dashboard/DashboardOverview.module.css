@@ -131,15 +131,15 @@
   .kpiSection {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .chartsSection {
     grid-template-columns: 1fr;
   }
-  
+
   .dataSection {
     grid-template-columns: 1fr;
   }
-  
+
   .rightColumn {
     grid-template-columns: 1fr 1fr;
     grid-auto-flow: column;
@@ -151,34 +151,34 @@
   .dashboard {
     padding: var(--spacing-md);
   }
-  
+
   .title {
     font-size: 1.5rem;
   }
-  
+
   .subtitle {
     font-size: 1rem;
   }
-  
+
   .kpiSection {
     grid-template-columns: 1fr; /* 1 column on mobile */
     gap: var(--spacing-md);
   }
-  
+
   .grid {
     gap: var(--spacing-lg);
   }
-  
+
   .chartsSection {
     gap: var(--spacing-md);
   }
-  
+
   .rightColumn {
     grid-template-columns: 1fr;
     grid-auto-flow: row;
     gap: var(--spacing-md);
   }
-  
+
   .dataSection {
     gap: var(--spacing-md);
   }
@@ -188,15 +188,15 @@
   .dashboard {
     padding: var(--spacing-sm);
   }
-  
+
   .kpiSection {
     grid-template-columns: 1fr;
   }
-  
+
   .header {
     margin-bottom: var(--spacing-lg);
   }
-  
+
   .title {
     font-size: 1.25rem;
   }

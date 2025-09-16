@@ -311,3 +311,13 @@ Watching for file changes with StatReloader
 [16/Sep/2025 20:44:21] "GET /api/analytics/overview/ HTTP/1.1" 200 2164
 [16/Sep/2025 21:02:23] "GET /api/analytics/overview/ HTTP/1.1" 200 2164
 [16/Sep/2025 21:02:23] "GET /api/analytics/overview/ HTTP/1.1" 200 2164
+/home/dev/Klynaa/backend/apps/analytics/urls.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+September 16, 2025 - 19:56:51
+Django version 4.2.24, using settings 'config.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Watching for file changes with StatReloader

@@ -127,16 +127,16 @@
   .td {
     padding: var(--spacing-xs) var(--spacing-sm);
   }
-  
+
   .table {
     font-size: 0.8125rem;
   }
-  
+
   .pagination {
     flex-direction: column;
     gap: var(--spacing-sm);
   }
-  
+
   .pageInfo {
     order: -1;
   }

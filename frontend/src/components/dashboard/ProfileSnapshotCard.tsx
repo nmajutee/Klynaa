@@ -70,8 +70,8 @@ const ProfileSnapshotCard: React.FC<ProfileSnapshotCardProps> = ({
         <div className={styles.header}>
           <div className={styles.avatarSection}>
             {profile.avatar ? (
-              <img 
-                src={profile.avatar} 
+              <img
+                src={profile.avatar}
                 alt={`${profile.name}'s profile`}
                 className={styles.avatar}
               />
@@ -80,16 +80,16 @@ const ProfileSnapshotCard: React.FC<ProfileSnapshotCardProps> = ({
                 <UserIcon className={styles.avatarIcon} />
               </div>
             )}
-            <div 
+            <div
               className={styles.statusDot}
               style={{ backgroundColor: getStatusColor(profile.status) }}
               aria-label={`Status: ${getStatusLabel(profile.status)}`}
             />
           </div>
-          
+
           <div className={styles.nameSection}>
             <h4 className={styles.name}>{profile.name}</h4>
-            <span 
+            <span
               className={styles.statusLabel}
               style={{ color: getStatusColor(profile.status) }}
             >
@@ -111,7 +111,7 @@ const ProfileSnapshotCard: React.FC<ProfileSnapshotCardProps> = ({
               Completed
             </div>
           </div>
-          
+
           <div className={styles.stat}>
             <div className={styles.statIcon}>
               <StarIcon />
@@ -123,7 +123,7 @@ const ProfileSnapshotCard: React.FC<ProfileSnapshotCardProps> = ({
               Rating
             </div>
           </div>
-          
+
           <div className={styles.stat}>
             <div className={styles.statIcon}>
               <CheckBadgeIcon />

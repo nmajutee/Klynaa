@@ -25,7 +25,7 @@
     --card-padding: 24px;         /* 8px * 3 = 24px base padding */
     --shadow: 0 6px 18px rgba(10,20,25,0.06);
     --sidebar-width: 340px; /* desktop */
-    
+
     /* 8px Spacing System */
     --spacing-xs: 4px;            /* 0.5 * base */
     --spacing-sm: 8px;            /* base unit */
@@ -40,7 +40,7 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
-    
+
     /* Typography Scale */
     --text-xs: 12px;
     --text-sm: 14px;
@@ -49,7 +49,7 @@
     --text-xl: 20px;
     --text-2xl: 24px;
     --text-3xl: 30px;
-    
+
     /* Legacy variables for compatibility */
     --h1: 20px;
     --h2: 16px;

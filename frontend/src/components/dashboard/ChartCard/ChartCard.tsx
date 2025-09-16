@@ -81,13 +81,13 @@ const TrendingLineChart: React.FC<TrendingLineChartProps> = ({ data, height, are
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--neutral-200)" />
-        <XAxis 
-          dataKey="date" 
+        <XAxis
+          dataKey="date"
           tick={{ fontSize: 12 }}
           tickFormatter={(value) => new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
         />
         <YAxis tick={{ fontSize: 12 }} />
-        <Tooltip 
+        <Tooltip
           contentStyle={{
             backgroundColor: 'white',
             border: '1px solid var(--neutral-200)',
@@ -138,12 +138,12 @@ const RatingBarChart: React.FC<RatingBarChartProps> = ({ data, height }) => {
     <ResponsiveContainer width="100%" height={height}>
       <BarChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" stroke="var(--neutral-200)" />
-        <XAxis 
-          dataKey="agency" 
+        <XAxis
+          dataKey="agency"
           tick={{ fontSize: 12 }}
         />
         <YAxis tick={{ fontSize: 12 }} />
-        <Tooltip 
+        <Tooltip
           contentStyle={{
             backgroundColor: 'white',
             border: '1px solid var(--neutral-200)',

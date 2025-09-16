@@ -116,12 +116,12 @@ export const DashboardOverview: React.FC = () => {
             loading={loading}
             className={styles.scorecard}
           />
-          
+
           <div className={styles.rightColumn}>
             <DonutChart
               title="My Waste Types"
               subtitle="Breakdown by waste categories I've handled"
-              data={data?.donut || { 
+              data={data?.donut || {
                 categories: [
                   { label: "Recyclable", value: 45, color: "#16A34A" },
                   { label: "Organic", value: 30, color: "#059669" },
@@ -132,11 +132,11 @@ export const DashboardOverview: React.FC = () => {
               loading={loading}
               className={styles.donutChart}
             />
-            
+
             <ReviewsWidget
               title="Customer Reviews"
               subtitle="Recent feedback from my customers"
-              data={data?.reviews || { 
+              data={data?.reviews || {
                 distribution: [1, 0, 1, 3, 8], // Mock rating distribution
                 recent: [
                   {
@@ -150,7 +150,7 @@ export const DashboardOverview: React.FC = () => {
                     tags: ["Professional", "On Time"]
                   },
                   {
-                    id: "r2", 
+                    id: "r2",
                     name: "Jean Pierre",
                     customerName: "Jean Pierre",
                     rating: 4,

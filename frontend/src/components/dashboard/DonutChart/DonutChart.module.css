@@ -114,15 +114,15 @@
   .chartContainer {
     gap: var(--spacing-md);
   }
-  
+
   .pieContainer {
     max-width: 250px;
   }
-  
+
   .totalNumber {
     font-size: 1.25rem;
   }
-  
+
   .legend {
     max-width: 100%;
   }

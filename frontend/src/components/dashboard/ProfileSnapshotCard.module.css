@@ -171,34 +171,34 @@
   .profileCard {
     min-height: 160px;
   }
-  
+
   .header {
     gap: var(--spacing-sm);
   }
-  
+
   .avatar,
   .avatarPlaceholder {
     width: 40px;
     height: 40px;
   }
-  
+
   .avatarIcon {
     width: 20px;
     height: 20px;
   }
-  
+
   .name {
     font-size: var(--text-sm);
   }
-  
+
   .statsGrid {
     gap: var(--spacing-xs);
   }
-  
+
   .stat {
     padding: var(--spacing-xs);
   }
-  
+
   .statValue {
     font-size: var(--text-base);
   }

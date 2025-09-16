@@ -30,10 +30,10 @@ export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({
 }) => {
   const recentReviews = data.recent.slice(0, maxReviews);
   const totalReviews = data.distribution.reduce((sum, count) => sum + count, 0);
-  
+
   // Calculate average rating from distribution
-  const averageRating = totalReviews > 0 
-    ? data.distribution.reduce((sum, count, index) => sum + count * (5 - index), 0) / totalReviews 
+  const averageRating = totalReviews > 0
+    ? data.distribution.reduce((sum, count, index) => sum + count * (5 - index), 0) / totalReviews
     : 0;
 
   const formatDate = (dateString: string) => {
@@ -41,7 +41,7 @@ export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays === 1) return '1 day ago';
     if (diffDays < 7) return `${diffDays} days ago`;
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
@@ -51,24 +51,24 @@ export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({
   const renderStarRating = (rating: number, size: 'sm' | 'md' = 'sm') => {
     const stars = [];
     const sizeClass = size === 'sm' ? styles.starSm : styles.starMd;
-    
+
     for (let i = 1; i <= 5; i++) {
       const isFilled = i <= rating;
       const StarComponent = isFilled ? StarIcon : StarOutlineIcon;
       stars.push(
-        <StarComponent 
-          key={i} 
+        <StarComponent
+          key={i}
           className={`${sizeClass} ${isFilled ? styles.starFilled : styles.starEmpty}`}
         />
       );
     }
-    
+
     return <div className={styles.starRating}>{stars}</div>;
   };
 
   const renderDistribution = () => {
     if (!showDistribution) return null;
-    
+
     return (
       <div className={styles.distribution}>
         <div className={styles.averageSection}>
@@ -80,19 +80,19 @@ export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({
             {totalReviews} reviews
           </div>
         </div>
-        
+
         <div className={styles.breakdown}>
           {data.distribution.map((count, index) => {
             const stars = 5 - index;
             const percentage = totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-            
+
             return (
               <div key={stars} className={styles.breakdownRow}>
                 <div className={styles.breakdownStars}>
                   {stars} {renderStarRating(1, 'sm')}
                 </div>
                 <div className={styles.breakdownBar}>
-                  <div 
+                  <div
                     className={styles.breakdownFill}
                     style={{ width: `${percentage}%` }}
                   />
@@ -122,8 +122,8 @@ export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({
             <div className={styles.reviewHeader}>
               <div className={styles.reviewerInfo}>
                 {review.avatar ? (
-                  <img 
-                    src={review.avatar} 
+                  <img
+                    src={review.avatar}
                     alt={review.customerName}
                     className={styles.avatar}
                   />
@@ -139,13 +139,13 @@ export const ReviewsWidget: React.FC<ReviewsWidgetProps> = ({
               </div>
               {renderStarRating(review.rating)}
             </div>
-            
+
             <div className={styles.reviewContent}>
               <p className={styles.reviewText}>{review.text}</p>
               {review.comment && (
                 <p className={styles.reviewComment}>{review.comment}</p>
               )}
-              
+
               {review.tags && review.tags.length > 0 && (
                 <div className={styles.reviewTags}>
                   {review.tags.map((tag, index) => (

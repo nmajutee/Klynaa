@@ -202,17 +202,17 @@
   .reviewItem {
     padding: var(--spacing-sm);
   }
-  
+
   .reviewHeader {
     flex-direction: column;
     gap: var(--spacing-sm);
     align-items: flex-start;
   }
-  
+
   .breakdownRow {
     grid-template-columns: 35px 1fr 35px;
   }
-  
+
   .averageSection {
     padding: var(--spacing-md) 0;
   }

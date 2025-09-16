@@ -34,7 +34,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [sortColumn, setSortColumn] = useState<keyof ScorecardRow | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  
+
   const itemsPerPage = 10;
   const totalPages = Math.ceil(data.rows.length / itemsPerPage);
 
@@ -59,17 +59,17 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
   // Sort and paginate data
   const sortedData = [...data.rows].sort((a, b) => {
     if (!sortColumn) return 0;
-    
+
     const aValue = a[sortColumn];
     const bValue = b[sortColumn];
-    
+
     if (typeof aValue === 'number' && typeof bValue === 'number') {
       return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
     }
-    
+
     const aStr = String(aValue).toLowerCase();
     const bStr = String(bValue).toLowerCase();
-    
+
     if (sortDirection === 'asc') {
       return aStr < bStr ? -1 : aStr > bStr ? 1 : 0;
     } else {
@@ -95,15 +95,15 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
         maximumFractionDigits: 0
       }).format(value);
     }
-    
+
     if (column.type === 'percentage') {
       return `${value}%`;
     }
-    
+
     if (column.type === 'number') {
       return new Intl.NumberFormat('en-US').format(value);
     }
-    
+
     return value;
   };
 
@@ -158,7 +158,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
             </tbody>
           </table>
         </div>
-        
+
         {totalPages > 1 && (
           <div className={styles.pagination}>
             <button
@@ -169,7 +169,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
             >
               <ChevronLeftIcon className={styles.pageIcon} />
             </button>
-            
+
             <div className={styles.pageInfo}>
               <span className={styles.pageText}>
                 Page {currentPage + 1} of {totalPages}
@@ -178,7 +178,7 @@ export const ScoreCard: React.FC<ScoreCardProps> = ({
                 ({paginatedData.length} of {data.rows.length} items)
               </span>
             </div>
-            
+
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages - 1}
