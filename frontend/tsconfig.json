@@ -1,47 +1,64 @@
 {
-    "compilerOptions": {
+  "compilerOptions": {
     "target": "ES2017",
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
-        "skipLibCheck": true,
+    "skipLibCheck": true,
     "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
     "noImplicitAny": true,
-        "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "bundler",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "jsx": "preserve",
     "jsxImportSource": "react",
-        "allowSyntheticDefaultImports": true,
-        "incremental": true,
-        "types": [
-            "node"
-        ],
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./src/*"],
-            "@/components/*": ["./src/components/*"],
-            "@/types": ["./src/types"],
-            "@/lib/*": ["./src/lib/*"],
-            "@/services/*": ["./src/services/*"],
-            "@/hooks/*": ["./src/hooks/*"],
-            "@/styles/*": ["./src/styles/*"]
-        }
-    },
-    "include": [
-        "next-env.d.ts",
-        "types/global.d.ts",
-        "**/*.ts",
-        "**/*.tsx"
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "types": [
+      "node",
+      "react",
+      "react-dom"
     ],
-    "exclude": [
-        "node_modules"
-    ]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@/components/*": [
+        "./src/components/*"
+      ],
+      "@/types": [
+        "./src/types"
+      ],
+      "@/lib/*": [
+        "./src/lib/*"
+      ],
+      "@/services/*": [
+        "./src/services/*"
+      ],
+      "@/hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@/styles/*": [
+        "./src/styles/*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "types/global.d.ts",
+    "types/react-global.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

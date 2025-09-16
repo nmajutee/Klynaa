@@ -32,7 +32,7 @@ export interface TableColumn<T> {
   title: string;
   sortable?: boolean;
   width?: string;
-  render?: (value: any, item: T, index: number) => React.ReactNode;
+  render?: (value: T[keyof T], item: T, index: number) => React.ReactNode;
 }
 
 export interface FilterOptions {
@@ -381,10 +381,10 @@ export const PickupHistoryTable: React.FC<PickupHistoryTableProps> = ({
           <CalendarDaysIcon className="w-4 h-4 text-gray-400 mr-2" />
           <div>
             <div className="text-sm font-medium text-gray-900">
-              {new Date(value).toLocaleDateString()}
+              {value ? new Date(value).toLocaleDateString() : 'N/A'}
             </div>
             <div className="text-xs text-gray-500">
-              {new Date(value).toLocaleTimeString()}
+              {value ? new Date(value).toLocaleTimeString() : 'N/A'}
             </div>
           </div>
         </div>
@@ -408,7 +408,7 @@ export const PickupHistoryTable: React.FC<PickupHistoryTableProps> = ({
       key: 'status',
       title: 'Status',
       sortable: true,
-      render: (value) => <StatusBadge status={value} />
+      render: (value) => <StatusBadge status={value as "completed" | "cancelled" | "disputed" | "paid"} />
     },
     {
       key: 'earnings',
@@ -418,7 +418,7 @@ export const PickupHistoryTable: React.FC<PickupHistoryTableProps> = ({
         <div className="flex items-center">
           <CurrencyDollarIcon className="w-4 h-4 text-gray-400 mr-1" />
           <span className="text-sm font-medium text-gray-900">
-            {value.toLocaleString()} XAF
+            {value ? (value as number).toLocaleString() : '0'} XAF
           </span>
         </div>
       )
@@ -426,7 +426,7 @@ export const PickupHistoryTable: React.FC<PickupHistoryTableProps> = ({
     {
       key: 'rating',
       title: 'Rating',
-      render: (value) => value ? <RatingStars rating={value} /> : (
+      render: (value) => value ? <RatingStars rating={value as number} /> : (
         <span className="text-xs text-gray-400">No rating</span>
       )
     }

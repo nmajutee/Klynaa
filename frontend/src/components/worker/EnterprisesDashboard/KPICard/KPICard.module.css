@@ -1,0 +1,171 @@
+/* KPI Card Component Styles */
+.kpiCard {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  transition: all var(--animation-duration-fast) var(--animation-easing);
+  min-height: 140px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpiCard:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.iconContainer {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-light);
+}
+
+.icon {
+  font-size: var(--font-size-xl);
+  line-height: 1;
+}
+
+.title {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Content */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.valueContainer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.value {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  word-break: break-all;
+}
+
+.trend {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-background);
+  border-radius: var(--border-radius-sm);
+}
+
+.trendArrow {
+  font-size: var(--font-size-base);
+  line-height: 1;
+}
+
+.trendPercent {
+  font-variant-numeric: tabular-nums;
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Variant Styles */
+.earnings .iconContainer {
+  background: linear-gradient(135deg, #10B981, #059669);
+  color: white;
+}
+
+.earnings .value {
+  color: #10B981;
+}
+
+.pickups .iconContainer {
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: white;
+}
+
+.pickups .value {
+  color: #3B82F6;
+}
+
+.completed .iconContainer {
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  color: white;
+}
+
+.completed .value {
+  color: #8B5CF6;
+}
+
+.rating .iconContainer {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: white;
+}
+
+.rating .value {
+  color: #F59E0B;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .kpiCard {
+    min-height: 120px;
+  }
+
+  .value {
+    font-size: var(--font-size-xl);
+  }
+
+  .title {
+    font-size: var(--font-size-xs);
+  }
+
+  .iconContainer {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .valueContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .trend {
+    margin-top: var(--spacing-xs);
+  }
+}

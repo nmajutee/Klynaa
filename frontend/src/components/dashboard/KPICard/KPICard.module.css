@@ -1,0 +1,146 @@
+.kpiCard {
+  min-height: 160px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: var(--spacing-md);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+}
+
+.title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-600);
+  margin: 0;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.valueSection {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+  flex: 1;
+  align-items: center;
+}
+
+.mainValue {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--neutral-900);
+  line-height: 1;
+  font-family: var(--font-secondary);
+}
+
+.trend {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.trendPositive {
+  background-color: #DCFCE7;
+  color: #166534;
+}
+
+.trendNegative {
+  background-color: #FEE2E2;
+  color: #991B1B;
+}
+
+.trendIcon {
+  width: 12px;
+  height: 12px;
+}
+
+.trendValue {
+  line-height: 1;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-top: auto;
+}
+
+.subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--neutral-600);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.trendLabel {
+  font-size: var(--font-size-xs);
+  color: var(--neutral-500);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mainValue {
+    font-size: var(--font-size-3xl);
+  }
+
+  .valueSection {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+}
+
+/* Focus and accessibility */
+.kpiCard:focus-within .iconWrapper {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .trendPositive {
+    background-color: #15803D;
+    color: white;
+  }
+
+  .trendNegative {
+    background-color: #DC2626;
+    color: white;
+  }
+}

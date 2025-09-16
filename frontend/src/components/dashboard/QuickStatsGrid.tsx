@@ -62,6 +62,7 @@ class StatsErrorBoundary extends React.Component<
  * Format currency value for display
  */
 const formatCurrency = (amount: number): string => {
+  // Use consistent formatting to avoid hydration mismatch
   return `${amount.toLocaleString()} XAF`;
 };
 

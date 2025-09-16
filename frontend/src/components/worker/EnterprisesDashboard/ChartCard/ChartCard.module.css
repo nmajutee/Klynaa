@@ -1,0 +1,116 @@
+/* Chart Card Component Styles */
+.chartCard {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  margin: 0 0 var(--spacing-lg) 0;
+  line-height: 1.4;
+}
+
+.chartWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chartContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.chartContainer svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Data points hover effect */
+.dataPoint {
+  transition: r var(--animation-duration-fast) var(--animation-easing);
+  cursor: pointer;
+}
+
+.dataPoint:hover {
+  r: 5;
+}
+
+/* Bar hover effect */
+.bar {
+  transition: opacity var(--animation-duration-fast) var(--animation-easing);
+  cursor: pointer;
+}
+
+.bar:hover {
+  opacity: 0.8;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) 0;
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--spacing-md);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.legendColor {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--border-radius-sm);
+  flex-shrink: 0;
+}
+
+.legendLabel {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .subtitle {
+    font-size: var(--font-size-xs);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .legend {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) 0;
+  }
+
+  .legendLabel {
+    font-size: var(--font-size-xs);
+  }
+
+  .legendColor {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chartContainer svg {
+    min-height: 150px;
+  }
+
+  .legend {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+}

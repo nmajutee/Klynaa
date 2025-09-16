@@ -1,8 +1,9 @@
 // Cleaned global declarations: removed shadowing of React/ReactDOM to allow official @types packages to work.
+import { ReactNode } from 'react';
 
 declare module 'next/head' {
   import { ComponentType } from 'react';
-  const Head: ComponentType<{ children?: React.ReactNode }>;
+  const Head: ComponentType<{ children?: ReactNode }>;
   export default Head;
 }
 
@@ -10,7 +11,7 @@ declare module 'next/link' {
   import { ComponentType } from 'react';
   interface LinkProps {
     href: string;
-    children?: React.ReactNode;
+    children?: ReactNode;
     className?: string;
     [key: string]: any;
   }
