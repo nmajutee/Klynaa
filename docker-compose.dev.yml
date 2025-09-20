@@ -21,7 +21,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: klynaa_frontend
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "pnpm install && pnpm run dev"
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules

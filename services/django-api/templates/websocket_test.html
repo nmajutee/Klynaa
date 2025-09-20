@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klynaa WebSocket Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c5530;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .connected { background-color: #d4edda; color: #155724; }
+        .disconnected { background-color: #f8d7da; color: #721c24; }
+        .message { background-color: #e2e3e5; color: #383d41; }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #218838; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; }
+        input, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+        .log-entry {
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 5px;
+        }
+        .log-timestamp {
+            color: #6c757d;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗑️ Klynaa WebSocket Real-time Test</h1>
+
+    <div class="container">
+        <h2>Connection Status</h2>
+        <div id="connection-status" class="status disconnected">
+            Disconnected
+        </div>
+        <button id="connect-btn">Connect to WebSocket</button>
+        <button id="disconnect-btn" disabled>Disconnect</button>
+    </div>
+
+    <div class="container">
+        <h2>WebSocket Configuration</h2>
+        <label>WebSocket Type:</label>
+        <select id="ws-type">
+            <option value="pickup">Pickup Updates (pickup_123)</option>
+            <option value="worker">Worker Dashboard (worker_1)</option>
+            <option value="customer">Customer Notifications (customer_1)</option>
+        </select>
+        <br>
+        <label>Auth Token (JWT):</label>
+        <input type="text" id="auth-token" placeholder="eyJhbGciOiJIUzI1NiIs..." style="width: 400px;">
+        <br>
+        <label>Entity ID:</label>
+        <input type="text" id="entity-id" placeholder="123" value="123">
+    </div>
+
+    <div class="container">
+        <h2>Test Messages</h2>
+        <button onclick="sendTestMessage('get_status')">Get Status</button>
+        <button onclick="sendTestMessage('update_location')">Update Location</button>
+        <button onclick="sendTestMessage('get_assignments')">Get Assignments</button>
+        <button onclick="sendTestMessage('get_notifications')">Get Notifications</button>
+        <br>
+        <label>Custom Message:</label>
+        <input type="text" id="custom-message" placeholder='{"type": "get_status"}' style="width: 300px;">
+        <button onclick="sendCustomMessage()">Send Custom</button>
+    </div>
+
+    <div class="container">
+        <h2>Message Log</h2>
+        <button onclick="clearMessages()">Clear Log</button>
+        <div id="messages" class="messages"></div>
+    </div>
+
+    <script>
+        let socket = null;
+        let connectionStatus = document.getElementById('connection-status');
+        let connectBtn = document.getElementById('connect-btn');
+        let disconnectBtn = document.getElementById('disconnect-btn');
+        let messagesDiv = document.getElementById('messages');
+
+        function updateConnectionStatus(connected) {
+            if (connected) {
+                connectionStatus.textContent = 'Connected';
+                connectionStatus.className = 'status connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+            } else {
+                connectionStatus.textContent = 'Disconnected';
+                connectionStatus.className = 'status disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+            }
+        }
+
+        function logMessage(type, message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+
+            let content = `<span class="log-timestamp">[${timestamp}]</span> <strong>${type}:</strong> ${message}`;
+            if (data) {
+                content += `<br><pre style="font-size: 0.8em; color: #666;">${JSON.stringify(data, null, 2)}</pre>`;
+            }
+
+            logEntry.innerHTML = content;
+            messagesDiv.appendChild(logEntry);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function connectWebSocket() {
+            const wsType = document.getElementById('ws-type').value;
+            const entityId = document.getElementById('entity-id').value;
+            const authToken = document.getElementById('auth-token').value;
+
+            // Build WebSocket URL based on type
+            let wsUrl = '';
+            if (wsType === 'pickup') {
+                wsUrl = `ws://localhost:8002/ws/pickups/${entityId}/`;
+            } else if (wsType === 'worker') {
+                wsUrl = `ws://localhost:8002/ws/worker/${entityId}/`;
+            } else if (wsType === 'customer') {
+                wsUrl = `ws://localhost:8002/ws/customer/${entityId}/`;
+            }
+
+            logMessage('INFO', `Connecting to ${wsUrl}`);
+
+            try {
+                socket = new WebSocket(wsUrl);
+
+                socket.onopen = function(event) {
+                    updateConnectionStatus(true);
+                    logMessage('SUCCESS', 'WebSocket connected successfully');
+
+                    // Send authentication if token provided
+                    if (authToken) {
+                        socket.send(JSON.stringify({
+                            'type': 'authenticate',
+                            'token': authToken
+                        }));
+                    }
+                };
+
+                socket.onmessage = function(event) {
+                    try {
+                        const data = JSON.parse(event.data);
+                        logMessage('RECEIVED', `Message type: ${data.type}`, data);
+                    } catch (e) {
+                        logMessage('RECEIVED', 'Raw message', event.data);
+                    }
+                };
+
+                socket.onclose = function(event) {
+                    updateConnectionStatus(false);
+                    logMessage('INFO', `WebSocket closed (Code: ${event.code})`);
+                };
+
+                socket.onerror = function(error) {
+                    logMessage('ERROR', 'WebSocket error occurred', error);
+                };
+
+            } catch (error) {
+                logMessage('ERROR', 'Failed to create WebSocket connection', error);
+            }
+        }
+
+        function disconnectWebSocket() {
+            if (socket) {
+                socket.close();
+                socket = null;
+            }
+        }
+
+        function sendTestMessage(messageType) {
+            if (!socket || socket.readyState !== WebSocket.OPEN) {
+                logMessage('ERROR', 'WebSocket is not connected');
+                return;
+            }
+
+            let message = { type: messageType };
+
+            if (messageType === 'update_location') {
+                message.data = {
+                    lat: 40.7128 + (Math.random() - 0.5) * 0.01,
+                    lng: -74.0060 + (Math.random() - 0.5) * 0.01
+                };
+            }
+
+            socket.send(JSON.stringify(message));
+            logMessage('SENT', `Test message: ${messageType}`, message);
+        }
+
+        function sendCustomMessage() {
+            if (!socket || socket.readyState !== WebSocket.OPEN) {
+                logMessage('ERROR', 'WebSocket is not connected');
+                return;
+            }
+
+            const customMessage = document.getElementById('custom-message').value;
+            try {
+                const message = JSON.parse(customMessage);
+                socket.send(JSON.stringify(message));
+                logMessage('SENT', 'Custom message', message);
+            } catch (e) {
+                logMessage('ERROR', 'Invalid JSON in custom message', e);
+            }
+        }
+
+        function clearMessages() {
+            messagesDiv.innerHTML = '';
+        }
+
+        // Event listeners
+        connectBtn.addEventListener('click', connectWebSocket);
+        disconnectBtn.addEventListener('click', disconnectWebSocket);
+
+        // Initialize
+        updateConnectionStatus(false);
+        logMessage('INFO', 'WebSocket test page loaded. Configure connection and click Connect.');
+    </script>
+</body>
+</html>

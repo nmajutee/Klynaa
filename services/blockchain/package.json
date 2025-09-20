@@ -1,0 +1,19 @@
+{
+    "name": "klynaa-blockchain",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "hardhat node",
+        "build": "echo 'compile handled by hardhat'",
+        "test": "hardhat test",
+        "format": "prettier --write ."
+    },
+    "devDependencies": {
+        "hardhat": "^3.0.6",
+        "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+        "prettier": "^3.6.2"
+    },
+    "dependencies": {
+        "ethers": "^6.15.0"
+    }
+}

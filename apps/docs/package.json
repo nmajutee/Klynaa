@@ -1,0 +1,27 @@
+{
+  "name": "@klynaa/docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build",
+    "build-storybook": "storybook build -o dist",
+    "lint": "eslint .storybook/ --ext .ts,.tsx,.js",
+    "format": "prettier --write .storybook/ stories/",
+    "clean": "rm -rf dist storybook-static"
+  },
+  "dependencies": {
+    "@storybook/addon-links": "^9.1.7",
+    "@storybook/react-vite": "^9.1.7",
+    "storybook": "^9.1.7",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "typescript": "^5.9.2",
+    "eslint-plugin-storybook": "9.1.7",
+    "@storybook/addon-docs": "^9.1.7"
+  }
+}

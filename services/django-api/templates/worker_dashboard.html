@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klynaa Worker Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5530, #4a7c59);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #dc3545;
+        }
+
+        .status-dot.connected {
+            background-color: #28a745;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+        }
+
+        .card h2 {
+            color: #2c5530;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 0.5rem;
+        }
+
+        .worker-status {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .status-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #2c5530;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e3a21;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .assignments {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .assignment-item {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .assignment-item:hover {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .assignment-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-assigned {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-in-progress {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .location-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+
+        .activity-log {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            padding: 0.5rem;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.9rem;
+        }
+
+        .log-timestamp {
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+
+        .log-message {
+            margin-top: 0.25rem;
+        }
+
+        .log-success { border-left: 3px solid #28a745; }
+        .log-info { border-left: 3px solid #17a2b8; }
+        .log-warning { border-left: 3px solid #ffc107; }
+        .log-error { border-left: 3px solid #dc3545; }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c5530;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🗑️ Klynaa Worker Dashboard</h1>
+        <div class="status-indicator">
+            <span id="connection-status-text">Disconnected</span>
+            <div id="connection-dot" class="status-dot"></div>
+        </div>
+    </header>
+
+    <div class="dashboard">
+        <!-- Worker Status Card -->
+        <div class="card">
+            <h2>Worker Status</h2>
+            <div class="worker-status">
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <div id="active-pickups" class="stat-number">0</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="completed-today" class="stat-number">0</div>
+                        <div class="stat-label">Today</div>
+                    </div>
+                    <div class="stat-item">
+                        <div id="location-accuracy" class="stat-number">--</div>
+                        <div class="stat-label">GPS</div>
+                    </div>
+                </div>
+
+                <div class="status-controls">
+                    <button id="connect-btn" class="btn btn-primary" onclick="connectDashboard()">
+                        Connect Dashboard
+                    </button>
+                    <button id="disconnect-btn" class="btn btn-danger" onclick="disconnectDashboard()" disabled>
+                        Disconnect
+                    </button>
+                    <button id="location-btn" class="btn btn-warning" onclick="toggleLocationTracking()" disabled>
+                        Start Location
+                    </button>
+                    <button id="refresh-btn" class="btn btn-success" onclick="refreshAssignments()" disabled>
+                        Refresh Tasks
+                    </button>
+                </div>
+
+                <div>
+                    <label for="worker-id">Worker ID:</label>
+                    <input type="number" id="worker-id" value="1" style="margin-left: 0.5rem; padding: 0.25rem;">
+
+                    <label for="auth-token" style="margin-left: 1rem;">Auth Token:</label>
+                    <input type="text" id="auth-token" placeholder="JWT Token" style="margin-left: 0.5rem; padding: 0.25rem; width: 200px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignments Card -->
+        <div class="card">
+            <h2>Current Assignments</h2>
+            <div id="assignments" class="assignments">
+                <div class="assignment-item">
+                    <div style="text-align: center; color: #6c757d; padding: 2rem;">
+                        No assignments loaded. Connect to dashboard first.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Log Card -->
+        <div class="card">
+            <h2>Activity Log</h2>
+            <div>
+                <button class="btn btn-warning" onclick="clearLog()" style="margin-bottom: 1rem;">
+                    Clear Log
+                </button>
+            </div>
+            <div id="activity-log" class="activity-log">
+                <!-- Log entries will be added here -->
+            </div>
+        </div>
+
+        <!-- Map/Route Card -->
+        <div class="card">
+            <h2>Route & Location</h2>
+            <div id="location-display" style="text-align: center; color: #6c757d; padding: 2rem;">
+                Location tracking not started
+            </div>
+            <div style="margin-top: 1rem;">
+                <button class="btn btn-primary" onclick="testLocationUpdate()" disabled id="test-location-btn">
+                    Test Location Update
+                </button>
+                <button class="btn btn-success" onclick="optimizeRoute()" disabled id="optimize-route-btn">
+                    Optimize Route
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include WebSocket JavaScript -->
+    <script src="/static/js/klynaa-websocket.js"></script>
+    <script>
+        let workerDashboard = null;
+        let isLocationTracking = false;
+        let locationUpdateCount = 0;
+
+        function logActivity(type, message, data = null) {
+            const log = document.getElementById('activity-log');
+            const timestamp = new Date().toLocaleTimeString();
+
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+
+            let content = `
+                <div class="log-timestamp">[${timestamp}]</div>
+                <div class="log-message">${message}</div>
+            `;
+
+            if (data) {
+                content += `<div style="font-size: 0.8rem; color: #666; margin-top: 0.25rem;">
+                    ${JSON.stringify(data, null, 2)}
+                </div>`;
+            }
+
+            entry.innerHTML = content;
+            log.insertBefore(entry, log.firstChild);
+
+            // Keep only last 50 entries
+            while (log.children.length > 50) {
+                log.removeChild(log.lastChild);
+            }
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusText = document.getElementById('connection-status-text');
+            const statusDot = document.getElementById('connection-dot');
+            const buttons = ['disconnect-btn', 'location-btn', 'refresh-btn', 'test-location-btn', 'optimize-route-btn'];
+
+            if (connected) {
+                statusText.textContent = 'Connected';
+                statusDot.classList.add('connected');
+                document.getElementById('connect-btn').disabled = true;
+                buttons.forEach(id => {
+                    document.getElementById(id).disabled = false;
+                });
+            } else {
+                statusText.textContent = 'Disconnected';
+                statusDot.classList.remove('connected');
+                document.getElementById('connect-btn').disabled = false;
+                buttons.forEach(id => {
+                    document.getElementById(id).disabled = true;
+                });
+            }
+        }
+
+        async function connectDashboard() {
+            const workerId = document.getElementById('worker-id').value;
+            const authToken = document.getElementById('auth-token').value;
+
+            try {
+                workerDashboard = new KlynaaWorkerDashboard(workerId, authToken || null);
+
+                // Setup event listeners
+                workerDashboard.onConnected(() => {
+                    updateConnectionStatus(true);
+                    logActivity('success', 'Worker dashboard connected successfully');
+                });
+
+                workerDashboard.onDisconnected(() => {
+                    updateConnectionStatus(false);
+                    logActivity('warning', 'Worker dashboard disconnected');
+                });
+
+                workerDashboard.onNewAssignment((data) => {
+                    logActivity('info', 'New pickup assignment received', data);
+                    refreshAssignments();
+                });
+
+                workerDashboard.onRouteUpdate((data) => {
+                    logActivity('info', 'Route update received', data);
+                });
+
+                workerDashboard.onPickupCancelled((data) => {
+                    logActivity('warning', 'Pickup cancelled', data);
+                    refreshAssignments();
+                });
+
+                workerDashboard.wsManager.on(`worker_${workerId}`, 'assignments', (data) => {
+                    updateAssignments(data);
+                });
+
+                await workerDashboard.connect();
+                logActivity('info', 'Connecting to worker dashboard...', { workerId });
+
+            } catch (error) {
+                logActivity('error', 'Failed to connect to dashboard', error);
+                console.error('Connection failed:', error);
+            }
+        }
+
+        function disconnectDashboard() {
+            if (workerDashboard) {
+                workerDashboard.disconnect();
+                workerDashboard = null;
+                updateConnectionStatus(false);
+                logActivity('info', 'Dashboard disconnected');
+            }
+        }
+
+        function toggleLocationTracking() {
+            if (!workerDashboard) return;
+
+            const btn = document.getElementById('location-btn');
+
+            if (isLocationTracking) {
+                workerDashboard.stopLocationTracking();
+                btn.textContent = 'Start Location';
+                btn.className = 'btn btn-warning';
+                isLocationTracking = false;
+                logActivity('info', 'Location tracking stopped');
+            } else {
+                workerDashboard.startLocationTracking(15000); // Every 15 seconds
+                btn.textContent = 'Stop Location';
+                btn.className = 'btn btn-danger';
+                isLocationTracking = true;
+                logActivity('success', 'Location tracking started');
+            }
+        }
+
+        function refreshAssignments() {
+            if (workerDashboard) {
+                workerDashboard.getAssignments();
+                logActivity('info', 'Requesting assignment refresh');
+            }
+        }
+
+        function testLocationUpdate() {
+            if (!workerDashboard) return;
+
+            const lat = 40.7128 + (Math.random() - 0.5) * 0.01;
+            const lng = -74.0060 + (Math.random() - 0.5) * 0.01;
+
+            workerDashboard.updateLocation(lat, lng);
+
+            document.getElementById('location-display').innerHTML = `
+                <strong>Last Test Location:</strong><br>
+                Lat: ${lat.toFixed(6)}<br>
+                Lng: ${lng.toFixed(6)}<br>
+                <small>Updated: ${new Date().toLocaleTimeString()}</small>
+            `;
+
+            document.getElementById('location-accuracy').textContent = '✓';
+
+            logActivity('success', 'Test location sent', { lat, lng });
+        }
+
+        function optimizeRoute() {
+            // This would integrate with the route optimization API
+            logActivity('info', 'Route optimization requested');
+        }
+
+        function acceptPickup(pickupId) {
+            if (workerDashboard) {
+                workerDashboard.acceptPickup(pickupId);
+                logActivity('success', `Pickup ${pickupId} accepted`);
+            }
+        }
+
+        function completePickup(pickupId) {
+            if (workerDashboard) {
+                workerDashboard.completePickup(pickupId);
+                logActivity('success', `Pickup ${pickupId} completed`);
+            }
+        }
+
+        function updateAssignments(assignments) {
+            const container = document.getElementById('assignments');
+
+            if (!assignments || assignments.length === 0) {
+                container.innerHTML = `
+                    <div class="assignment-item">
+                        <div style="text-align: center; color: #6c757d;">
+                            No current assignments
+                        </div>
+                    </div>
+                `;
+                document.getElementById('active-pickups').textContent = '0';
+                return;
+            }
+
+            container.innerHTML = '';
+            document.getElementById('active-pickups').textContent = assignments.length;
+
+            assignments.forEach(assignment => {
+                const item = document.createElement('div');
+                item.className = 'assignment-item';
+
+                const statusClass = assignment.status ? `status-${assignment.status.replace('_', '-')}` : 'status-assigned';
+
+                item.innerHTML = `
+                    <div class="assignment-header">
+                        <strong>Pickup #${assignment.id}</strong>
+                        <span class="assignment-status ${statusClass}">${assignment.status || 'assigned'}</span>
+                    </div>
+                    <div>
+                        <strong>Customer:</strong> ${assignment.customer?.name || 'Unknown'}<br>
+                        <strong>Scheduled:</strong> ${assignment.scheduled_time ? new Date(assignment.scheduled_time).toLocaleString() : 'ASAP'}
+                    </div>
+                    <div class="location-info">
+                        📍 ${assignment.bin?.location ? `${assignment.bin.location.lat}, ${assignment.bin.location.lng}` : 'Location not available'}
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-success" onclick="acceptPickup(${assignment.id})"
+                            ${assignment.status === 'in_progress' ? 'disabled' : ''}>
+                            ${assignment.status === 'assigned' ? 'Accept' : 'Accepted'}
+                        </button>
+                        <button class="btn btn-primary" onclick="completePickup(${assignment.id})"
+                            ${assignment.status !== 'in_progress' ? 'disabled' : ''}>
+                            Complete
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(item);
+            });
+        }
+
+        function clearLog() {
+            document.getElementById('activity-log').innerHTML = '';
+        }
+
+        // Initialize
+        updateConnectionStatus(false);
+        logActivity('info', 'Worker dashboard loaded. Enter your Worker ID and connect.');
+    </script>
+</body>
+</html>

@@ -32,7 +32,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: klynaa_frontend
-    command: [ "sh", "-lc", "npm install && npm run dev" ]
+    command: [ "sh", "-lc", "pnpm install && pnpm run dev" ]
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
@@ -46,7 +46,7 @@ services:
       context: ./mobile
       dockerfile: Dockerfile
     container_name: klynaa_mobile
-    command: npm run start
+    command: pnpm run start
     volumes:
       - ./mobile:/usr/src/app
     ports:
@@ -74,7 +74,7 @@ services:
       context: ./blockchain
       dockerfile: Dockerfile
     container_name: klynaa_blockchain
-    command: npm run dev
+    command: pnpm run dev
     volumes:
       - ./blockchain:/usr/src/app
     ports:

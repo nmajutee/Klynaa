@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test - Klynaa</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        .log { background: #f8f9fa; padding: 10px; margin: 10px 0; border-left: 3px solid #007bff; }
+        button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+        input, select { padding: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Test - Klynaa Real-time System</h1>
+
+    <div id="connection-status" class="status info">Not connected</div>
+
+    <div>
+        <button onclick="connectWebSocket()">Connect</button>
+        <button onclick="disconnectWebSocket()">Disconnect</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <div>
+        <h3>Test Actions</h3>
+        <select id="test-consumer">
+            <option value="pickup">Pickup Consumer</option>
+            <option value="customer">Customer Consumer</option>
+            <option value="worker">Worker Consumer</option>
+        </select>
+        <input type="text" id="test-message" placeholder="Test message" value="Hello WebSocket!">
+        <button onclick="sendTestMessage()">Send Test</button>
+    </div>
+
+    <div>
+        <h3>Connection Log</h3>
+        <div id="log-container" class="log" style="height: 300px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        let socket = null;
+        const logContainer = document.getElementById('log-container');
+        const statusDiv = document.getElementById('connection-status');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            logEntry.style.color = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#007bff';
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateStatus(message, className) {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${className}`;
+        }
+
+        function connectWebSocket() {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                log('Already connected!', 'warning');
+                return;
+            }
+
+            // Try different WebSocket endpoints
+            const wsUrl = `ws://localhost:8003/ws/pickup/test/`;
+            log(`Connecting to: ${wsUrl}`);
+
+            socket = new WebSocket(wsUrl);
+
+            socket.onopen = function(e) {
+                log('WebSocket connected successfully!', 'success');
+                updateStatus('Connected', 'success');
+            };
+
+            socket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                log(`Received: ${JSON.stringify(data)}`, 'success');
+            };
+
+            socket.onclose = function(e) {
+                log(`WebSocket closed: Code ${e.code}, Reason: ${e.reason}`, 'warning');
+                updateStatus('Disconnected', 'warning');
+                socket = null;
+            };
+
+            socket.onerror = function(e) {
+                log(`WebSocket error: ${e}`, 'error');
+                updateStatus('Error', 'error');
+            };
+        }
+
+        function disconnectWebSocket() {
+            if (socket) {
+                socket.close();
+                log('Disconnecting WebSocket');
+            } else {
+                log('No active connection to disconnect');
+            }
+        }
+
+        function sendTestMessage() {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                const message = document.getElementById('test-message').value;
+                const consumer = document.getElementById('test-consumer').value;
+
+                const testData = {
+                    type: 'test_message',
+                    consumer: consumer,
+                    message: message,
+                    timestamp: new Date().toISOString()
+                };
+
+                socket.send(JSON.stringify(testData));
+                log(`Sent: ${JSON.stringify(testData)}`);
+            } else {
+                log('WebSocket not connected!', 'error');
+            }
+        }
+
+        function clearLog() {
+            logContainer.innerHTML = '';
+        }
+
+        // Auto-connect on page load
+        window.onload = function() {
+            log('WebSocket test page loaded');
+            log('Ready to test WebSocket connections');
+        };
+    </script>
+</body>
+</html>

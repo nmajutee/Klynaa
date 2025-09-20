@@ -1,0 +1,46 @@
+{
+  "name": "klynaa",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Enterprise waste management platform",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "test": "turbo test",
+    "clean": "turbo clean",
+    "type-check": "turbo type-check",
+    "storybook": "turbo storybook",
+    "web:dev": "pnpm --filter @klynaa/web dev",
+    "admin:dev": "pnpm --filter @klynaa/admin dev",
+    "docs:dev": "pnpm --filter @klynaa/docs dev",
+    "backend:migrate": "cd services/django-api && python manage.py migrate",
+    "backend:shell": "cd services/django-api && python manage.py shell",
+    "backend:test": "cd services/django-api && python manage.py test",
+    "setup": "pnpm install && pnpm run backend:migrate"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "@types/node": "^24.5.2",
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@typescript-eslint/eslint-plugin": "^8.44.0",
+    "@typescript-eslint/parser": "^8.44.0",
+    "eslint": "^9.36.0",
+    "eslint-config-next": "^15.5.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "react": "^19.1.1",
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.2"
+  },
+  "packageManager": "pnpm@10.17.0",
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=10.0.0"
+  }
+}

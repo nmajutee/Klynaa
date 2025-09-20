@@ -1,0 +1,53 @@
+{
+    "name": "@klynaa/web",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev -p 3000",
+        "build": "next build",
+        "start": "next start -p 3000",
+        "lint": "next lint",
+        "format": "prettier --write .",
+        "type-check": "tsc --noEmit",
+        "clean": "rm -rf .next dist"
+    },
+    "dependencies": {
+        "@headlessui/react": "^2.2.8",
+        "@heroicons/react": "^2.2.0",
+        "@klynaa/api": "file:../../packages/api",
+        "@klynaa/types": "file:../../packages/types",
+        "@klynaa/ui": "file:../../packages/ui",
+        "@tailwindcss/forms": "^0.5.10",
+        "@tailwindcss/typography": "^0.5.18",
+        "@tanstack/react-query": "^5.89.0",
+        "@tanstack/react-query-devtools": "^5.89.0",
+        "autoprefixer": "^10.4.21",
+        "axios": "^1.12.2",
+        "class-variance-authority": "^0.7.1",
+        "classnames": "^2.5.1",
+        "clsx": "^2.1.1",
+        "leaflet": "^1.9.4",
+        "lucide-react": "^0.544.0",
+        "next": "^15.5.3",
+        "postcss": "^8.5.6",
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
+        "react-hook-form": "^7.63.0",
+        "react-icons": "^5.5.0",
+        "react-leaflet": "^5.0.0",
+        "recharts": "^3.2.1",
+        "tailwind-merge": "^3.3.1",
+        "tailwindcss": "^4.1.13",
+        "zod": "^4.1.11",
+        "zustand": "^5.0.8"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3.3.1",
+        "@eslint/js": "^9.36.0",
+        "@types/leaflet": "^1.9.20",
+        "@types/leaflet.markercluster": "^1.5.6"
+    },
+    "engines": {
+        "node": ">=18.17.0"
+    }
+}
