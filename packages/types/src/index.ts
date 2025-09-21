@@ -10,6 +10,34 @@ export interface User {
   updatedAt: Date;
 }
 
+// Authentication Types
+export interface LoginCredentials {
+  identifier: string; // Can be email or username
+  password: string;
+}
+
+export interface RegisterData {
+  email: string;
+  username: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
+  role: 'customer' | 'worker' | 'admin';
+}
+
+export interface AuthResponse {
+  user: User;
+  token?: string;
+  access?: string;
+  refresh?: string;
+}
+
+export interface AuthTokens {
+  access: string;
+  refresh: string;
+}
+
 // Bin Types
 export interface Bin {
   id: string;

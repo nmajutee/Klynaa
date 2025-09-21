@@ -1,72 +1,118 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '../client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { apiClient, type User, type LoginCredentials, type RegisterData, type AuthResponse } from '../client';
 
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'customer' | 'worker' | 'admin';
-  phone?: string;
-  address?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+// Re-export types from client for convenience
+export type {
+  User,
+  LoginCredentials,
+  RegisterData,
+  AuthResponse,
+} from '../client';
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
+export const useAuth = () => {
+  const queryClient = useQueryClient();
 
-export interface RegisterData {
-  email: string;
-  password: string;
-  name: string;
-  role: 'customer' | 'worker';
-  phone?: string;
-  address?: string;
-}
+  const loginMutation = useMutation({
+    mutationFn: (credentials: LoginCredentials) => apiClient.login(credentials),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['user'], data.user);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+  });
 
-export interface AuthResponse {
-  user: User;
-  token: string;
-  refreshToken: string;
-}
+  const registerMutation = useMutation({
+    mutationFn: (data: RegisterData) => apiClient.register(data),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['user'], data.user);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+  });
 
-// Auth API calls
-const authApi = {
-  login: (credentials: LoginCredentials): Promise<AuthResponse> =>
-    apiClient.post('/auth/login/', credentials),
+  const logoutMutation = useMutation({
+    mutationFn: () => apiClient.logout(),
+    onSuccess: () => {
+      queryClient.setQueryData(['user'], null);
+      queryClient.clear();
+    },
+  });
 
-  register: (data: RegisterData): Promise<AuthResponse> =>
-    apiClient.post('/auth/register/', data),
+  const userQuery = useQuery({
+    queryKey: ['user'],
+    queryFn: () => apiClient.getCurrentUser(),
+    retry: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
 
-  refresh: (refreshToken: string): Promise<{ token: string }> =>
-    apiClient.post('/auth/refresh/', { refresh_token: refreshToken }),
+  return {
+    // Queries
+    user: userQuery.data,
+    isLoading: userQuery.isLoading,
+    isError: userQuery.isError,
+    error: userQuery.error,
 
-  logout: (): Promise<void> =>
-    apiClient.post('/auth/logout/'),
+    // Mutations
+    login: loginMutation.mutate,
+    loginAsync: loginMutation.mutateAsync,
+    isLoggingIn: loginMutation.isPending,
+    loginError: loginMutation.error,
 
-  getProfile: (): Promise<User> =>
-    apiClient.get('/auth/profile/'),
+    register: registerMutation.mutate,
+    registerAsync: registerMutation.mutateAsync,
+    isRegistering: registerMutation.isPending,
+    registerError: registerMutation.error,
+
+    logout: logoutMutation.mutate,
+    isLoggingOut: logoutMutation.isPending,
+
+    // Helper methods
+    isAuthenticated: !!userQuery.data,
+    isCustomer: userQuery.data?.role === 'customer',
+    isWorker: userQuery.data?.role === 'worker',
+    isAdmin: userQuery.data?.role === 'admin',
+
+    // Token check helper
+    hasValidToken: () => {
+      const token = localStorage.getItem('auth_token');
+      return !!token && token !== 'null' && token !== 'undefined';
+    },
+
+    // Refresh user data
+    refetchUser: userQuery.refetch,
+  };
 };
 
-// React Query hooks
+export const useCurrentUser = () => {
+  return useQuery({
+    queryKey: ['user'],
+    queryFn: () => apiClient.getCurrentUser(),
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// Individual hooks for specific operations
 export const useLogin = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: authApi.login,
+    mutationFn: (credentials: LoginCredentials) => apiClient.login(credentials),
     onSuccess: (data) => {
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('refresh_token', data.refreshToken);
+      queryClient.setQueryData(['user'], data.user);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
 };
 
 export const useRegister = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: authApi.register,
+    mutationFn: (data: RegisterData) => apiClient.register(data),
     onSuccess: (data) => {
-      localStorage.setItem('auth_token', data.token);
-      localStorage.setItem('refresh_token', data.refreshToken);
+      queryClient.setQueryData(['user'], data.user);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
 };
@@ -75,20 +121,10 @@ export const useLogout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: authApi.logout,
+    mutationFn: () => apiClient.logout(),
     onSuccess: () => {
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('refresh_token');
+      queryClient.setQueryData(['user'], null);
       queryClient.clear();
     },
-  });
-};
-
-export const useAuth = () => {
-  return useQuery({
-    queryKey: ['auth', 'profile'],
-    queryFn: authApi.getProfile,
-    retry: false,
-    enabled: typeof window !== 'undefined' && !!localStorage.getItem('auth_token'),
   });
 };

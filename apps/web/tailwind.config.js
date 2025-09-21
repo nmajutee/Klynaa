@@ -4,11 +4,12 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Arimo', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Manrope', 'system-ui', 'sans-serif'],
       },
       colors: {
         // Klynaa Design System Colors
@@ -28,8 +29,8 @@ module.exports = {
           200: '#bae6fd',
           300: '#7dd3fc',
           400: '#38bdf8',
-          500: '#4CAF50', // Updated to match Klynaa primary
-          600: '#2E7D32', // Updated to match Klynaa dark green
+          500: '#4CAF50',
+          600: '#2E7D32',
           700: '#0369a1',
           800: '#075985',
           900: '#0c4a6e',
@@ -40,8 +41,8 @@ module.exports = {
           200: '#bbf7d0',
           300: '#86efac',
           400: '#4ade80',
-          500: '#4CAF50', // Updated to match Klynaa primary
-          600: '#2E7D32', // Updated to match Klynaa dark green
+          500: '#4CAF50',
+          600: '#2E7D32',
           700: '#15803d',
           800: '#166534',
           900: '#14532d',
@@ -49,7 +50,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
-}
+  plugins: [],
+};

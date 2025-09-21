@@ -1,13 +1,13 @@
 import { useAuth } from '@klynaa/api';
 
 export const useUser = () => {
-  const { data: user, isLoading, error, refetch } = useAuth();
+  const { user, isLoading, error, refetchUser } = useAuth();
 
   return {
     user,
     isLoading,
     error,
-    refetch,
+    refetch: refetchUser,
     isAuthenticated: !!user,
   };
 };

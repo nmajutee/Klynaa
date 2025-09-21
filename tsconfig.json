@@ -30,7 +30,16 @@
       "@/*": ["./*"]
     }
   },
-  "include": [],
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "apps/*/src/**/*.ts",
+    "apps/*/src/**/*.tsx",
+    "apps/web/**/*.ts",
+    "apps/web/**/*.tsx",
+    "*.ts",
+    "*.tsx"
+  ],
   "exclude": [
     "node_modules",
     ".next",

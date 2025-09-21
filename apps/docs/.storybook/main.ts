@@ -21,6 +21,15 @@ const config: any = {
       propFilter: (prop: any) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
     },
   },
+  viteFinal: async (config: any) => {
+    return {
+      ...config,
+      esbuild: {
+        jsxFactory: 'React.createElement',
+        jsxFragment: 'React.Fragment',
+      },
+    };
+  },
 };
 
 export default config;
