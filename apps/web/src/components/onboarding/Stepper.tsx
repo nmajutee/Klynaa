@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Circle, ChevronRight } from 'lucide-react';
+import { Icon } from '../../../components/ui/Icons';
 import { cn } from '../../lib/utils';
 
 export interface Step {
@@ -77,7 +77,7 @@ export const Stepper: React.FC<StepperProps> = ({
                   )}
                 >
                   {status === 'completed' ? (
-                    <Check className="w-5 h-5" />
+                    <Icon name="Check" size={20 as any} />
                   ) : (
                     <span className="text-sm font-semibold">{step.id}</span>
                   )}
@@ -130,7 +130,7 @@ export const Stepper: React.FC<StepperProps> = ({
                   )}
                 >
                   {status === 'completed' ? (
-                    <Check className="w-4 h-4" />
+                    <Icon name="Check" size={16 as any} />
                   ) : (
                     <span className="text-xs font-semibold">{step.id}</span>
                   )}

@@ -2,11 +2,18 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, Phone } from 'lucide-react';
+import { Icon } from '../../../components/ui/Icons';
 import { useOnboardingStore } from '../../../src/stores/onboarding';
 import OnboardingLayout from '../../../src/components/onboarding/OnboardingLayout';
 import { workerAccountBasicsSchema, type WorkerAccountBasicsForm } from '../../../src/schemas/registration';
 import { Input, Label, Field } from '../../../src/design-system/components/Form';
+import {
+  PHONE_SETTINGS,
+  FORM_VALIDATION,
+  FORM_UI_SETTINGS,
+  formatPhoneNumber,
+  isValidPhoneNumber
+} from '../../../src/config/formSettings';
 
 export default function WorkerRegistrationPage() {
   const router = useRouter();
@@ -62,28 +69,18 @@ export default function WorkerRegistrationPage() {
 
       console.log('Data updated in store');
 
-      // If phone not verified, trigger OTP
-      if (!phoneVerified) {
-        // Here we would call API to send OTP
-        console.log('Phone not verified, redirecting to verification');
-        setOtpSent(true);
-        // Redirect to OTP verification page
-        router.push('/auth/register/verify-phone?type=worker');
-      } else {
-        // Move to next step
-        console.log('Phone verified, moving to profile');
-        nextStep();
-        router.push('/auth/register/worker/profile');
-      }
+      // Always go to phone verification (simplified flow)
+      console.log('Redirecting to phone verification');
+      setOtpSent(true);
+      router.push('/auth/register/verify-phone?type=worker');
+
     } catch (error) {
       console.error('Form submission error:', error);
     }
-  };
-
-  return (
+  };  return (
     <OnboardingLayout
       title="Create Your Worker Account"
-      subtitle="Step 1 of 5: Account Basics"
+      subtitle="Step 1 of 2: Account Basics"
     >
       <div className="p-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -114,11 +111,11 @@ export default function WorkerRegistrationPage() {
           >
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Phone className="h-5 w-5 text-neutral-400" />
+                <Icon name="Smartphone" size={20} className="text-gray-500" />
               </div>
               <Input
                 {...register('phone_number')}
-                placeholder="+237 6XX XXX XXX"
+                placeholder={PHONE_SETTINGS.phonePlaceholder}
                 className="pl-10"
                 error={errors.phone_number?.message}
               />
@@ -140,9 +137,9 @@ export default function WorkerRegistrationPage() {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <EyeOff className="h-5 w-5 text-neutral-400" />
+                  <Icon name="EyeOff" size={20} className="text-gray-500" />
                 ) : (
-                  <Eye className="h-5 w-5 text-neutral-400" />
+                  <Icon name="Eye" size={20} className="text-gray-500" />
                 )}
               </button>
             </div>
@@ -172,9 +169,9 @@ export default function WorkerRegistrationPage() {
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? (
-                  <EyeOff className="h-5 w-5 text-neutral-400" />
+                  <Icon name="EyeOff" size={20} className="text-gray-500" />
                 ) : (
-                  <Eye className="h-5 w-5 text-neutral-400" />
+                  <Icon name="Eye" size={20} className="text-gray-500" />
                 )}
               </button>
             </div>
@@ -184,7 +181,7 @@ export default function WorkerRegistrationPage() {
           <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <Phone className="h-5 w-5 text-emerald-600" />
+                <Icon name="Smartphone" size={20} className="text-emerald-600" />
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-emerald-800">
@@ -208,14 +205,27 @@ export default function WorkerRegistrationPage() {
               Back to Account Type
             </button>
 
-            <button
-              type="submit"
-              disabled={!isValid || isSubmitting}
-              className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-neutral-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
-              onClick={() => console.log('Button clicked', { isValid, isSubmitting, errors })}
-            >
-              {isSubmitting ? 'Creating Account...' : 'Continue'}
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              {(!isValid && Object.keys(errors).length > 0) && (
+                <p className="text-sm text-red-600">
+                  Please fix the errors above to continue
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={!isValid || isSubmitting}
+                className={FORM_UI_SETTINGS.fieldClasses.button.primary}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    {FORM_UI_SETTINGS.loadingStates.creatingAccount}
+                  </>
+                ) : (
+                  'Continue'
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>

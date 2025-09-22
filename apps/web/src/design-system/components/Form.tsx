@@ -4,13 +4,13 @@ import { cn } from '../../lib/utils';
 
 // Input variant configurations
 const inputVariants = cva(
-  'flex w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50 transition-colors',
+  'flex w-full rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 disabled:cursor-not-allowed disabled:opacity-50 transition-colors dark:bg-neutral-800 dark:border-neutral-600 dark:placeholder:text-neutral-500 dark:text-neutral-100 dark:focus:ring-primary-400 dark:focus:border-primary-400',
   {
     variants: {
       variant: {
         default: '',
-        error: 'border-error-300 focus:border-error-500 focus:ring-error-500',
-        success: 'border-success-300 focus:border-success-500 focus:ring-success-500',
+        error: 'border-error-300 focus:border-error-500 focus:ring-error-500 dark:border-error-600 dark:focus:border-error-400 dark:focus:ring-error-400',
+        success: 'border-success-300 focus:border-success-500 focus:ring-success-500 dark:border-success-600 dark:focus:border-success-400 dark:focus:ring-success-400',
       },
       size: {
         sm: 'h-8 px-2 text-xs',
@@ -132,13 +132,13 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
     <label
       ref={ref}
       className={cn(
-        'text-sm font-medium leading-none text-neutral-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        'text-sm font-medium leading-none text-neutral-700 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-neutral-300',
         className
       )}
       {...props}
     >
       {children}
-      {required && <span className="text-error-500 ml-1">*</span>}
+      {required && <span className="text-error-500 ml-1 dark:text-error-400">*</span>}
     </label>
   )
 );
@@ -174,7 +174,7 @@ export const Field: React.FC<FieldProps> = ({
           {label}
         </Label>
       )}
-      {React.cloneElement(childWithProps, { error: !!error, id })}
+      {React.cloneElement(childWithProps, { error, id })}
       {(error || helperText) && (
         <p className={cn('text-xs', error ? 'text-error-600' : 'text-neutral-500')}>
           {error || helperText}

@@ -1,14 +1,14 @@
 import { z } from 'zod';
+import { PHONE_SETTINGS, FORM_VALIDATION, OTP_SETTINGS } from '../config/formSettings';
 
-// Common validation patterns
-const phoneRegex = /^[+]?[\d\s\-\(\)]+$/;
-const emailSchema = z.string().email('Please enter a valid email address');
+// Common validation patterns using centralized settings
+const emailSchema = z.string().email(FORM_VALIDATION.email.message);
 const phoneSchema = z.string()
   .min(8, 'Phone number must be at least 8 digits')
-  .regex(phoneRegex, 'Please enter a valid phone number');
+  .regex(PHONE_SETTINGS.phoneRegex, PHONE_SETTINGS.phoneValidationMessage);
 const passwordSchema = z.string()
-  .min(8, 'Password must be at least 8 characters')
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
+  .min(FORM_VALIDATION.password.minLength, FORM_VALIDATION.password.message)
+  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, FORM_VALIDATION.password.message);
 
 // File validation
 const maxFileSize = 5 * 1024 * 1024; // 5MB
@@ -34,8 +34,9 @@ const documentFileSchema = z.any()
 // Worker Registration Schemas
 export const workerAccountBasicsSchema = z.object({
   full_name: z.string()
-    .min(2, 'Full name must be at least 2 characters')
-    .max(100, 'Full name must be less than 100 characters'),
+    .min(FORM_VALIDATION.name.minLength, `Full name must be at least ${FORM_VALIDATION.name.minLength} characters`)
+    .max(FORM_VALIDATION.name.maxLength, `Full name must be less than ${FORM_VALIDATION.name.maxLength} characters`)
+    .regex(FORM_VALIDATION.name.regex, FORM_VALIDATION.name.message),
   email: emailSchema,
   phone_number: phoneSchema,
   password: passwordSchema,
@@ -111,10 +112,11 @@ export const workerEarningsSchema = z.object({
 export const binOwnerAccountBasicsSchema = z.object({
   account_type: z.enum(['individual', 'business', 'institution']),
   full_name: z.string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be less than 100 characters'),
+    .min(FORM_VALIDATION.name.minLength, `Name must be at least ${FORM_VALIDATION.name.minLength} characters`)
+    .max(FORM_VALIDATION.name.maxLength, `Name must be less than ${FORM_VALIDATION.name.maxLength} characters`)
+    .regex(FORM_VALIDATION.name.regex, FORM_VALIDATION.name.message),
   org_name: z.string()
-    .max(100, 'Organization name must be less than 100 characters')
+    .max(FORM_VALIDATION.name.maxLength, `Organization name must be less than ${FORM_VALIDATION.name.maxLength} characters`)
     .optional(),
   email: emailSchema,
   phone_number: phoneSchema,
@@ -190,9 +192,8 @@ export const binOwnerBillingSchema = z.object({
 // OTP Verification Schema
 export const otpVerificationSchema = z.object({
   otp_code: z.string()
-    .min(4, 'OTP must be at least 4 digits')
-    .max(6, 'OTP must be at most 6 digits')
-    .regex(/^\d+$/, 'OTP must contain only numbers'),
+    .length(OTP_SETTINGS.codeLength, `OTP must be exactly ${OTP_SETTINGS.codeLength} digits`)
+    .regex(OTP_SETTINGS.otpRegex, OTP_SETTINGS.otpValidationMessage),
 });
 
 // Type exports for TypeScript integration

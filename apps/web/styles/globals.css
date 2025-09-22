@@ -1,10 +1,57 @@
 /* Tailwind CSS v4 - Use single import instead of separate directives */
 @import "tailwindcss";
 
-/* Import our new design system - but comment out for now since file doesn't exist */
-/* @import '../src/styles/index.css'; */
-
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+
+/* Custom CSS variables for themes */
+:root {
+  --bg-color: #f9fafb;
+  --text-color: #111827;
+  --border-color: #e5e7eb;
+}
+
+/* Dark theme variables */
+html.dark,
+html[data-theme="dark"],
+body.dark {
+  --bg-color: #111827;
+  --text-color: #f3f4f6;
+  --border-color: #374151;
+}
+
+/* Force background and text colors using custom properties */
+html {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+body {
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Smooth transitions */
+html, body {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Ensure Tailwind dark classes work */
+html.dark {
+  @apply bg-neutral-900 text-neutral-100;
+}
+
+html:not(.dark) {
+  @apply bg-neutral-50 text-neutral-900;
+}
+
+/* Additional dark mode support */
+.dark {
+  color-scheme: dark;
+}
+
+:not(.dark) {
+  color-scheme: light;
+}
 
 /* Klynaa Two-Pane Dashboard Design Tokens */
 :root {

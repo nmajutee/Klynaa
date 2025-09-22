@@ -2,57 +2,69 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, User, Phone, Mail, MapPin } from 'lucide-react';
-import Link from 'next/link';
-import { z } from 'zod';
-import { Input, Label, Field } from '../../../src/design-system/components/Form';
+import { Icon } from '../../../components/ui/Icons';
 import { useOnboardingStore } from '../../../src/stores/onboarding';
 import OnboardingLayout from '../../../src/components/onboarding/OnboardingLayout';
+import { z } from 'zod';
+import { Input, Label, Field } from '../../../src/design-system/components/Form';
 
-// Step 1: Account Basics Schema
-const binOwnerBasicsSchema = z.object({
-  // Personal Information
-  full_name: z.string().min(2, 'Full name must be at least 2 characters'),
+// Bin Owner Account Basics Schema
+const binOwnerAccountBasicsSchema = z.object({
+  full_name: z.string()
+    .min(2, 'Full name must be at least 2 characters')
+    .max(100, 'Full name must be less than 100 characters'),
   email: z.string().email('Please enter a valid email address'),
-  phone_number: z.string().min(9, 'Please enter a valid phone number'),
+  phone_number: z.string()
+    .min(8, 'Phone number must be at least 8 digits')
+    .regex(/^[+]?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'),
   account_type: z.enum(['individual', 'business', 'institution']),
-
-  // Organization name (optional for business/institution)
   org_name: z.string().optional(),
-
-  // Account Security
+  address: z.string().min(10, 'Please provide your full address'),
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain uppercase, lowercase, and number'),
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
   password_confirm: z.string(),
-
-  // Address Information
-  address: z.string().min(10, 'Please provide your full address'),
-
-  // Agreement
-  terms_agreed: z.boolean().refine(val => val === true, 'You must accept the terms and conditions'),
 }).refine((data) => data.password === data.password_confirm, {
   message: "Passwords don't match",
   path: ["password_confirm"],
 });
 
-type BinOwnerBasicsForm = z.infer<typeof binOwnerBasicsSchema>;
+export type BinOwnerAccountBasicsForm = z.infer<typeof binOwnerAccountBasicsSchema>;
 
 export default function BinOwnerRegistrationPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     setUserType,
-    setCurrentStep,
     binOwnerData,
     updateBinOwnerData,
-    clearBinOwnerData,
+    setCurrentStep,
     phoneVerified,
     setOtpSent
   } = useOnboardingStore();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid, isSubmitting },
+    setValue,
+    watch
+  } = useForm<BinOwnerAccountBasicsForm>({
+    resolver: zodResolver(binOwnerAccountBasicsSchema),
+    defaultValues: {
+      full_name: binOwnerData.full_name || '',
+      email: binOwnerData.email || '',
+      phone_number: binOwnerData.phone_number || '',
+      account_type: binOwnerData.account_type || 'individual',
+      org_name: binOwnerData.org_name || '',
+      address: binOwnerData.address || '',
+      password: '',
+      password_confirm: '',
+    },
+    mode: 'onChange',
+  });
 
   // Set user type when component mounts
   useEffect(() => {
@@ -60,258 +72,224 @@ export default function BinOwnerRegistrationPage() {
     setCurrentStep(1);
   }, [setUserType, setCurrentStep]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    setValue
-  } = useForm<BinOwnerBasicsForm>({
-    resolver: zodResolver(binOwnerBasicsSchema),
-    defaultValues: {
-      full_name: binOwnerData?.full_name || '',
-      email: binOwnerData?.email || '',
-      phone_number: binOwnerData?.phone_number || '',
-      account_type: binOwnerData?.account_type || 'individual',
-      org_name: binOwnerData?.org_name || '',
-      password: '',
-      password_confirm: '',
-      address: binOwnerData?.address || '',
-      terms_agreed: binOwnerData?.terms_agreed || false,
-    },
-  });
-
-  const onSubmit = async (data: BinOwnerBasicsForm) => {
-    console.log('🔥 Bin Owner Form Submit - Data:', data);
-    console.log('🔥 Form validation errors:', errors);
-
-    setIsSubmitting(true);
+  const onSubmit = async (data: BinOwnerAccountBasicsForm) => {
+    console.log('Form submitted with data:', data);
+    console.log('Form is valid:', isValid);
+    console.log('Form errors:', errors);
 
     try {
-      // Save data to store
-      updateBinOwnerData(data);
+      // Update store with form data
+      updateBinOwnerData({
+        full_name: data.full_name,
+        email: data.email,
+        phone_number: data.phone_number,
+        account_type: data.account_type,
+        org_name: data.org_name,
+        address: data.address,
+        password: data.password,
+        password_confirm: data.password_confirm,
+      });
 
-      // Move to next step
+      // Always redirect to phone verification (simplified flow)
       setCurrentStep(2);
+      setOtpSent(true);
 
-      console.log('🔥 Moving to next step, redirecting...');
-
-      // Simulate API call for phone verification trigger
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Redirect to service details
-      router.push('/auth/register/bin-owner/details');
+      // Redirect to OTP verification page
+      router.push('/auth/register/verify-phone?type=binowner&phone=' + encodeURIComponent(data.phone_number));
     } catch (error) {
-      console.error('Registration error:', error);
-    } finally {
-      setIsSubmitting(false);
+      console.error('Form submission error:', error);
     }
-  };  // Auto-save form data as user types
-  const watchedFields = watch();
-  useEffect(() => {
-    const subscription = watch((value) => {
-      updateBinOwnerData(value as any);
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, updateBinOwnerData]);
-
-  return (
+  };  return (
     <OnboardingLayout
-      title="Join as Bin Owner"
-      subtitle="Create your account to manage waste collection services"
-      showBackButton={true}
-      showCloseButton={true}
+      title="Create Your Bin Owner Account"
+      subtitle="Step 1 of 2: Account Basics"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Personal Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2">
-                Personal Information
-              </h3>
+      <div className="p-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Full Name */}
+          <Field label="Full Name" error={errors.full_name?.message}>
+            <Input
+              {...register('full_name')}
+              placeholder="Enter your full name"
+              error={errors.full_name?.message}
+            />
+          </Field>
 
-              <Field label="Full Name" error={errors.full_name?.message}>
-                <Input
-                  {...register('full_name')}
-                  placeholder="Enter your full name"
-                  error={errors.full_name?.message}
-                />
-              </Field>
+          {/* Account Type */}
+          <Field label="Account Type" error={errors.account_type?.message}>
+            <select
+              {...register('account_type')}
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.account_type ? 'border-red-500' : 'border-neutral-300'
+              }`}
+            >
+              <option value="individual">Individual/Personal</option>
+              <option value="business">Business</option>
+              <option value="institution">Institution</option>
+            </select>
+          </Field>
 
-              <Field label="Account Type" error={errors.account_type?.message}>
-                <select
-                  {...register('account_type')}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                    errors.account_type ? 'border-red-500' : 'border-neutral-300'
-                  }`}
-                >
-                  <option value="individual">Individual/Personal</option>
-                  <option value="business">Business</option>
-                  <option value="institution">Institution</option>
-                </select>
-              </Field>
+          {/* Organization Name (conditional) */}
+          {watch('account_type') !== 'individual' && (
+            <Field label="Organization Name" error={errors.org_name?.message}>
+              <Input
+                {...register('org_name')}
+                placeholder="Enter organization name"
+                error={errors.org_name?.message}
+              />
+            </Field>
+          )}
 
-              {watch('account_type') !== 'individual' && (
-                <Field label="Organization Name" error={errors.org_name?.message}>
-                  <Input
-                    {...register('org_name')}
-                    placeholder="Enter organization name"
-                    error={errors.org_name?.message}
-                  />
-                </Field>
-              )}
-
-              <Field label="Email Address" error={errors.email?.message}>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-neutral-400" />
-                  </div>
-                  <Input
-                    type="email"
-                    {...register('email')}
-                    placeholder="your.email@example.com"
-                    className="pl-10"
-                    error={errors.email?.message}
-                  />
-                </div>
-              </Field>
-
-              <Field label="Phone Number" error={errors.phone_number?.message}>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Phone className="h-5 w-5 text-neutral-400" />
-                  </div>
-                  <Input
-                    type="tel"
-                    {...register('phone_number')}
-                    placeholder="+237 6XX XXX XXX"
-                    className="pl-10"
-                    error={errors.phone_number?.message}
-                  />
-                </div>
-              </Field>
-            </div>
-
-            {/* Security */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2">
-                Account Security
-              </h3>
-
-              <Field label="Password" error={errors.password?.message}>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? 'text' : 'password'}
-                    {...register('password')}
-                    placeholder="Create a secure password"
-                    className="pr-10"
-                    error={errors.password?.message}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-neutral-400" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-neutral-400" />
-                    )}
-                  </button>
-                </div>
-              </Field>
-
-              <Field label="Confirm Password" error={errors.password_confirm?.message}>
-                <div className="relative">
-                  <Input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    {...register('password_confirm')}
-                    placeholder="Confirm your password"
-                    className="pr-10"
-                    error={errors.password_confirm?.message}
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-5 w-5 text-neutral-400" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-neutral-400" />
-                    )}
-                  </button>
-                </div>
-              </Field>
-            </div>
-
-            {/* Address Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2">
-                Service Address
-              </h3>
-
-              <Field label="Full Address" error={errors.address?.message}>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <MapPin className="h-5 w-5 text-neutral-400" />
-                  </div>
-                  <Input
-                    {...register('address')}
-                    placeholder="Street address, building name, apartment number, city, region"
-                    className="pl-10"
-                    error={errors.address?.message}
-                  />
-                </div>
-              </Field>
-            </div>
-
-            {/* Terms and Conditions */}
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  {...register('terms_agreed')}
-                  className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-neutral-300 rounded"
-                />
-                <label className="text-sm text-neutral-700">
-                  I agree to the{' '}
-                  <Link href="/terms" className="text-blue-600 hover:text-blue-700 underline">
-                    Terms of Service
-                  </Link>{' '}
-                  and{' '}
-                  <Link href="/privacy" className="text-blue-600 hover:text-blue-700 underline">
-                    Privacy Policy
-                  </Link>
-                </label>
+          {/* Email */}
+          <Field label="Email Address" error={errors.email?.message}>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Icon name="Mail" size={20} className="text-gray-500" />
               </div>
-              {errors.terms_agreed && (
-                <p className="text-sm text-red-600">{errors.terms_agreed.message}</p>
-              )}
+              <Input
+                type="email"
+                {...register('email')}
+                placeholder="your.email@example.com"
+                className="pl-10"
+                error={errors.email?.message}
+              />
             </div>
+          </Field>
 
-            {/* Navigation */}
-            <div className="flex justify-between pt-6 border-t border-neutral-200">
-              <Link
-                href="/auth/register"
-                className="px-6 py-3 border border-neutral-300 text-neutral-700 rounded-lg hover:bg-neutral-50 transition-colors"
-              >
-                Back
-              </Link>
+          {/* Phone Number */}
+          <Field
+            label="Phone Number"
+            error={errors.phone_number?.message}
+            helperText="We'll send an SMS verification code to this number"
+          >
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Icon name="Smartphone" size={20} className="text-gray-500" />
+              </div>
+              <Input
+                {...register('phone_number')}
+                placeholder="+237 6XX XXX XXX"
+                className="pl-10"
+                error={errors.phone_number?.message}
+              />
+            </div>
+          </Field>
 
+          {/* Password */}
+          <Field label="Password" error={errors.password?.message}>
+            <div className="relative">
+              <Input
+                type={showPassword ? 'text' : 'password'}
+                {...register('password')}
+                placeholder="Create a strong password"
+                error={errors.password?.message}
+              />
               <button
-                type="submit"
-                disabled={isSubmitting}
-                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors flex items-center gap-2"
-                onClick={() => {
-                  console.log('🔥 Bin Owner Continue button clicked!');
-                  console.log('🔥 Form errors:', errors);
-                  console.log('🔥 Is submitting:', isSubmitting);
-                }}
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
               >
-                {isSubmitting ? 'Processing...' : 'Continue'}
+                {showPassword ? (
+                  <Icon name="EyeOff" size={20} className="text-gray-500" />
+                ) : (
+                  <Icon name="Eye" size={20} className="text-gray-500" />
+                )}
               </button>
             </div>
-          </form>
-      </OnboardingLayout>
-    );
+          </Field>
+          <div className="mt-2 text-sm text-neutral-600">
+            <p>Password must contain:</p>
+            <ul className="list-disc list-inside mt-1 space-y-1">
+              <li>At least 8 characters</li>
+              <li>One uppercase letter</li>
+              <li>One lowercase letter</li>
+              <li>One number</li>
+            </ul>
+          </div>
+
+          {/* Confirm Password */}
+          <Field label="Confirm Password" error={errors.password_confirm?.message}>
+            <div className="relative">
+              <Input
+                type={showConfirmPassword ? 'text' : 'password'}
+                {...register('password_confirm')}
+                placeholder="Confirm your password"
+                error={errors.password_confirm?.message}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                {showConfirmPassword ? (
+                  <Icon name="EyeOff" size={20} className="text-gray-500" />
+                ) : (
+                  <Icon name="Eye" size={20} className="text-gray-500" />
+                )}
+              </button>
+            </div>
+          </Field>
+
+          {/* Service Address */}
+          <Field label="Service Address" error={errors.address?.message}>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Icon name="MapPin" size={20} className="text-gray-500" />
+              </div>
+              <Input
+                {...register('address')}
+                placeholder="Street address, building name, apartment number, city, region"
+                className="pl-10"
+                error={errors.address?.message}
+              />
+            </div>
+          </Field>
+
+          {/* Privacy Notice */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <Icon name="Smartphone" size={20} style={{ color: '#2563EB' }} />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-blue-800">
+                  Phone Verification Required
+                </h3>
+                <p className="mt-1 text-sm text-blue-700">
+                  We'll send you a verification code via SMS to confirm your phone number.
+                  This helps keep our platform secure and ensures reliable waste collection services.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Continue Button */}
+          <div className="flex items-center justify-between pt-6 border-t border-neutral-200">
+            <button
+              type="button"
+              onClick={() => router.push('/auth/register')}
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Back to Account Type
+            </button>
+
+            <div className="flex flex-col items-end gap-2">
+              {(!isValid && Object.keys(errors).length > 0) && (
+                <p className="text-sm text-red-600">
+                  Please fix the errors above to continue
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={!isValid || isSubmitting}
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              >
+                {isSubmitting ? 'Creating Account...' : 'Continue'}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </OnboardingLayout>
+  );
 }

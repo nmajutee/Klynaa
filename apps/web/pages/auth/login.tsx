@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, User, Lock } from 'lucide-react';
+import { Icon } from '../../components/ui/Icons';
 import Link from 'next/link';
 import { z } from 'zod';
 import { Input, Label, Field } from '../../src/design-system/components/Form';
+import { useAuth } from '../../src/contexts/AuthContext';
 
 const loginSchema = z.object({
   identifier: z.string().min(1, 'Email or username is required'),
@@ -16,6 +17,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -58,8 +60,11 @@ export default function LoginPage() {
         throw new Error('Invalid credentials');
       }
 
-      // Store user data
-      localStorage.setItem('klynaa_user', JSON.stringify(user));
+      // Generate mock token
+      const mockToken = `token_${user.id}_${Date.now()}`;
+
+      // Use AuthContext to log in the user
+      login(user, mockToken);
 
       // Role-based redirect
       switch (user.role) {
@@ -89,7 +94,7 @@ export default function LoginPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-4">
-              <User className="w-8 h-8 text-emerald-600" />
+              <Icon name="User" size={32} className="text-emerald-600" />
             </div>
             <h1 className="text-2xl font-bold text-neutral-900 mb-2">
               Welcome Back
@@ -112,7 +117,7 @@ export default function LoginPage() {
             <Field label="Email or Username" error={errors.identifier?.message}>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-neutral-400" />
+                  <Icon name="User" size={20} className="text-gray-500" />
                 </div>
                 <Input
                   {...register('identifier')}
@@ -127,7 +132,7 @@ export default function LoginPage() {
             <Field label="Password" error={errors.password?.message}>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-neutral-400" />
+                  <Icon name="Lock" size={20} className="text-gray-500" />
                 </div>
                 <Input
                   type={showPassword ? 'text' : 'password'}
@@ -142,9 +147,9 @@ export default function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-neutral-400" />
+                    <Icon name="EyeOff" size={20} className="text-gray-500" />
                   ) : (
-                    <Eye className="h-5 w-5 text-neutral-400" />
+                    <Icon name="Eye" size={20} className="text-gray-500" />
                   )}
                 </button>
               </div>

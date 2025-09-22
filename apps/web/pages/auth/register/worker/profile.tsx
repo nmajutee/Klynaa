@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Calendar, MapPin, Clock, Upload, User } from 'lucide-react';
 import { useOnboardingStore } from '../../../../src/stores/onboarding';
 import OnboardingLayout from '../../../../src/components/onboarding/OnboardingLayout';
 import { workerProfileSchema, type WorkerProfileForm } from '../../../../src/schemas/registration';
 import { Input, Label, Field, TextArea } from '../../../../src/design-system/components/Form';
+import { Icon } from '../../../../components/ui/Icons';
 
 export default function WorkerProfilePage() {
   const router = useRouter();
@@ -102,7 +102,7 @@ export default function WorkerProfilePage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <User className="w-8 h-8 text-neutral-400" />
+                    <Icon name="User" className="w-8 h-8 text-neutral-400" />
                   )}
                 </div>
                 <input
@@ -118,7 +118,7 @@ export default function WorkerProfilePage() {
                   className="inline-flex items-center gap-2 px-4 py-2 border border-neutral-300 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50"
                   onClick={() => (document.querySelector('input[type="file"]') as HTMLInputElement)?.click()}
                 >
-                  <Upload className="w-4 h-4" />
+                  <Icon name="Upload" className="w-4 h-4" />
                   Upload Photo
                 </button>
                 <p className="text-xs text-neutral-500 mt-1">
@@ -141,7 +141,7 @@ export default function WorkerProfilePage() {
           <Field label="Date of Birth" error={errors.date_of_birth?.message}>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Calendar className="h-5 w-5 text-neutral-400" />
+                <Icon name="Calendar" className="h-5 w-5 text-neutral-400" />
               </div>
               <Input
                 type="date"
@@ -160,7 +160,7 @@ export default function WorkerProfilePage() {
           <Field label="Address / Area of Operation" error={errors.address?.message}>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MapPin className="h-5 w-5 text-neutral-400" />
+                <Icon name="MapPin" className="h-5 w-5 text-neutral-400" />
               </div>
               <TextArea
                 {...register('address')}
@@ -192,7 +192,7 @@ export default function WorkerProfilePage() {
                     className="w-4 h-4 text-emerald-600 border-neutral-300 rounded focus:ring-emerald-500"
                   />
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-neutral-400" />
+                    <Icon name="Clock" className="w-4 h-4 text-neutral-400" />
                     <span className="font-medium text-neutral-900">{option.label}</span>
                   </div>
                 </label>
@@ -204,7 +204,7 @@ export default function WorkerProfilePage() {
           <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <User className="h-5 w-5 text-emerald-600" />
+                <Icon name="User" className="h-5 w-5 text-emerald-600" />
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-emerald-800">

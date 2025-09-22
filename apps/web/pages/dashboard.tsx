@@ -1,31 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { User, Settings, LogOut, Bell, Home } from 'lucide-react';
+import { Icon } from '../components/ui/Icons';
 
 export default function DashboardPage() {
   return (
-    <div className="min-h-screen bg-neutral-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-4">
-              <Home className="w-8 h-8 text-emerald-600" />
-              <h1 className="text-xl font-semibold text-neutral-900">Klynaa Dashboard</h1>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <Bell className="w-5 h-5 text-neutral-400" />
-              <Settings className="w-5 h-5 text-neutral-400" />
-              <Link href="/auth/login" className="flex items-center gap-2 text-neutral-700 hover:text-neutral-900">
-                <LogOut className="w-5 h-5" />
-                Logout
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -36,12 +15,12 @@ export default function DashboardPage() {
           </div>
 
           {/* Registration Test Cards */}
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+          <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-neutral-200 dark:border-neutral-700">
             <div className="flex items-center gap-3 mb-4">
-              <User className="w-8 h-8 text-emerald-600" />
-              <h3 className="text-lg font-semibold text-neutral-900">Worker Registration</h3>
+              <Icon name="User" className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Worker Registration</h3>
             </div>
-            <p className="text-neutral-600 mb-4">Test the worker onboarding flow with 5 steps.</p>
+            <p className="text-neutral-600 dark:text-neutral-300 mb-4">Test the worker onboarding flow with 5 steps.</p>
             <Link
               href="/auth/register/worker"
               className="inline-block bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"
@@ -50,12 +29,12 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+          <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-neutral-200 dark:border-neutral-700">
             <div className="flex items-center gap-3 mb-4">
-              <Home className="w-8 h-8 text-blue-600" />
-              <h3 className="text-lg font-semibold text-neutral-900">Bin Owner Registration</h3>
+              <Icon name="Home" className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">Bin Owner Registration</h3>
             </div>
-            <p className="text-neutral-600 mb-4">Test the bin owner onboarding flow.</p>
+            <p className="text-neutral-600 dark:text-neutral-300 mb-4">Test the bin owner onboarding flow.</p>
             <Link
               href="/auth/register/bin-owner"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"
@@ -64,12 +43,12 @@ export default function DashboardPage() {
             </Link>
           </div>
 
-          <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+          <div className="bg-white dark:bg-neutral-800 rounded-xl p-6 shadow-sm border border-neutral-200 dark:border-neutral-700">
             <div className="flex items-center gap-3 mb-4">
-              <Settings className="w-8 h-8 text-neutral-600" />
-              <h3 className="text-lg font-semibold text-neutral-900">API Testing</h3>
+              <Icon name="Settings" className="w-8 h-8 text-neutral-600 dark:text-neutral-400" />
+              <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">API Testing</h3>
             </div>
-            <p className="text-neutral-600 mb-4">Test API connections and authentication.</p>
+            <p className="text-neutral-600 dark:text-neutral-300 mb-4">Test API connections and authentication.</p>
             <Link
               href="/auth-test"
               className="inline-block bg-neutral-600 hover:bg-neutral-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors"

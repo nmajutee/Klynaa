@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { User, LogOut, Shield, BarChart3, Users, DollarSign, MapPin, AlertTriangle, TrendingUp } from 'lucide-react';
+import { Icon } from '../../components/ui/Icons';
 
 interface AdminUser {
   id: string;
@@ -39,7 +39,7 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
       </div>
     );
@@ -48,36 +48,8 @@ export default function AdminDashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <Shield className="w-8 h-8 text-purple-600" />
-              <h1 className="text-xl font-semibold text-neutral-900">Admin Dashboard</h1>
-            </div>
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-neutral-600" />
-                <span className="text-sm font-medium text-neutral-900">{user.name}</span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium text-purple-600 bg-purple-100">
-                  Administrator
-                </span>
-              </div>
-
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -92,12 +64,12 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <Users className="w-8 h-8 text-blue-600" />
+                <Icon name="Users" className="w-8 h-8 text-blue-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Total Users</p>
                   <p className="text-2xl font-bold text-neutral-900">1,247</p>
                   <p className="text-xs text-green-600 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
+                    <Icon name="TrendingUp" className="w-3 h-3" />
                     +12% this month
                   </p>
                 </div>
@@ -106,12 +78,12 @@ export default function AdminDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <Users className="w-8 h-8 text-emerald-600" />
+                <Icon name="Users" className="w-8 h-8 text-emerald-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Active Workers</p>
                   <p className="text-2xl font-bold text-neutral-900">89</p>
                   <p className="text-xs text-green-600 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
+                    <Icon name="TrendingUp" className="w-3 h-3" />
                     +5 new this week
                   </p>
                 </div>
@@ -120,12 +92,12 @@ export default function AdminDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <DollarSign className="w-8 h-8 text-green-600" />
+                <Icon name="DollarSign" className="w-8 h-8 text-green-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Monthly Revenue</p>
                   <p className="text-2xl font-bold text-neutral-900">XAF 2.5M</p>
                   <p className="text-xs text-green-600 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
+                    <Icon name="TrendingUp" className="w-3 h-3" />
                     +18% vs last month
                   </p>
                 </div>
@@ -134,7 +106,7 @@ export default function AdminDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <AlertTriangle className="w-8 h-8 text-red-600" />
+                <Icon name="AlertTriangle" className="w-8 h-8 text-red-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Active Issues</p>
                   <p className="text-2xl font-bold text-neutral-900">3</p>
@@ -236,25 +208,25 @@ export default function AdminDashboard() {
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <Users className="w-6 h-6 text-blue-600 mb-2" />
+                  <Icon name="Users" className="w-6 h-6 text-blue-600 mb-2" />
                   <h4 className="font-medium text-neutral-900">Manage Users</h4>
                   <p className="text-sm text-neutral-600">View and manage all platform users</p>
                 </button>
 
                 <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <BarChart3 className="w-6 h-6 text-emerald-600 mb-2" />
+                  <Icon name="BarChart3" className="w-6 h-6 text-emerald-600 mb-2" />
                   <h4 className="font-medium text-neutral-900">Analytics</h4>
                   <p className="text-sm text-neutral-600">View detailed system analytics</p>
                 </button>
 
                 <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <DollarSign className="w-6 h-6 text-green-600 mb-2" />
+                  <Icon name="DollarSign" className="w-6 h-6 text-green-600 mb-2" />
                   <h4 className="font-medium text-neutral-900">Financial Reports</h4>
                   <p className="text-sm text-neutral-600">Generate financial reports</p>
                 </button>
 
                 <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <MapPin className="w-6 h-6 text-purple-600 mb-2" />
+                  <Icon name="MapPin" className="w-6 h-6 text-purple-600 mb-2" />
                   <h4 className="font-medium text-neutral-900">Service Areas</h4>
                   <p className="text-sm text-neutral-600">Manage coverage areas and zones</p>
                 </button>

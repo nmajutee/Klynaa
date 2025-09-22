@@ -4,15 +4,15 @@ import { cn } from '../../lib/utils';
 
 // Card variant configurations
 const cardVariants = cva(
-  'bg-white rounded-lg border border-neutral-200 shadow-sm transition-all duration-200',
+  'bg-white rounded-lg border border-neutral-200 shadow-sm transition-all duration-200 dark:bg-neutral-800 dark:border-neutral-700',
   {
     variants: {
       variant: {
-        default: 'hover:shadow-md',
-        elevated: 'shadow-lg hover:shadow-xl',
-        outlined: 'border-2 shadow-none hover:border-primary-200',
-        ghost: 'border-none shadow-none bg-transparent',
-        gradient: 'bg-gradient-to-br from-white to-neutral-50 border-none shadow-md',
+        default: 'hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/10',
+        elevated: 'shadow-lg hover:shadow-xl dark:shadow-black/20 dark:hover:shadow-black/30',
+        outlined: 'border-2 shadow-none hover:border-primary-200 dark:hover:border-primary-700',
+        ghost: 'border-none shadow-none bg-transparent dark:bg-transparent',
+        gradient: 'bg-gradient-to-br from-white to-neutral-50 border-none shadow-md dark:from-neutral-800 dark:to-neutral-900',
       },
       padding: {
         none: 'p-0',
@@ -21,7 +21,7 @@ const cardVariants = cva(
         lg: 'p-8',
       },
       interactive: {
-        true: 'cursor-pointer hover:bg-neutral-50 active:bg-neutral-100',
+        true: 'cursor-pointer hover:bg-neutral-50 active:bg-neutral-100 dark:hover:bg-neutral-750 dark:active:bg-neutral-700',
         false: '',
       },
     },

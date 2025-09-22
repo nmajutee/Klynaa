@@ -1,6 +1,6 @@
 import React from 'react';
+import { Icon } from '../../components/ui/Icons';
 import Link from 'next/link';
-import { User, Briefcase, ArrowRight, Shield, Clock, MapPin, Zap } from 'lucide-react';
 
 export default function RegisterPage() {
   return (
@@ -24,7 +24,7 @@ export default function RegisterPage() {
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-neutral-200">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-4">
-                <User className="w-8 h-8 text-emerald-600" />
+                <Icon name="User" size={32} color="#16A34A" />
               </div>
               <h2 className="text-2xl font-bold text-neutral-900 mb-2">
                 Worker
@@ -38,25 +38,25 @@ export default function RegisterPage() {
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <Clock className="w-3 h-3 text-emerald-600" />
+                  <Icon name="Clock" size={12} color="#16A34A" />
                 </div>
                 <span className="text-sm text-neutral-700">Flexible working hours</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <Zap className="w-3 h-3 text-emerald-600" />
+                  <Icon name="Zap" size={12} color="#16A34A" />
                 </div>
                 <span className="text-sm text-neutral-700">Instant earnings with secure payments</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <MapPin className="w-3 h-3 text-emerald-600" />
+                  <Icon name="MapPin" size={12} color="#16A34A" />
                 </div>
                 <span className="text-sm text-neutral-700">Work in your local area</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <Shield className="w-3 h-3 text-emerald-600" />
+                  <Icon name="Shield" size={12} color="#16A34A" />
                 </div>
                 <span className="text-sm text-neutral-700">Verified and trusted platform</span>
               </div>
@@ -67,7 +67,7 @@ export default function RegisterPage() {
               className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors duration-200"
             >
               Start as Worker
-              <ArrowRight className="w-5 h-5" />
+              <Icon name="ArrowRight" size={20} />
             </Link>
           </div>
 
@@ -75,7 +75,7 @@ export default function RegisterPage() {
           <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-neutral-200">
             <div className="text-center mb-6">
               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                <Briefcase className="w-8 h-8 text-blue-600" />
+                <Icon name="Briefcase" size={32} color="#2563EB" />
               </div>
               <h2 className="text-2xl font-bold text-neutral-900 mb-2">
                 Bin Owner
@@ -89,25 +89,25 @@ export default function RegisterPage() {
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Clock className="w-3 h-3 text-blue-600" />
+                  <Icon name="Clock" size={12} color="#2563EB" />
                 </div>
                 <span className="text-sm text-neutral-700">Scheduled pickup services</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Zap className="w-3 h-3 text-blue-600" />
+                  <Icon name="Zap" size={12} color="#2563EB" />
                 </div>
                 <span className="text-sm text-neutral-700">Smart bin monitoring</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                  <MapPin className="w-3 h-3 text-blue-600" />
+                  <Icon name="MapPin" size={12} color="#2563EB" />
                 </div>
                 <span className="text-sm text-neutral-700">Real-time tracking</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Shield className="w-3 h-3 text-blue-600" />
+                  <Icon name="Shield" size={12} color="#2563EB" />
                 </div>
                 <span className="text-sm text-neutral-700">Secure payment system</span>
               </div>
@@ -118,7 +118,7 @@ export default function RegisterPage() {
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 transition-colors duration-200"
             >
               Start as Bin Owner
-              <ArrowRight className="w-5 h-5" />
+              <Icon name="ArrowRight" size={20} />
             </Link>
           </div>
         </div>

@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { User, LogOut, MapPin, Truck, DollarSign, Clock, CheckCircle } from 'lucide-react';
+import { Icon } from '../../components/ui/Icons';
+import VerificationBadge, { getVerificationStatus } from '../../src/components/VerificationBadge';
+import VerificationModal from '../../src/components/VerificationModal';
 
 interface WorkerUser {
   id: string;
   email: string;
   name: string;
   role: 'worker';
+  verification_status?: 'verified' | 'pending' | 'rejected';
 }
 
 export default function WorkerDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<WorkerUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem('klynaa_user');
@@ -37,9 +41,38 @@ export default function WorkerDashboard() {
     router.push('/auth/login');
   };
 
+  const handleVerificationSubmit = async (data: any) => {
+    try {
+      console.log('Submitting verification documents:', data);
+
+      // In production, this would upload to your API
+      // const formData = new FormData();
+      // formData.append('id_type', data.id_type);
+      // formData.append('id_document_front', data.id_document_front);
+      // if (data.id_document_back) formData.append('id_document_back', data.id_document_back);
+      // formData.append('address_verification', data.address_verification);
+      // if (data.taxpayer_card) formData.append('taxpayer_card', data.taxpayer_card);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Update user verification status to pending
+      if (user) {
+        const updatedUser = { ...user, verification_status: 'pending' as const };
+        setUser(updatedUser);
+        localStorage.setItem('klynaa_user', JSON.stringify(updatedUser));
+      }
+
+      alert('Verification documents submitted successfully! We will review them within 24-48 hours.');
+    } catch (error) {
+      console.error('Verification submission error:', error);
+      alert('Failed to submit verification documents. Please try again.');
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
       </div>
     );
@@ -48,40 +81,31 @@ export default function WorkerDashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <Truck className="w-8 h-8 text-emerald-600" />
-              <h1 className="text-xl font-semibold text-neutral-900">Worker Dashboard</h1>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-neutral-600" />
-                <span className="text-sm font-medium text-neutral-900">{user.name}</span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium text-emerald-600 bg-emerald-100">
-                  Worker
-                </span>
-              </div>
-
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-8">
+          {/* Verification Banner */}
+          {router.query.verification === 'pending' && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <Icon name="CheckCircle" className="h-5 w-5 text-orange-400" />
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm font-medium text-orange-800">
+                    Complete your ID verification to start accepting premium jobs and unlock all features
+                  </p>
+                  <div className="mt-2">
+                    <button className="text-sm text-orange-600 hover:text-orange-800 underline">
+                      Complete verification now →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Welcome Section */}
           <div className="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl p-8 text-white">
             <h2 className="text-3xl font-bold mb-2">Welcome back, {user.name}!</h2>
@@ -92,7 +116,7 @@ export default function WorkerDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <MapPin className="w-8 h-8 text-blue-600" />
+                <Icon name="MapPin" className="w-8 h-8 text-blue-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Available Pickups</p>
                   <p className="text-2xl font-bold text-neutral-900">12</p>
@@ -102,7 +126,7 @@ export default function WorkerDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+                <Icon name="CheckCircle" className="w-8 h-8 text-green-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Completed Today</p>
                   <p className="text-2xl font-bold text-neutral-900">3</p>
@@ -112,7 +136,7 @@ export default function WorkerDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <DollarSign className="w-8 h-8 text-emerald-600" />
+                <Icon name="CreditCard" className="w-8 h-8 text-emerald-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Today's Earnings</p>
                   <p className="text-2xl font-bold text-neutral-900">XAF 15,000</p>
@@ -122,7 +146,7 @@ export default function WorkerDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <Clock className="w-8 h-8 text-orange-600" />
+                <Icon name="Clock" className="w-8 h-8 text-orange-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Hours Worked</p>
                   <p className="text-2xl font-bold text-neutral-900">6.5</p>
@@ -145,7 +169,7 @@ export default function WorkerDashboard() {
                 ].map((pickup) => (
                   <div key={pickup.id} className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50">
                     <div className="flex items-center gap-4">
-                      <MapPin className="w-5 h-5 text-neutral-400" />
+                      <Icon name="MapPin" className="w-5 h-5 text-neutral-400" />
                       <div>
                         <p className="font-medium text-neutral-900">{pickup.address}</p>
                         <p className="text-sm text-neutral-600">{pickup.distance} away • {pickup.bins} bins</p>
@@ -176,7 +200,7 @@ export default function WorkerDashboard() {
                   { time: "6 hours ago", action: "Completed pickup at Boulevard du 20 Mai", reward: "XAF 2,800" }
                 ].map((activity, index) => (
                   <div key={index} className="flex items-center gap-4 p-4 bg-neutral-50 rounded-lg">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <Icon name="CheckCircle" className="w-5 h-5 text-green-600" />
                     <div className="flex-1">
                       <p className="text-sm font-medium text-neutral-900">{activity.action}</p>
                       <p className="text-xs text-neutral-600">{activity.time}</p>
@@ -202,6 +226,14 @@ export default function WorkerDashboard() {
           </div>
         </div>
       </main>
+
+      {/* Verification Modal */}
+      <VerificationModal
+        isOpen={isVerificationModalOpen}
+        onClose={() => setIsVerificationModalOpen(false)}
+        userType="worker"
+        onSubmit={handleVerificationSubmit}
+      />
     </div>
   );
 }

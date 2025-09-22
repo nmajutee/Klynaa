@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Home, MapPin, Trash2, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import { z } from 'zod';
 import { Input, Label, Field } from '../../../../src/design-system/components/Form';
 import { useOnboardingStore } from '../../../../src/stores/onboarding';
 import OnboardingLayout from '../../../../src/components/onboarding/OnboardingLayout';
+import { Icon } from '../../../../components/ui/Icons';
 
 // Step 2: Service Details Schema
 const binOwnerDetailsSchema = z.object({
@@ -25,9 +25,9 @@ const binOwnerDetailsSchema = z.object({
 type BinOwnerDetailsForm = z.infer<typeof binOwnerDetailsSchema>;
 
 const binTypeOptions = [
-  { value: 'residential', label: 'Residential', icon: Home, description: 'Home, apartment, residential building' },
-  { value: 'commercial', label: 'Commercial', icon: Trash2, description: 'Office, shop, restaurant, hotel' },
-  { value: 'industrial', label: 'Industrial', icon: MapPin, description: 'Factory, warehouse, manufacturing' },
+  { value: 'residential', label: 'Residential', icon: 'Home' as const, description: 'Home, apartment, residential building' },
+  { value: 'commercial', label: 'Commercial', icon: 'Trash2' as const, description: 'Office, shop, restaurant, hotel' },
+  { value: 'industrial', label: 'Industrial', icon: 'MapPin' as const, description: 'Factory, warehouse, manufacturing' },
 ];
 
 const frequencyOptions = [
@@ -120,7 +120,6 @@ export default function BinOwnerDetailsPage() {
 
               <div className="grid grid-cols-1 gap-4">
                 {binTypeOptions.map((option) => {
-                  const Icon = option.icon;
                   return (
                     <label
                       key={option.value}
@@ -136,7 +135,7 @@ export default function BinOwnerDetailsPage() {
                         value={option.value}
                         className="sr-only"
                       />
-                      <Icon className={`w-6 h-6 mt-1 ${
+                      <Icon name={option.icon} className={`w-6 h-6 mt-1 ${
                         selectedBinType === option.value ? 'text-blue-600' : 'text-neutral-400'
                       }`} />
                       <div>
@@ -227,7 +226,7 @@ export default function BinOwnerDetailsPage() {
                     />
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium text-neutral-900 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
+                        <Icon name="Calendar" className="w-4 h-4" />
                         {option.label}
                       </h4>
                       <span className={`text-sm font-semibold ${

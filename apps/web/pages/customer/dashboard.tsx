@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { User, LogOut, Home, Trash2, CreditCard, Calendar, MapPin, AlertTriangle } from 'lucide-react';
+import { Icon } from '../../components/ui/Icons';
+import VerificationBadge, { mockVerificationStatus } from '../../src/components/VerificationBadge';
+import VerificationModal from '../../src/components/VerificationModal';
 
 interface CustomerUser {
   id: string;
   email: string;
   name: string;
   role: 'customer';
+  verification_status?: 'verified' | 'pending' | 'rejected';
 }
 
 export default function CustomerDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<CustomerUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
 
   useEffect(() => {
     const userData = localStorage.getItem('klynaa_user');
@@ -37,9 +41,31 @@ export default function CustomerDashboard() {
     router.push('/auth/login');
   };
 
+  const handleVerificationSubmit = async (data: any) => {
+    try {
+      console.log('Submitting customer verification documents:', data);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Update user verification status to pending
+      if (user) {
+        const updatedUser = { ...user, verification_status: 'pending' as const };
+        setUser(updatedUser);
+        localStorage.setItem('klynaa_user', JSON.stringify(updatedUser));
+      }
+
+      alert('Verification documents submitted successfully! We will review them within 24-48 hours.');
+      setIsVerificationModalOpen(false);
+    } catch (error) {
+      console.error('Verification submission error:', error);
+      alert('Failed to submit verification documents. Please try again.');
+    }
+  };
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
@@ -48,36 +74,8 @@ export default function CustomerDashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3">
-              <Home className="w-8 h-8 text-blue-600" />
-              <h1 className="text-xl font-semibold text-neutral-900">Bin Owner Dashboard</h1>
-            </div>
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5 text-neutral-600" />
-                <span className="text-sm font-medium text-neutral-900">{user.name}</span>
-                <span className="px-3 py-1 rounded-full text-xs font-medium text-blue-600 bg-blue-100">
-                  Bin Owner
-                </span>
-              </div>
-
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -92,7 +90,7 @@ export default function CustomerDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <Trash2 className="w-8 h-8 text-green-600" />
+                <Icon name="Trash2" className="w-8 h-8 text-green-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Active Bins</p>
                   <p className="text-2xl font-bold text-neutral-900">5</p>
@@ -102,7 +100,7 @@ export default function CustomerDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <Calendar className="w-8 h-8 text-orange-600" />
+                <Icon name="Calendar" className="w-8 h-8 text-orange-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Pending Pickups</p>
                   <p className="text-2xl font-bold text-neutral-900">2</p>
@@ -112,7 +110,7 @@ export default function CustomerDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <CreditCard className="w-8 h-8 text-purple-600" />
+                <Icon name="CreditCard" className="w-8 h-8 text-purple-600" />
                 <div>
                   <p className="text-sm text-neutral-600">This Month's Bill</p>
                   <p className="text-2xl font-bold text-neutral-900">XAF 15,000</p>
@@ -122,7 +120,7 @@ export default function CustomerDashboard() {
 
             <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
               <div className="flex items-center gap-3">
-                <AlertTriangle className="w-8 h-8 text-red-600" />
+                <Icon name="AlertTriangle" className="w-8 h-8 text-red-600" />
                 <div>
                   <p className="text-sm text-neutral-600">Overdue Bills</p>
                   <p className="text-2xl font-bold text-neutral-900">0</p>
@@ -194,7 +192,7 @@ export default function CustomerDashboard() {
                 ].map((pickup, index) => (
                   <div key={index} className="flex items-center justify-between p-4 border border-neutral-200 rounded-lg">
                     <div className="flex items-center gap-4">
-                      <Calendar className="w-5 h-5 text-neutral-400" />
+                      <Icon name="Calendar" className="w-5 h-5 text-neutral-400" />
                       <div>
                         <p className="font-medium text-neutral-900">{pickup.date}</p>
                         <p className="text-sm text-neutral-600">Bins: {pickup.bins.join(", ")} • Worker: {pickup.worker}</p>
@@ -216,19 +214,19 @@ export default function CustomerDashboard() {
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <button className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200 hover:bg-neutral-50 transition-colors text-left">
-              <Calendar className="w-8 h-8 text-blue-600 mb-3" />
+              <Icon name="Calendar" className="w-8 h-8 text-blue-600 mb-3" />
               <h4 className="font-medium text-neutral-900 mb-2">Schedule Pickup</h4>
               <p className="text-sm text-neutral-600">Request additional waste collection</p>
             </button>
 
             <button className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200 hover:bg-neutral-50 transition-colors text-left">
-              <CreditCard className="w-8 h-8 text-green-600 mb-3" />
+              <Icon name="CreditCard" className="w-8 h-8 text-green-600 mb-3" />
               <h4 className="font-medium text-neutral-900 mb-2">Pay Bills</h4>
               <p className="text-sm text-neutral-600">View and pay your waste management bills</p>
             </button>
 
             <button className="bg-white p-6 rounded-xl shadow-sm border border-neutral-200 hover:bg-neutral-50 transition-colors text-left">
-              <MapPin className="w-8 h-8 text-purple-600 mb-3" />
+              <Icon name="MapPin" className="w-8 h-8 text-purple-600 mb-3" />
               <h4 className="font-medium text-neutral-900 mb-2">Add New Bin</h4>
               <p className="text-sm text-neutral-600">Register additional waste bins</p>
             </button>
@@ -248,6 +246,14 @@ export default function CustomerDashboard() {
           </div>
         </div>
       </main>
+
+      {/* Verification Modal */}
+      <VerificationModal
+        isOpen={isVerificationModalOpen}
+        onClose={() => setIsVerificationModalOpen(false)}
+        userType="bin_owner"
+        onSubmit={handleVerificationSubmit}
+      />
     </div>
   );
 }

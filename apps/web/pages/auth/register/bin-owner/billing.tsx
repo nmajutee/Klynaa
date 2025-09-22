@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreditCard, DollarSign, Calendar } from 'lucide-react';
 import { z } from 'zod';
 import { Input, Label, Field } from '../../../../src/design-system/components/Form';
 import { useOnboardingStore } from '../../../../src/stores/onboarding';
 import OnboardingLayout from '../../../../src/components/onboarding/OnboardingLayout';
+import { Icon } from '../../../../components/ui/Icons';
 
 // Step 3: Billing Schema
 const billingSchema = z.object({
@@ -27,10 +27,10 @@ const billingSchema = z.object({
 type BillingForm = z.infer<typeof billingSchema>;
 
 const paymentMethods = [
-  { value: 'momo', label: 'Mobile Money (MTN)', icon: DollarSign, description: 'Pay with MTN Mobile Money' },
-  { value: 'om', label: 'Orange Money', icon: DollarSign, description: 'Pay with Orange Money' },
-  { value: 'card', label: 'Credit/Debit Card', icon: CreditCard, description: 'Visa, Mastercard accepted' },
-  { value: 'cash', label: 'Cash on Service', icon: Calendar, description: 'Pay when service is provided' },
+  { value: 'momo', label: 'Mobile Money (MTN)', icon: 'DollarSign' as const, description: 'Pay with MTN Mobile Money' },
+  { value: 'om', label: 'Orange Money', icon: 'DollarSign' as const, description: 'Pay with Orange Money' },
+  { value: 'card', label: 'Credit/Debit Card', icon: 'CreditCard' as const, description: 'Visa, Mastercard accepted' },
+  { value: 'cash', label: 'Cash on Service', icon: 'Calendar' as const, description: 'Pay when service is provided' },
 ];
 
 const subscriptionPlans = [
@@ -123,7 +123,6 @@ export default function BinOwnerBillingPage() {
 
           <div className="grid grid-cols-1 gap-4">
             {paymentMethods.map((method) => {
-              const Icon = method.icon;
               return (
                 <label
                   key={method.value}
@@ -139,7 +138,7 @@ export default function BinOwnerBillingPage() {
                     {...register('payment_method')}
                     className="sr-only"
                   />
-                  <Icon className={`w-6 h-6 ${
+                  <Icon name={method.icon} className={`w-6 h-6 ${
                     selectedPaymentMethod === method.value ? 'text-blue-600' : 'text-neutral-400'
                   }`} />
                   <div className="flex-1">

@@ -1,8 +1,9 @@
 import React from 'react';
-import { ArrowLeft, X } from 'lucide-react';
+import { Icon } from '../../../components/ui/Icons';
 import Link from 'next/link';
 import { useOnboardingStore } from '../../stores/onboarding';
-import Stepper, { Step } from './Stepper';
+import { Stepper } from './Stepper';
+import { getStepsForUserType } from '../../config/onboardingSteps';
 import { cn } from '../../lib/utils';
 
 export interface OnboardingLayoutProps {
@@ -14,57 +15,6 @@ export interface OnboardingLayoutProps {
   className?: string;
 }
 
-const workerSteps: Step[] = [
-  {
-    id: 1,
-    title: 'Account Basics',
-    description: 'Personal information and credentials',
-  },
-  {
-    id: 2,
-    title: 'Worker Profile',
-    description: 'ID verification and availability',
-  },
-  {
-    id: 3,
-    title: 'Verification',
-    description: 'Documents and background check',
-  },
-  {
-    id: 4,
-    title: 'Earnings Setup',
-    description: 'Payment and tax information',
-  },
-  {
-    id: 5,
-    title: 'Confirmation',
-    description: 'Review and complete setup',
-  },
-];
-
-const binOwnerSteps: Step[] = [
-  {
-    id: 1,
-    title: 'Account Basics',
-    description: 'Personal or business information',
-  },
-  {
-    id: 2,
-    title: 'Bin Details',
-    description: 'Location and pickup preferences',
-  },
-  {
-    id: 3,
-    title: 'Billing & Subscription',
-    description: 'Payment method and plan selection',
-  },
-  {
-    id: 4,
-    title: 'Confirmation',
-    description: 'Review and complete setup',
-  },
-];
-
 export const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
   children,
   title,
@@ -75,7 +25,7 @@ export const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
 }) => {
   const { userType, currentStep, prevStep } = useOnboardingStore();
 
-  const steps = userType === 'worker' ? workerSteps : binOwnerSteps;
+  const steps = userType ? getStepsForUserType(userType) : [];
   const themeColor = userType === 'worker' ? 'emerald' : 'blue';
 
   return (
@@ -97,7 +47,7 @@ export const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
                   )}
                   aria-label="Go back"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <Icon name="ArrowLeft" size={20 as any} />
                 </button>
               )}
 
@@ -118,7 +68,7 @@ export const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
                 className="p-2 text-neutral-400 hover:text-neutral-600 transition-colors"
                 aria-label="Close registration"
               >
-                <X className="w-5 h-5" />
+                <Icon name="X" size={20 as any} />
               </Link>
             )}
           </div>

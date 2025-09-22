@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { TOTAL_STEPS } from '../config/onboardingSteps';
 
 // Registration form data types
 export interface WorkerRegistrationData {
@@ -164,7 +165,7 @@ export const useOnboardingStore = create<OnboardingState>()(
       // Actions
       setUserType: (type) => set({
         userType: type,
-        totalSteps: type === 'worker' ? 5 : 4,
+        totalSteps: TOTAL_STEPS[type], // Use centralized step configuration
         currentStep: 1
       }),
 

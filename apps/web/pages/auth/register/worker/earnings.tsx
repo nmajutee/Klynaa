@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CreditCard, Building, User, DollarSign } from 'lucide-react';
 import { z } from 'zod';
 import { Input, Label, Field } from '../../../../src/design-system/components/Form';
 import { useOnboardingStore } from '../../../../src/stores/onboarding';
 import OnboardingLayout from '../../../../src/components/onboarding/OnboardingLayout';
+import { Icon } from '../../../../components/ui/Icons';
 
 // Step 4: Earnings Setup Schema
 const workerEarningsSchema = z.object({
@@ -53,19 +53,19 @@ const paymentOptions = [
   {
     value: 'mobile_money',
     label: 'Mobile Money',
-    icon: CreditCard,
+    icon: 'CreditCard' as const,
     description: 'MTN Mobile Money, Orange Money'
   },
   {
     value: 'bank_transfer',
     label: 'Bank Transfer',
-    icon: Building,
+    icon: 'Building' as const,
     description: 'Direct bank account transfer'
   },
   {
     value: 'cash',
     label: 'Cash Payment',
-    icon: DollarSign,
+    icon: 'DollarSign' as const,
     description: 'Cash pickup at office location'
   },
 ];
@@ -169,7 +169,6 @@ export default function WorkerEarningsPage() {
 
           <div className="grid grid-cols-1 gap-4">
             {paymentOptions.map((option) => {
-              const Icon = option.icon;
               return (
                 <label
                   key={option.value}
@@ -190,7 +189,7 @@ export default function WorkerEarningsPage() {
                       ? 'bg-emerald-100 text-emerald-600'
                       : 'bg-neutral-100 text-neutral-600'
                   }`}>
-                    <Icon className="w-5 h-5" />
+                    <Icon name={option.icon} className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
                     <div className="font-medium text-neutral-900">{option.label}</div>

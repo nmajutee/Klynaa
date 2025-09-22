@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { CheckCircle, User, Phone, MapPin, CreditCard, Shield, AlertCircle } from 'lucide-react';
+import { Icon } from '../../../../components/ui/Icons';
 import { useOnboardingStore } from '../../../../src/stores/onboarding';
 import OnboardingLayout from '../../../../src/components/onboarding/OnboardingLayout';
 
@@ -66,7 +66,7 @@ export default function WorkerConfirmationPage() {
         {/* Registration Summary */}
         <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6">
           <div className="flex items-center gap-3 mb-4">
-            <CheckCircle className="w-6 h-6 text-emerald-600" />
+            <Icon name="CheckCircle" className="w-6 h-6 text-emerald-600" />
             <h3 className="text-lg font-semibold text-emerald-900">
               Registration Almost Complete!
             </h3>
@@ -79,7 +79,7 @@ export default function WorkerConfirmationPage() {
         {/* Account Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 flex items-center gap-2">
-            <User className="w-5 h-5" />
+            <Icon name="User" className="w-5 h-5" />
             Account Information
           </h3>
 
@@ -106,7 +106,7 @@ export default function WorkerConfirmationPage() {
         {/* Profile Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 flex items-center gap-2">
-            <MapPin className="w-5 h-5" />
+            <Icon name="MapPin" className="w-5 h-5" />
             Profile & Availability
           </h3>
 
@@ -125,7 +125,7 @@ export default function WorkerConfirmationPage() {
         {/* Payment Information */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 flex items-center gap-2">
-            <CreditCard className="w-5 h-5" />
+            <Icon name="CreditCard" className="w-5 h-5" />
             Payment & Tax
           </h3>
 
@@ -168,7 +168,7 @@ export default function WorkerConfirmationPage() {
         {/* Emergency Contact */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 flex items-center gap-2">
-            <Shield className="w-5 h-5" />
+            <Icon name="Shield" className="w-5 h-5" />
             Emergency Contact
           </h3>
 
@@ -191,7 +191,7 @@ export default function WorkerConfirmationPage() {
         {/* Important Notice */}
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+            <Icon name="AlertCircle" className="w-5 h-5 text-amber-600 mt-0.5" />
             <div className="text-sm">
               <h4 className="font-medium text-amber-900 mb-1">Account Review Process</h4>
               <p className="text-amber-700">
@@ -224,7 +224,7 @@ export default function WorkerConfirmationPage() {
               </>
             ) : (
               <>
-                <CheckCircle className="w-5 h-5" />
+                <Icon name="CheckCircle" className="w-5 h-5" />
                 Complete Registration
               </>
             )}

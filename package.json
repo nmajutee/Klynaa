@@ -5,7 +5,7 @@
   "description": "Enterprise waste management platform",
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+  "dev": "turbo dev --concurrency=20",
     "lint": "turbo lint",
     "format": "turbo format",
     "test": "turbo test",

@@ -9,11 +9,11 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-neutral-200 bg-neutral-50 text-neutral-900',
-        success: 'border-success-200 bg-success-50 text-success-900',
-        warning: 'border-warning-200 bg-warning-50 text-warning-900',
-        danger: 'border-danger-200 bg-danger-50 text-danger-900',
-        info: 'border-primary-200 bg-primary-50 text-primary-900',
+        default: 'border-neutral-200 bg-neutral-50 text-neutral-900 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100',
+        success: 'border-success-200 bg-success-50 text-success-900 dark:border-success-800 dark:bg-success-900/20 dark:text-success-100',
+        warning: 'border-warning-200 bg-warning-50 text-warning-900 dark:border-warning-800 dark:bg-warning-900/20 dark:text-warning-100',
+        danger: 'border-danger-200 bg-danger-50 text-danger-900 dark:border-danger-800 dark:bg-danger-900/20 dark:text-danger-100',
+        info: 'border-primary-200 bg-primary-50 text-primary-900 dark:border-primary-800 dark:bg-primary-900/20 dark:text-primary-100',
       },
       size: {
         sm: 'text-sm p-3',

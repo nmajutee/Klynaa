@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Upload, FileText, Shield, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Icon } from '../../../../components/ui/Icons';
 import { useOnboardingStore } from '../../../../src/stores/onboarding';
 import OnboardingLayout from '../../../../src/components/onboarding/OnboardingLayout';
 import { workerVerificationSchema, type WorkerVerificationForm } from '../../../../src/schemas/registration';
@@ -139,11 +139,11 @@ export default function WorkerVerificationPage() {
                 className="mx-auto max-h-32 rounded border"
               />
             ) : (
-              <FileText className="mx-auto h-12 w-12 text-emerald-600" />
+                   <Icon name="FileText" className="mx-auto h-12 w-12 text-emerald-600" />
             )}
             <div>
-              <div className="flex items-center justify-center gap-2 text-emerald-600">
-                <CheckCircle2 className="w-5 h-5" />
+                    <div className="flex items-center justify-center gap-2 text-emerald-600">
+                      <Icon name="CheckCircle2" className="w-5 h-5" />
                 <span className="font-medium">File uploaded</span>
               </div>
               <p className="text-sm text-neutral-600 mt-1">{state.file.name}</p>
@@ -154,7 +154,7 @@ export default function WorkerVerificationPage() {
           </div>
         ) : (
           <>
-            <Upload className="mx-auto h-12 w-12 text-neutral-400 mb-4" />
+            <Icon name="Upload" className="mx-auto h-12 w-12 text-neutral-400 mb-4" />
             <h3 className="font-medium text-neutral-900 mb-2">{title}</h3>
             <p className="text-sm text-neutral-600 mb-4">{description}</p>
           </>
@@ -162,7 +162,7 @@ export default function WorkerVerificationPage() {
 
         <div className="space-y-2">
           <label className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg cursor-pointer hover:bg-emerald-700 transition-colors">
-            <Upload className="w-4 h-4 mr-2" />
+                   <Icon name="Upload" className="w-4 h-4 mr-2" />
             {state.file ? 'Replace File' : 'Choose File'}
             <input
               type="file"
@@ -174,7 +174,7 @@ export default function WorkerVerificationPage() {
 
           {state.error && (
             <div className="flex items-center gap-2 text-error-600 text-sm">
-              <AlertCircle className="w-4 h-4" />
+                   <Icon name="AlertCircle" className="w-4 h-4" />
               {state.error}
             </div>
           )}
@@ -270,7 +270,7 @@ export default function WorkerVerificationPage() {
           <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <Shield className="h-5 w-5 text-emerald-600" />
+                 <Icon name="Shield" className="h-5 w-5 text-emerald-600" />
               </div>
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-emerald-800">

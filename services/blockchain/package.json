@@ -2,6 +2,7 @@
     "name": "klynaa-blockchain",
     "version": "0.1.0",
     "private": true,
+    "type": "module",
     "scripts": {
         "dev": "hardhat node",
         "build": "echo 'compile handled by hardhat'",

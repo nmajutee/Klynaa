@@ -2,11 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Phone, Shield, RotateCcw } from 'lucide-react';
+import { Icon } from '../../../components/ui/Icons';
 import OnboardingLayout from '../../../src/components/onboarding/OnboardingLayout';
 import { otpVerificationSchema, type OTPVerificationForm } from '../../../src/schemas/registration';
 import { useOnboardingStore } from '../../../src/stores/onboarding';
 import { Input, Field } from '../../../src/design-system/components/Form';
+import {
+  OTP_SETTINGS,
+  FORM_UI_SETTINGS,
+  formatTimeRemaining,
+  isValidOTP
+} from '../../../src/config/formSettings';
 
 export default function PhoneVerificationPage() {
   const router = useRouter();
@@ -19,7 +25,7 @@ export default function PhoneVerificationPage() {
     nextStep
   } = useOnboardingStore();
 
-  const [countdown, setCountdown] = useState(60);
+  const [countdown, setCountdown] = useState<number>(OTP_SETTINGS.resendCooldown);
   const [canResend, setCanResend] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
@@ -83,13 +89,13 @@ export default function PhoneVerificationPage() {
       setPhoneVerified(true);
       setOtpVerified(true);
 
-      // Navigate to next step based on user type
+      // Navigate to welcome page based on user type (simplified flow)
       if (userType === 'worker') {
         nextStep();
-        router.push('/auth/register/worker/profile');
+        router.push('/auth/register/worker/welcome');
       } else {
         nextStep();
-        router.push('/auth/register/bin-owner/details');
+        router.push('/auth/register/bin-owner/welcome');
       }
     } catch (error) {
       console.error('OTP verification error:', error);
@@ -114,7 +120,7 @@ export default function PhoneVerificationPage() {
       <div className="p-8">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-4">
-            <Shield className="w-8 h-8 text-emerald-600" />
+            <Icon name="Shield" size={32} className="text-emerald-600" />
           </div>
           <h2 className="text-2xl font-bold text-neutral-900 mb-2">
             Check Your Messages
@@ -123,7 +129,7 @@ export default function PhoneVerificationPage() {
             We've sent a 6-digit verification code to
           </p>
           <p className="font-semibold text-neutral-900 flex items-center justify-center gap-2">
-            <Phone className="w-4 h-4" />
+            <Icon name="Smartphone" size={16} />
             {phoneNumber}
           </p>
         </div>
@@ -133,9 +139,9 @@ export default function PhoneVerificationPage() {
           <Field label="Verification Code" error={errors.otp_code?.message}>
             <Input
               {...register('otp_code')}
-              placeholder="Enter 6-digit code"
+              placeholder={OTP_SETTINGS.otpPlaceholder}
               className="text-center text-2xl font-mono tracking-widest"
-              maxLength={6}
+              maxLength={OTP_SETTINGS.codeLength}
               autoComplete="one-time-code"
               error={errors.otp_code?.message}
             />
@@ -152,14 +158,14 @@ export default function PhoneVerificationPage() {
                 type="button"
                 onClick={handleResendOTP}
                 disabled={isResending}
-                className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium text-sm"
+                className={FORM_UI_SETTINGS.fieldClasses.button.secondary + " inline-flex items-center gap-2 text-sm"}
               >
-                <RotateCcw className={`w-4 h-4 ${isResending ? 'animate-spin' : ''}`} />
-                {isResending ? 'Sending...' : 'Resend Code'}
+                <Icon name="RefreshCw" size={16} className={isResending ? 'animate-spin' : ''} />
+                {isResending ? FORM_UI_SETTINGS.loadingStates.resending : 'Resend Code'}
               </button>
             ) : (
               <p className="text-sm text-neutral-500">
-                Resend code in {countdown} seconds
+                Resend code in {formatTimeRemaining(countdown)}
               </p>
             )}
           </div>
@@ -171,16 +177,23 @@ export default function PhoneVerificationPage() {
               onClick={handleBackToBasics}
               className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-700 font-medium"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <Icon name="ArrowLeft" size={16} />
               Back to Account Info
             </button>
 
             <button
               type="submit"
               disabled={!isValid || isSubmitting}
-              className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-neutral-300 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              className={FORM_UI_SETTINGS.fieldClasses.button.primary}
             >
-              {isSubmitting ? 'Verifying...' : 'Verify & Continue'}
+              {isSubmitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  {FORM_UI_SETTINGS.loadingStates.verifying}
+                </>
+              ) : (
+                'Verify & Continue'
+              )}
             </button>
           </div>
         </form>
@@ -196,7 +209,7 @@ export default function PhoneVerificationPage() {
               This is a development environment. No real SMS will be sent.
             </p>
             <p className="text-sm text-yellow-700 font-mono bg-yellow-100 px-2 py-1 rounded">
-              Use test code: <strong>123456</strong>
+              Use test code: <strong>{OTP_SETTINGS.testCode}</strong>
             </p>
           </div>
 
@@ -206,7 +219,7 @@ export default function PhoneVerificationPage() {
               Security Notice
             </h3>
             <p className="text-sm text-neutral-600">
-              For your security, this verification code will expire in 10 minutes.
+              For your security, this verification code will expire in {OTP_SETTINGS.expiryMinutes} minutes.
               Never share this code with anyone else.
             </p>
           </div>
