@@ -8,10 +8,10 @@ export default function ProfilePage() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 flex justify-between items-center">
           <Link
-            href="/dashboard"
+            href="/auth/login"
             className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300"
           >
-            ← Back to Dashboard
+            ← Back to Login
           </Link>
           <Link
             href="/settings"

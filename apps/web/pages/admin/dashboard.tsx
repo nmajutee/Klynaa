@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Icon } from '../../components/ui/Icons';
+import { Card } from '../../src/design-system/components/Card';
+import { Badge } from '../../src/design-system/components/Badge';
 
 interface AdminUser {
   id: string;
@@ -8,6 +11,37 @@ interface AdminUser {
   name: string;
   role: 'admin';
 }
+
+interface SystemMetrics {
+  totalUsers: number;
+  activePickups: number;
+  totalRevenue: number;
+  disputesPending: number;
+}
+
+interface UserData {
+  id: string;
+  name: string;
+  role: string;
+  status: 'Active' | 'Pending' | 'Banned';
+  email: string;
+  joinDate: string;
+}
+
+// Mock data that would typically come from backend
+const mockMetrics: SystemMetrics = {
+  totalUsers: 1250,
+  activePickups: 82,
+  totalRevenue: 12450,
+  disputesPending: 5,
+};
+
+const mockUsers: UserData[] = [
+  { id: '1', name: 'John Doe', role: 'Bin Owner', status: 'Active', email: 'john@email.com', joinDate: '2024-01-15' },
+  { id: '2', name: 'Jane Smith', role: 'Worker', status: 'Pending', email: 'jane@email.com', joinDate: '2024-02-20' },
+  { id: '3', name: 'Sam Wilson', role: 'Worker', status: 'Banned', email: 'sam@email.com', joinDate: '2024-01-10' },
+  { id: '4', name: 'Mary Johnson', role: 'Bin Owner', status: 'Active', email: 'mary@email.com', joinDate: '2024-03-05' },
+];
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -21,7 +55,6 @@ export default function AdminDashboard() {
       if (parsedUser.role === 'admin') {
         setUser(parsedUser);
       } else {
-        // Redirect to appropriate dashboard
         router.push(`/${parsedUser.role}/dashboard`);
         return;
       }
@@ -39,8 +72,8 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      <div className="min-h-screen bg-klynaa-lightgray dark:bg-neutral-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-klynaa-primary"></div>
       </div>
     );
   }
@@ -48,206 +81,167 @@ export default function AdminDashboard() {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
+    <div className="flex h-screen bg-klynaa-lightgray dark:bg-neutral-900 overflow-hidden">
+      {/* Sidebar */}
+      <div className="w-64 text-white flex flex-col shadow-xl border-r border-neutral-600" style={{ backgroundColor: '#2E7D32' }}>
+        {/* Header */}
+        <div className="p-4 border-b border-green-600">
+          <h2 className="text-2xl font-bold text-white">Klynaa Admin</h2>
+        </div>
 
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          <Link href="/admin/dashboard" className="flex items-center p-3 rounded-lg font-medium transition-colors bg-white" style={{ color: '#4CAF50' }}>
+            <Icon name="BarChart3" className="w-5 h-5 mr-3" />
+            Overview
+          </Link>
+          <Link href="/admin/users" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+            <Icon name="Users" className="w-5 h-5 mr-3" />
+            User Management
+          </Link>
+          <Link href="/admin/pickups" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+            <Icon name="Truck" className="w-5 h-5 mr-3" />
+            Pickup Management
+          </Link>
+          <Link href="/admin/finance" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+            <Icon name="CreditCard" className="w-5 h-5 mr-3" />
+            Payment & Finance
+          </Link>
+          <Link href="/admin/reports" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+            <Icon name="FileText" className="w-5 h-5 mr-3" />
+            Reports
+          </Link>
+          <Link href="/admin/disputes" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+            <Icon name="MessageSquare" className="w-5 h-5 mr-3" />
+            Reviews & Disputes
+          </Link>
+          <Link href="/admin/settings" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+            <Icon name="Settings" className="w-5 h-5 mr-3" />
+            System Settings
+          </Link>
+        </nav>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="space-y-8">
-          {/* Welcome Section */}
-          <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-8 text-white">
-            <h2 className="text-3xl font-bold mb-2">Welcome back, {user.name}!</h2>
-            <p className="opacity-90 text-lg">Monitor and manage the entire Klynaa ecosystem.</p>
-          </div>
-
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
-              <div className="flex items-center gap-3">
-                <Icon name="Users" className="w-8 h-8 text-blue-600" />
-                <div>
-                  <p className="text-sm text-neutral-600">Total Users</p>
-                  <p className="text-2xl font-bold text-neutral-900">1,247</p>
-                  <p className="text-xs text-green-600 flex items-center gap-1">
-                    <Icon name="TrendingUp" className="w-3 h-3" />
-                    +12% this month
-                  </p>
-                </div>
-              </div>
+        {/* User Profile */}
+        <div className="p-4 border-t border-green-600">
+          <div className="flex items-center">
+            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center mr-3">
+              <Icon name="User" className="w-6 h-6" style={{ color: '#4CAF50' }} />
             </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
-              <div className="flex items-center gap-3">
-                <Icon name="Users" className="w-8 h-8 text-emerald-600" />
-                <div>
-                  <p className="text-sm text-neutral-600">Active Workers</p>
-                  <p className="text-2xl font-bold text-neutral-900">89</p>
-                  <p className="text-xs text-green-600 flex items-center gap-1">
-                    <Icon name="TrendingUp" className="w-3 h-3" />
-                    +5 new this week
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
-              <div className="flex items-center gap-3">
-                <Icon name="DollarSign" className="w-8 h-8 text-green-600" />
-                <div>
-                  <p className="text-sm text-neutral-600">Monthly Revenue</p>
-                  <p className="text-2xl font-bold text-neutral-900">XAF 2.5M</p>
-                  <p className="text-xs text-green-600 flex items-center gap-1">
-                    <Icon name="TrendingUp" className="w-3 h-3" />
-                    +18% vs last month
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
-              <div className="flex items-center gap-3">
-                <Icon name="AlertTriangle" className="w-8 h-8 text-red-600" />
-                <div>
-                  <p className="text-sm text-neutral-600">Active Issues</p>
-                  <p className="text-2xl font-bold text-neutral-900">3</p>
-                  <p className="text-xs text-red-600">Requires attention</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* System Overview */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Recent Activity */}
-            <div className="bg-white rounded-xl shadow-sm border border-neutral-200">
-              <div className="p-6 border-b border-neutral-200">
-                <h3 className="text-lg font-semibold text-neutral-900">Recent System Activity</h3>
-              </div>
-              <div className="p-6">
-                <div className="space-y-4">
-                  {[
-                    { time: "5 minutes ago", action: "New worker registered", user: "Jean-Marie Foko", type: "success" },
-                    { time: "12 minutes ago", action: "Payment processed", user: "Marie Nkomo", type: "success" },
-                    { time: "30 minutes ago", action: "Service complaint filed", user: "Paul Mbida", type: "warning" },
-                    { time: "1 hour ago", action: "Worker verification completed", user: "Sophie Talla", type: "success" },
-                    { time: "2 hours ago", action: "System backup completed", user: "System", type: "info" }
-                  ].map((activity, index) => (
-                    <div key={index} className="flex items-center gap-4 p-3 rounded-lg border border-neutral-100">
-                      <div className={`w-2 h-2 rounded-full ${
-                        activity.type === 'success' ? 'bg-green-600' :
-                        activity.type === 'warning' ? 'bg-orange-600' :
-                        activity.type === 'error' ? 'bg-red-600' :
-                        'bg-blue-600'
-                      }`}></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-neutral-900">{activity.action}</p>
-                        <p className="text-xs text-neutral-600">{activity.user} • {activity.time}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Performance Metrics */}
-            <div className="bg-white rounded-xl shadow-sm border border-neutral-200">
-              <div className="p-6 border-b border-neutral-200">
-                <h3 className="text-lg font-semibold text-neutral-900">Performance Metrics</h3>
-              </div>
-              <div className="p-6">
-                <div className="space-y-6">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-neutral-900">System Uptime</span>
-                      <span className="text-sm text-green-600 font-semibold">99.8%</span>
-                    </div>
-                    <div className="w-full bg-neutral-200 rounded-full h-2">
-                      <div className="bg-green-600 h-2 rounded-full" style={{ width: '99.8%' }}></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-neutral-900">Worker Utilization</span>
-                      <span className="text-sm text-blue-600 font-semibold">87%</span>
-                    </div>
-                    <div className="w-full bg-neutral-200 rounded-full h-2">
-                      <div className="bg-blue-600 h-2 rounded-full" style={{ width: '87%' }}></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-neutral-900">Customer Satisfaction</span>
-                      <span className="text-sm text-emerald-600 font-semibold">94%</span>
-                    </div>
-                    <div className="w-full bg-neutral-200 rounded-full h-2">
-                      <div className="bg-emerald-600 h-2 rounded-full" style={{ width: '94%' }}></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-neutral-900">Payment Success Rate</span>
-                      <span className="text-sm text-purple-600 font-semibold">96%</span>
-                    </div>
-                    <div className="w-full bg-neutral-200 rounded-full h-2">
-                      <div className="bg-purple-600 h-2 rounded-full" style={{ width: '96%' }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Management Actions */}
-          <div className="bg-white rounded-xl shadow-sm border border-neutral-200">
-            <div className="p-6 border-b border-neutral-200">
-              <h3 className="text-lg font-semibold text-neutral-900">Management Actions</h3>
-            </div>
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <Icon name="Users" className="w-6 h-6 text-blue-600 mb-2" />
-                  <h4 className="font-medium text-neutral-900">Manage Users</h4>
-                  <p className="text-sm text-neutral-600">View and manage all platform users</p>
-                </button>
-
-                <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <Icon name="BarChart3" className="w-6 h-6 text-emerald-600 mb-2" />
-                  <h4 className="font-medium text-neutral-900">Analytics</h4>
-                  <p className="text-sm text-neutral-600">View detailed system analytics</p>
-                </button>
-
-                <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <Icon name="DollarSign" className="w-6 h-6 text-green-600 mb-2" />
-                  <h4 className="font-medium text-neutral-900">Financial Reports</h4>
-                  <p className="text-sm text-neutral-600">Generate financial reports</p>
-                </button>
-
-                <button className="p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition-colors text-left">
-                  <Icon name="MapPin" className="w-6 h-6 text-purple-600 mb-2" />
-                  <h4 className="font-medium text-neutral-900">Service Areas</h4>
-                  <p className="text-sm text-neutral-600">Manage coverage areas and zones</p>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Testing Info */}
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-            <h3 className="text-sm font-medium text-purple-800 mb-2">
-              🧪 Admin Dashboard - Testing Mode
-            </h3>
-            <div className="text-sm text-purple-700 space-y-1">
-              <p><strong>Current User:</strong> {user.email} (Administrator)</p>
-              <p><strong>Features:</strong> System monitoring, user management, analytics, financial oversight</p>
-              <p><strong>Mock Data:</strong> All metrics and activities are simulated for testing</p>
-              <p><strong>Complete Testing:</strong> You've now tested all three user roles! 🎉</p>
+            <div>
+              <p className="font-semibold text-white">{user?.name || user?.email || 'Admin User'}</p>
+              <button
+                onClick={handleLogout}
+                className="text-sm text-green-200 hover:text-white transition-colors"
+              >
+                Logout
+              </button>
             </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-klynaa-dark dark:text-white" style={{ color: '#1C1C1C' }}>Overview</h2>
+          <div className="flex items-center space-x-4">
+            <Icon name="Bell" className="w-5 h-5 text-klynaa-neutral dark:text-neutral-400" />
+            <button
+              className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2"
+              style={{
+                backgroundColor: 'white',
+                color: '#4CAF50',
+                borderColor: '#4CAF50'
+              }}
+            >
+              Create Report
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 flex-1 bg-klynaa-lightgray dark:bg-neutral-900 overflow-y-auto">
+          {/* Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Total Users</h3>
+              <p className="text-3xl font-bold text-klynaa-dark dark:text-white">{mockMetrics.totalUsers.toLocaleString()}</p>
+            </Card>
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Active Pickups</h3>
+              <p className="text-3xl font-bold text-klynaa-dark dark:text-white">{mockMetrics.activePickups}</p>
+            </Card>
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Total Revenue</h3>
+              <p className="text-3xl font-bold text-klynaa-dark dark:text-white">${mockMetrics.totalRevenue.toLocaleString()}</p>
+            </Card>
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Disputes Pending</h3>
+              <p className="text-3xl font-bold text-klynaa-dark dark:text-white">{mockMetrics.disputesPending}</p>
+            </Card>
+          </div>
+
+          {/* Pickup Management Map */}
+          <Card className="mb-6">
+            <h3 className="text-lg font-semibold mb-4 text-klynaa-dark dark:text-white">Pickup Management</h3>
+            <div className="h-96 bg-neutral-200 dark:bg-neutral-700 rounded-lg flex items-center justify-center">
+              <div className="text-center">
+                <Icon name="Map" className="w-12 h-12 text-klynaa-graylabel mx-auto mb-2" />
+                <p className="text-klynaa-neutral dark:text-neutral-400">Interactive Map View</p>
+                <p className="text-sm text-klynaa-graylabel dark:text-neutral-500">Pickup locations and routes</p>
+              </div>
+            </div>
+          </Card>
+
+          {/* User Management Table */}
+          <Card>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-klynaa-dark dark:text-white">User Management</h3>
+              <Link href="/admin/users">
+                <button className="bg-transparent border border-klynaa-primary text-klynaa-primary hover:bg-klynaa-primary hover:text-white px-3 py-1 rounded-lg text-sm transition-colors">
+                  View All Users
+                </button>
+              </Link>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="border-b border-neutral-200 dark:border-neutral-700">
+                  <tr>
+                    <th className="p-2 text-klynaa-graylabel dark:text-neutral-400 font-medium">Name</th>
+                    <th className="p-2 text-klynaa-graylabel dark:text-neutral-400 font-medium">Role</th>
+                    <th className="p-2 text-klynaa-graylabel dark:text-neutral-400 font-medium">Status</th>
+                    <th className="p-2 text-klynaa-graylabel dark:text-neutral-400 font-medium">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="text-klynaa-dark dark:text-white">
+                  {mockUsers.map((userData) => (
+                    <tr key={userData.id} className="border-b border-neutral-100 dark:border-neutral-700">
+                      <td className="p-2 font-medium">{userData.name}</td>
+                      <td className="p-2">{userData.role}</td>
+                      <td className="p-2">
+                        <Badge
+                          variant={
+                            userData.status === 'Active' ? 'success' :
+                            userData.status === 'Pending' ? 'warning' : 'danger'
+                          }
+                        >
+                          {userData.status}
+                        </Badge>
+                      </td>
+                      <td className="p-2">
+                        <button className="text-klynaa-primary hover:text-klynaa-darkgreen transition-colors font-medium">
+                          {userData.status === 'Pending' ? 'Verify' : 'View'}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

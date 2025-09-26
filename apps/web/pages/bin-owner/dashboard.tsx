@@ -1,220 +1,294 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Icon } from '../../components/ui/Icons';
-import VerificationBadge, { mockVerificationStatus } from '../../src/components/VerificationBadge';
-import VerificationModal from '../../src/components/VerificationModal';
+import { Card } from '../../src/design-system/components/Card';
+import { Badge } from '../../src/design-system/components/Badge';
+
+interface BinOwnerUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'bin-owner' | 'customer';
+}
+
+interface BinOwnerMetrics {
+  registeredBins: number;
+  activeRequests: number;
+  paymentStatus: string;
+  avgResponse: string;
+}
+
+interface BinData {
+  id: string;
+  name: string;
+  status: 'Full' | 'Empty' | 'Half Full';
+  location: string;
+  lastPickup: string;
+}
+
+interface PickupRequest {
+  id: string;
+  binId: string;
+  status: 'In-Progress' | 'Completed' | 'Pending';
+  worker: string;
+  workerRating: number;
+  requestDate: string;
+  progress: number;
+}
+
+// Mock data
+const mockMetrics: BinOwnerMetrics = {
+  registeredBins: 2,
+  activeRequests: 1,
+  paymentStatus: 'Paid',
+  avgResponse: '2.5 hrs',
+};
+
+const mockBins: BinData[] = [
+  {
+    id: '1',
+    name: 'Main Residential Bin',
+    status: 'Full',
+    location: '123 Main St',
+    lastPickup: '2024-03-01'
+  },
+  {
+    id: '2',
+    name: 'Recycling Bin',
+    status: 'Empty',
+    location: '123 Main St',
+    lastPickup: '2024-03-10'
+  }
+];
+
+const mockActiveRequest: PickupRequest = {
+  id: 'KLYN7890',
+  binId: '1',
+  status: 'In-Progress',
+  worker: 'Jane S.',
+  workerRating: 4.8,
+  requestDate: '2024-03-15',
+  progress: 66
+};
 
 export default function BinOwnerDashboard() {
   const router = useRouter();
-  const { verification, setup } = router.query;
-  const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
+  const [user, setUser] = useState<BinOwnerUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock verification status for demo
-  const verificationStatus = mockVerificationStatus('bin_owner');
-
-  const handleVerificationSubmit = async (data: any) => {
-    try {
-      console.log('Submitting bin owner verification documents:', data);
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      alert('Verification documents submitted successfully! We will review them within 24-48 hours.');
-      setIsVerificationModalOpen(false);
-    } catch (error) {
-      console.error('Verification submission error:', error);
-      alert('Failed to submit verification documents. Please try again.');
+  useEffect(() => {
+    const userData = localStorage.getItem('klynaa_user');
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      if (parsedUser.role === 'bin-owner' || parsedUser.role === 'customer') {
+        setUser(parsedUser);
+      } else {
+        router.push(`/${parsedUser.role}/dashboard`);
+        return;
+      }
+    } else {
+      router.push('/auth/login');
+      return;
     }
+    setIsLoading(false);
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('klynaa_user');
+    router.push('/auth/login');
   };
 
+  const handleRequestPickup = (binId: string) => {
+    // In a real app, this would make an API call
+    console.log('Requesting pickup for bin:', binId);
+    alert('Pickup request submitted! A worker will be assigned shortly.');
+  };
+
+  const handleAddBin = () => {
+    // Navigate to add bin form
+    console.log('Adding new bin');
+    alert('Add Bin functionality would open a form here.');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-klynaa-lightgray dark:bg-neutral-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-klynaa-primary"></div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Verification/Setup Banners */}
-        {verification === 'pending' && (
-          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <Icon name="MapPin" className="h-5 w-5 text-yellow-400" />
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-yellow-800">
-                  Complete your service setup to start receiving waste collection requests
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {setup === 'pending' && (
-          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <Icon name="Settings" className="h-5 w-5 text-blue-400" />
-              </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-blue-800">
-                  Complete your service setup to access all features
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Icon name="Trash2" className="h-6 w-6 text-blue-600" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Bins</dt>
-                    <dd className="text-lg font-medium text-gray-900">12</dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Icon name="Calendar" className="h-6 w-6 text-green-600" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Scheduled Pickups</dt>
-                    <dd className="text-lg font-medium text-gray-900">8</dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Icon name="DollarSign" className="h-6 w-6 text-yellow-600" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Monthly Cost</dt>
-                    <dd className="text-lg font-medium text-gray-900">$240</dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <Icon name="TrendingUp" className="h-6 w-6 text-purple-600" />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Efficiency</dt>
-                    <dd className="text-lg font-medium text-gray-900">94%</dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="flex h-screen bg-klynaa-lightgray dark:bg-neutral-900 overflow-hidden">
+      {/* Sidebar */}
+      <div className="w-64 bg-klynaa-dark dark:bg-neutral-800 text-white flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b border-neutral-600">
+          <h2 className="text-2xl font-bold">Klynaa Bin Owner</h2>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Bin Status */}
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg leading-6 font-medium text-gray-900">Bin Status</h3>
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm">
-                  <Icon name="Plus" size={16} className="inline mr-1" />
-                  Add Bin
-                </button>
-              </div>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mr-3"></div>
-                    <span className="text-sm text-gray-700">Bin #001 - Kitchen</span>
-                  </div>
-                  <span className="text-sm text-red-600 font-medium">95% Full</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></div>
-                    <span className="text-sm text-gray-700">Bin #002 - Office</span>
-                  </div>
-                  <span className="text-sm text-yellow-600 font-medium">70% Full</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                    <span className="text-sm text-gray-700">Bin #003 - Lobby</span>
-                  </div>
-                  <span className="text-sm text-green-600 font-medium">30% Full</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-2">
+          <Link href="/bin-owner/dashboard" className="flex items-center p-2 rounded bg-klynaa-primary text-white">
+            <Icon name="BarChart3" className="w-5 h-5 mr-3" />
+            Overview
+          </Link>
+          <Link href="/bin-owner/bins" className="flex items-center p-2 rounded hover:bg-neutral-700 transition-colors">
+            <Icon name="Trash2" className="w-5 h-5 mr-3" />
+            Bin Management
+          </Link>
+          <Link href="/bin-owner/requests" className="flex items-center p-2 rounded hover:bg-neutral-700 transition-colors">
+            <Icon name="FileText" className="w-5 h-5 mr-3" />
+            Pickup Requests
+          </Link>
+          <Link href="/bin-owner/payments" className="flex items-center p-2 rounded hover:bg-neutral-700 transition-colors">
+            <Icon name="CreditCard" className="w-5 h-5 mr-3" />
+            Payments
+          </Link>
+          <Link href="/bin-owner/reviews" className="flex items-center p-2 rounded hover:bg-neutral-700 transition-colors">
+            <Icon name="Star" className="w-5 h-5 mr-3" />
+            Ratings & Reviews
+          </Link>
+          <Link href="/profile" className="flex items-center p-2 rounded hover:bg-neutral-700 transition-colors">
+            <Icon name="User" className="w-5 h-5 mr-3" />
+            Profile Settings
+          </Link>
+        </nav>
 
-          {/* Recent Activity */}
-          <div className="bg-white shadow rounded-lg">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Activity</h3>
+        {/* User Profile */}
+        <div className="p-4 border-t border-neutral-600">
+          <div className="flex items-center">
+            <div className="w-10 h-10 rounded-full bg-klynaa-primary flex items-center justify-center mr-3">
+              <Icon name="User" className="w-6 h-6" />
             </div>
-            <div className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                    <Icon name="Trash2" size={16} className="text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-900">Bin #001 collected</p>
-                    <p className="text-xs text-gray-500">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                    <Icon name="Calendar" size={16} className="text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-900">Pickup scheduled for tomorrow</p>
-                    <p className="text-xs text-gray-500">1 day ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
-                    <Icon name="Users" size={16} className="text-yellow-600" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-900">New worker assigned</p>
-                    <p className="text-xs text-gray-500">3 days ago</p>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <p className="font-semibold">John Doe</p>
+              <button
+                onClick={handleLogout}
+                className="text-sm text-neutral-400 hover:text-white transition-colors"
+              >
+                Logout
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Verification Modal */}
-      <VerificationModal
-        isOpen={isVerificationModalOpen}
-        onClose={() => setIsVerificationModalOpen(false)}
-        userType="bin_owner"
-        onSubmit={handleVerificationSubmit}
-      />
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-klynaa-dark dark:text-white">Bin Owner Dashboard</h2>
+          <div className="flex items-center space-x-4">
+            <Icon name="Bell" className="w-5 h-5 text-klynaa-neutral dark:text-neutral-400" />
+            <button className="bg-klynaa-primary hover:bg-klynaa-darkgreen text-white px-4 py-2 rounded-lg transition-colors font-medium">
+              Request Pickup
+            </button>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 flex-1 bg-klynaa-lightgray dark:bg-neutral-900 overflow-y-auto">
+          {/* Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Registered Bins</h3>
+              <p className="text-3xl font-bold text-klynaa-dark dark:text-white">{mockMetrics.registeredBins}</p>
+            </Card>
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Active Requests</h3>
+              <p className="text-3xl font-bold text-klynaa-dark dark:text-white">{mockMetrics.activeRequests}</p>
+            </Card>
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Payment Status</h3>
+              <p className="text-3xl font-bold text-klynaa-primary">{mockMetrics.paymentStatus}</p>
+            </Card>
+            <Card>
+              <h3 className="text-klynaa-graylabel dark:text-neutral-400 text-sm font-medium">Avg. Response</h3>
+              <p className="text-3xl font-bold text-klynaa-dark dark:text-white">{mockMetrics.avgResponse}</p>
+            </Card>
+          </div>
+
+          {/* My Bins */}
+          <Card className="mb-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-klynaa-dark dark:text-white">My Bins</h3>
+              <button
+                className="bg-transparent border border-klynaa-primary text-klynaa-primary hover:bg-klynaa-primary hover:text-white px-3 py-1 rounded-lg text-sm transition-colors flex items-center"
+                onClick={handleAddBin}
+              >
+                <Icon name="Plus" className="w-4 h-4 mr-1" />
+                Add Bin
+              </button>
+            </div>
+            <div className="space-y-4">
+              {mockBins.map((bin) => (
+                <div key={bin.id} className="p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg flex justify-between items-center">
+                  <div>
+                    <p className="font-semibold text-klynaa-dark dark:text-white">{bin.name}</p>
+                    <p className="text-sm text-klynaa-graylabel dark:text-neutral-400">{bin.location}</p>
+                    <p className="text-sm">
+                      <Badge
+                        variant={
+                          bin.status === 'Full' ? 'danger' :
+                          bin.status === 'Half Full' ? 'warning' : 'success'
+                        }
+                      >
+                        {bin.status}
+                      </Badge>
+                    </p>
+                  </div>
+                  <button
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      bin.status === 'Full'
+                        ? 'bg-klynaa-primary hover:bg-klynaa-darkgreen text-white'
+                        : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-not-allowed'
+                    }`}
+                    disabled={bin.status === 'Empty'}
+                    onClick={() => handleRequestPickup(bin.id)}
+                  >
+                    Request Pickup
+                  </button>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Pickup History */}
+          <Card>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-klynaa-dark dark:text-white">Pickup History</h3>
+              <Link href="/bin-owner/requests">
+                <button className="bg-transparent border border-klynaa-primary text-klynaa-primary hover:bg-klynaa-primary hover:text-white px-3 py-1 rounded-lg text-sm transition-colors">
+                  View All Requests
+                </button>
+              </Link>
+            </div>
+            <div className="p-4 border border-neutral-200 dark:border-neutral-700 rounded-lg">
+              <p className="font-semibold text-klynaa-dark dark:text-white">Request #{mockActiveRequest.id}</p>
+              <p className="text-sm text-klynaa-graylabel dark:text-neutral-400">
+                Status: <Badge variant="warning">{mockActiveRequest.status}</Badge>
+              </p>
+              <p className="text-sm text-klynaa-graylabel dark:text-neutral-400 flex items-center">
+                Worker: {mockActiveRequest.worker} ({mockActiveRequest.workerRating}
+                <Icon name="Star" className="w-4 h-4 text-klynaa-yellow ml-1 fill-current" />)
+              </p>
+              <div className="mt-2 h-2 bg-neutral-200 dark:bg-neutral-700 rounded-full">
+                <div
+                  className="h-2 bg-klynaa-primary rounded-full transition-all duration-300"
+                  style={{width: `${mockActiveRequest.progress}%`}}
+                />
+              </div>
+              <p className="text-xs text-right mt-1 text-klynaa-graylabel dark:text-neutral-400">
+                {mockActiveRequest.progress}% Complete
+              </p>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

@@ -38,9 +38,10 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredRole }) =
             const dashboardMap = {
                 admin: '/admin/dashboard',
                 worker: '/worker/dashboard',
-                customer: '/customer/dashboard'
+                customer: '/bin-owner/dashboard',
+                'bin-owner': '/bin-owner/dashboard'
             };
-            router.push(dashboardMap[user?.role as keyof typeof dashboardMap] || '/dashboard');
+            router.push(dashboardMap[user?.role as keyof typeof dashboardMap] || '/bin-owner/dashboard');
             return;
         }
     }, [isAuthenticated, user, requiredRole, router, isLoading]);

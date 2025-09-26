@@ -12,8 +12,18 @@ export default function NavigationProvider({ children }: { children: React.React
     '/auth/login',
     '/auth/register',
     '/auth/forgot-password',
-    '/auth/reset-password'
-  ].includes(router.pathname) || router.pathname.startsWith('/auth/register/');
+    '/auth/reset-password',
+    // Dashboard pages have their own sidebar navigation
+    '/admin/dashboard',
+    '/worker/dashboard',
+    '/bin-owner/dashboard',
+    '/customer/dashboard'
+  ].includes(router.pathname) ||
+  router.pathname.startsWith('/auth/register/') ||
+  router.pathname.startsWith('/admin/') ||
+  router.pathname.startsWith('/worker/') ||
+  router.pathname.startsWith('/bin-owner/') ||
+  router.pathname.startsWith('/customer/');
 
   // Show nothing during initial auth loading to prevent flash
   if (isLoading) {

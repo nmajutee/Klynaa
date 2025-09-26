@@ -26,11 +26,29 @@ export default function HomePage() {
               <Icon name="ArrowRight" className="w-5 h-5" />
             </Link>
             <Link
-              href="/dashboard"
+              href="/auth/login"
               className="inline-flex items-center gap-2 px-8 py-4 border border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
             >
-              View Demo
+              Login to Dashboard
             </Link>
+          </div>
+
+          {/* Demo Links */}
+          <div className="mt-12 p-6 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
+            <h3 className="text-lg font-semibold text-emerald-900 dark:text-emerald-100 mb-4 text-center">
+              🎯 Quick Dashboard Demos
+            </h3>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/demo-admin" className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm">
+                Admin Dashboard
+              </Link>
+              <Link href="/demo-worker" className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm">
+                Worker Dashboard
+              </Link>
+              <Link href="/demo-binowner" className="inline-flex items-center justify-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors text-sm">
+                Bin Owner Dashboard
+              </Link>
+            </div>
           </div>
         </div>
       </section>

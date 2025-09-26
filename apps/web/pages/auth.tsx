@@ -8,7 +8,7 @@ export default function AuthPage() {
   useEffect(() => {
     // Redirect based on the type parameter
     if (type === 'customer') {
-      router.push('/customer/dashboard');
+      router.push('/bin-owner/dashboard');
     } else if (type === 'worker') {
       router.push('/worker/dashboard');
     } else if (type === 'admin') {

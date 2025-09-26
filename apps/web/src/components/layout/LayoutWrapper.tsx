@@ -54,9 +54,6 @@ const simpleLayoutPages = [
   '/worker/dashboard',
   '/worker/pickups',
   '/worker/earnings',
-  '/customer/dashboard',
-  '/customer/bins',
-  '/customer/pickups',
   '/bin-owner/dashboard',
   '/bin-owner/analytics',
   '/bin-owner/settings'

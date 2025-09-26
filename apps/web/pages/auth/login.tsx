@@ -72,13 +72,13 @@ export default function LoginPage() {
           router.push('/worker/dashboard');
           break;
         case 'customer':
-          router.push('/customer/dashboard');
+          router.push('/bin-owner/dashboard');
           break;
         case 'admin':
           router.push('/admin/dashboard');
           break;
         default:
-          router.push('/dashboard');
+          router.push('/auth/login');
       }
     } catch (error) {
       setError('Invalid email/phone or password. Please try again.');

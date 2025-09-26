@@ -63,9 +63,9 @@ export default function AuthenticatedNavbar({ onVerificationClick }: Authenticat
         return {
           name: mounted ? t('role.customer', 'Customer') : fallbackNames.customer,
           color: 'text-blue-600 bg-blue-100',
-          dashboardPath: '/customer/dashboard',
+          dashboardPath: '/bin-owner/dashboard',
           navigation: [
-            { name: mounted ? t('nav.dashboard', 'Dashboard') : 'Dashboard', href: '/customer/dashboard', icon: 'Home' },
+            { name: mounted ? t('nav.dashboard', 'Dashboard') : 'Dashboard', href: '/bin-owner/dashboard', icon: 'Home' },
             { name: mounted ? t('nav.bins', 'My Bins') : 'My Bins', href: '/customer/bins', icon: 'Truck' },
             { name: mounted ? t('nav.pickups', 'Pickups') : 'Pickups', href: '/customer/pickups', icon: 'MapPin' },
           ]
