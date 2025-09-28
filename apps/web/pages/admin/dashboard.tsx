@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Icon } from '../../components/ui/Icons';
 import { Card } from '../../src/design-system/components/Card';
 import { Badge } from '../../src/design-system/components/Badge';
+import WorkingThemeToggle from '../../src/components/ui/WorkingThemeToggle';
 
 interface AdminUser {
   id: string;
@@ -72,7 +73,7 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-klynaa-lightgray dark:bg-neutral-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-neutral-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-klynaa-primary"></div>
       </div>
     );
@@ -81,7 +82,7 @@ export default function AdminDashboard() {
   if (!user) return null;
 
   return (
-    <div className="flex h-screen bg-klynaa-lightgray dark:bg-neutral-900 overflow-hidden">
+        <div className="flex h-screen bg-gray-50 dark:bg-neutral-900 overflow-hidden">
       {/* Sidebar */}
       <div className="w-64 text-white flex flex-col shadow-xl border-r border-neutral-600" style={{ backgroundColor: '#2E7D32' }}>
         {/* Header */}
@@ -95,27 +96,27 @@ export default function AdminDashboard() {
             <Icon name="BarChart3" className="w-5 h-5 mr-3" />
             Overview
           </Link>
-          <Link href="/admin/users" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/admin/users" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="Users" className="w-5 h-5 mr-3" />
             User Management
           </Link>
-          <Link href="/admin/pickups" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/admin/pickups" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="Truck" className="w-5 h-5 mr-3" />
             Pickup Management
           </Link>
-          <Link href="/admin/finance" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/admin/finance" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="CreditCard" className="w-5 h-5 mr-3" />
             Payment & Finance
           </Link>
-          <Link href="/admin/reports" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/admin/reports" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="FileText" className="w-5 h-5 mr-3" />
             Reports
           </Link>
-          <Link href="/admin/disputes" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/admin/disputes" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="MessageSquare" className="w-5 h-5 mr-3" />
             Reviews & Disputes
           </Link>
-          <Link href="/admin/settings" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/admin/settings" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="Settings" className="w-5 h-5 mr-3" />
             System Settings
           </Link>
@@ -144,24 +145,18 @@ export default function AdminDashboard() {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <div className="p-6 border-b bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-klynaa-dark dark:text-white" style={{ color: '#1C1C1C' }}>Overview</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Overview</h2>
           <div className="flex items-center space-x-4">
+            <WorkingThemeToggle />
             <Icon name="Bell" className="w-5 h-5 text-klynaa-neutral dark:text-neutral-400" />
-            <button
-              className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2"
-              style={{
-                backgroundColor: 'white',
-                color: '#4CAF50',
-                borderColor: '#4CAF50'
-              }}
-            >
+            <button className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2 bg-white dark:bg-neutral-800 text-green-600 dark:text-green-400 border-green-600 dark:border-green-400 hover:bg-green-50 dark:hover:bg-neutral-700">
               Create Report
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 flex-1 bg-klynaa-lightgray dark:bg-neutral-900 overflow-y-auto">
+        <div className="p-6 flex-1 bg-gray-50 dark:bg-neutral-900 overflow-y-auto">
           {/* Metrics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <Card>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '../../components/ui/Icons';
+import WorkingThemeToggle from '../../src/components/ui/WorkingThemeToggle';
 
 export default function AdminPickups() {
   return (
@@ -65,19 +66,20 @@ export default function AdminPickups() {
         {/* Header */}
         <div className="p-6 border-b bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
           <h2 className="text-xl font-semibold" style={{ color: '#1C1C1C' }}>Pickup Management</h2>
-          <button
-            className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2"
-            style={{
-              backgroundColor: 'white',
-              color: '#4CAF50',
-              borderColor: '#4CAF50'
-            }}
-          >
-            Create Pickup Route
-          </button>
-        </div>
-
-        {/* Content */}
+          <div className="flex items-center space-x-4">
+            <WorkingThemeToggle />
+            <button
+              className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2"
+              style={{
+                backgroundColor: 'white',
+                color: '#4CAF50',
+                borderColor: '#4CAF50'
+              }}
+            >
+              Create Pickup Route
+            </button>
+          </div>
+        </div>        {/* Content */}
         <div className="p-6 flex-1 bg-klynaa-lightgray dark:bg-neutral-900 overflow-y-auto">
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold mb-4" style={{ color: '#1C1C1C' }}>Pickup Operations</h3>

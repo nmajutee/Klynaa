@@ -1,17 +1,16 @@
 import React from 'react';
+import { NextPage } from 'next';
 import Link from 'next/link';
 import { Icon } from '../components/ui/Icons';
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
+    <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-800">
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-5xl font-bold text-neutral-900 dark:text-neutral-100 mb-6">
-            Smart Waste Management
-            <span className="block text-emerald-600">Made Simple</span>
-          </h1>
+      <section className="px-4 py-16 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <h1 className="mb-6 text-4xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 lg:text-6xl">
+            Smart Waste Management</h1>
           <p className="text-xl text-neutral-600 dark:text-neutral-300 mb-8 max-w-2xl mx-auto">
             Connect waste collectors with bin owners for efficient, sustainable waste management
             across Cameroon and beyond.

@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '../../components/ui/Icons';
+import WorkingThemeToggle from '../../src/components/ui/WorkingThemeToggle';
 
 export default function AdminUsers() {
   return (
-    <div className="flex h-screen bg-klynaa-lightgray dark:bg-neutral-900 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-neutral-900 overflow-hidden">
       {/* Sidebar */}
       <div className="w-64 text-white flex flex-col shadow-xl border-r border-neutral-600" style={{ backgroundColor: '#2E7D32' }}>
         {/* Header */}
@@ -64,24 +65,20 @@ export default function AdminUsers() {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <div className="p-6 border-b bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
-          <h2 className="text-xl font-semibold" style={{ color: '#1C1C1C' }}>User Management</h2>
-          <button
-            className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2"
-            style={{
-              backgroundColor: 'white',
-              color: '#4CAF50',
-              borderColor: '#4CAF50'
-            }}
-          >
-            Add New User
-          </button>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">User Management</h2>
+          <div className="flex items-center space-x-4">
+            <WorkingThemeToggle />
+            <button className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2 bg-white dark:bg-neutral-800 text-green-600 dark:text-green-400 border-green-600 dark:border-green-400 hover:bg-green-50 dark:hover:bg-neutral-700">
+              Add New User
+            </button>
+          </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 flex-1 bg-klynaa-lightgray dark:bg-neutral-900 overflow-y-auto">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold mb-4" style={{ color: '#1C1C1C' }}>User Management</h3>
-            <p className="text-gray-600">Manage users, approve workers, and handle user-related operations from this page.</p>
+        <div className="p-6 flex-1 bg-gray-50 dark:bg-neutral-900 overflow-y-auto">
+          <div className="bg-white dark:bg-neutral-800 rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">User Management</h3>
+            <p className="text-gray-600 dark:text-gray-300">Manage users, approve workers, and handle user-related operations from this page.</p>
 
             <div className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

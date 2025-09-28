@@ -1,56 +1,92 @@
-/* Tailwind CSS v4 - Use single import instead of separate directives */
 @import "tailwindcss";
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
 
-/* Custom CSS variables for themes */
-:root {
-  --bg-color: #f9fafb;
-  --text-color: #111827;
-  --border-color: #e5e7eb;
-}
-
-/* Dark theme variables */
-html.dark,
-html[data-theme="dark"],
-body.dark {
-  --bg-color: #111827;
-  --text-color: #f3f4f6;
-  --border-color: #374151;
-}
-
-/* Force background and text colors using custom properties */
+/* Override Tailwind's dark mode classes with explicit CSS */
 html {
-  background-color: var(--bg-color) !important;
-  color: var(--text-color) !important;
+  background: #f9fafb;
+  color: #111827;
+  transition: all 0.2s ease;
 }
 
-body {
-  background-color: var(--bg-color) !important;
-  color: var(--text-color) !important;
-}
-
-/* Smooth transitions */
-html, body {
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-/* Ensure Tailwind dark classes work */
 html.dark {
-  @apply bg-neutral-900 text-neutral-100;
+  background: #111827 !important;
+  color: #f3f4f6 !important;
 }
 
-html:not(.dark) {
-  @apply bg-neutral-50 text-neutral-900;
+/* Override specific utility classes */
+.bg-white {
+  background-color: white;
 }
 
-/* Additional dark mode support */
-.dark {
-  color-scheme: dark;
+html.dark .bg-white {
+  background-color: #111827 !important;
 }
 
-:not(.dark) {
-  color-scheme: light;
+.dark\:bg-gray-900,
+html.dark .bg-gray-900 {
+  background-color: #111827 !important;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+html.dark .text-gray-900,
+.dark\:text-white,
+html.dark .text-white {
+  color: #f3f4f6 !important;
+}
+
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+html.dark .bg-gray-100,
+.dark\:bg-gray-800,
+html.dark .bg-gray-800 {
+  background-color: #374151 !important;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+html.dark .text-gray-800,
+.dark\:text-gray-200,
+html.dark .text-gray-200 {
+  color: #e5e7eb !important;
+}
+
+/* Color test elements */
+.bg-yellow-100 {
+  background-color: #fef3c7;
+}
+
+html.dark .bg-yellow-100,
+.dark\:bg-yellow-900,
+html.dark .bg-yellow-900 {
+  background-color: #78350f !important;
+}
+
+.bg-red-100 {
+  background-color: #fee2e2;
+}
+
+html.dark .bg-red-100,
+.dark\:bg-red-900,
+html.dark .bg-red-900 {
+  background-color: #7f1d1d !important;
+}
+
+.bg-blue-100 {
+  background-color: #dbeafe;
+}
+
+html.dark .bg-blue-100,
+.dark\:bg-blue-900,
+html.dark .bg-blue-900 {
+  background-color: #1e3a8a !important;
 }
 
 /* Klynaa Two-Pane Dashboard Design Tokens */

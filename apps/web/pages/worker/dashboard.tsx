@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Icon } from '../../components/ui/Icons';
 import { Card } from '../../src/design-system/components/Card';
 import { Badge } from '../../src/design-system/components/Badge';
+import WorkingThemeToggle from '../../src/components/ui/WorkingThemeToggle';
 
 interface WorkerUser {
   id: string;
@@ -107,7 +108,7 @@ export default function WorkerDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-klynaa-lightgray dark:bg-neutral-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-neutral-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-klynaa-primary"></div>
       </div>
     );
@@ -116,7 +117,7 @@ export default function WorkerDashboard() {
   if (!user) return null;
 
   return (
-    <div className="flex h-screen bg-klynaa-lightgray dark:bg-neutral-900 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-neutral-900 overflow-hidden">
       {/* Sidebar */}
       <div className="w-64 text-white flex flex-col shadow-xl border-r border-neutral-600" style={{ backgroundColor: '#2E7D32' }}>
         {/* Header */}
@@ -130,23 +131,23 @@ export default function WorkerDashboard() {
             <Icon name="BarChart3" className="w-5 h-5 mr-3" />
             Overview
           </Link>
-          <Link href="/worker/jobs" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/worker/jobs" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="CheckSquare" className="w-5 h-5 mr-3" />
             Available Pickups
           </Link>
-          <Link href="/worker/routes" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/worker/routes" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="Navigation" className="w-5 h-5 mr-3" />
             Active Pickups
           </Link>
-          <Link href="/worker/earnings" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/worker/earnings" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="Wallet" className="w-5 h-5 mr-3" />
             Earnings
           </Link>
-          <Link href="/worker/performance" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/worker/performance" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="Star" className="w-5 h-5 mr-3" />
             Performance
           </Link>
-          <Link href="/worker/profile" className="flex items-center p-3 rounded-lg font-medium hover:bg-white hover:bg-opacity-20 transition-colors text-white">
+          <Link href="/worker/profile" className="flex items-center p-3 rounded-lg font-medium transition-colors text-white hover:bg-white hover:bg-opacity-20 hover:text-white">
             <Icon name="User" className="w-5 h-5 mr-3" />
             Profile
           </Link>
@@ -175,24 +176,18 @@ export default function WorkerDashboard() {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <div className="p-6 border-b bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-klynaa-dark dark:text-white" style={{ color: '#1C1C1C' }}>Worker Dashboard</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Worker Dashboard</h2>
           <div className="flex items-center space-x-4">
+            <WorkingThemeToggle />
             <Icon name="Bell" className="w-5 h-5 text-klynaa-neutral dark:text-neutral-400" />
-            <button
-              className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2"
-              style={{
-                backgroundColor: 'white',
-                color: '#4CAF50',
-                borderColor: '#4CAF50'
-              }}
-            >
+            <button className="px-4 py-2 rounded-lg transition-colors font-medium hover:shadow-md border-2 bg-white dark:bg-neutral-800 text-green-600 dark:text-green-400 border-green-600 dark:border-green-400 hover:bg-green-50 dark:hover:bg-neutral-700">
               Request Payout
             </button>
           </div>
         </div>
 
         {/* Content */}
-        <div className="p-6 flex-1 bg-klynaa-lightgray dark:bg-neutral-900 overflow-y-auto">
+        <div className="p-6 flex-1 bg-gray-50 dark:bg-neutral-900 overflow-y-auto">
           {/* Metrics Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <Card>

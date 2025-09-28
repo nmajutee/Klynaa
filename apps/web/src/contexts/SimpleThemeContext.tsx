@@ -13,43 +13,43 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>('light');
 
   // Simple function to apply theme directly to DOM
-  const applyTheme = (newTheme: Theme) => {
-    console.log('Applying theme:', newTheme);
+  const applyTheme = (theme: Theme) => {
+    console.log('🔥 applyTheme called with:', theme);
 
-    // Remove existing classes
-    document.documentElement.classList.remove('light', 'dark');
-    document.body.classList.remove('light', 'dark');
+    if (typeof window !== 'undefined') {
+      const html = document.documentElement;
+      console.log('🔥 HTML element before:', html.className);
 
-    // Add new theme class
-    document.documentElement.classList.add(newTheme);
-    document.body.classList.add(newTheme);
+      // Force remove and add classes
+      html.classList.remove('light', 'dark');
 
-    // Set data attribute as well for extra compatibility
-    document.documentElement.setAttribute('data-theme', newTheme);
+      if (theme === 'dark') {
+        html.classList.add('dark');
+        // Also set attribute for maximum compatibility
+        html.setAttribute('data-theme', 'dark');
+        // Force CSS custom properties
+        document.body.style.setProperty('--theme', 'dark');
+      } else {
+        html.classList.add('light');
+        html.setAttribute('data-theme', 'light');
+        document.body.style.setProperty('--theme', 'light');
+      }
 
-    // Update CSS custom properties directly
-    if (newTheme === 'dark') {
-      document.documentElement.style.setProperty('--bg-color', '#111827');
-      document.documentElement.style.setProperty('--text-color', '#f3f4f6');
-    } else {
-      document.documentElement.style.setProperty('--bg-color', '#f9fafb');
-      document.documentElement.style.setProperty('--text-color', '#111827');
+      console.log('🔥 HTML element after:', html.className);
+      console.log('🔥 Has dark class:', html.classList.contains('dark'));
+      console.log('🔥 Data theme attribute:', html.getAttribute('data-theme'));
+
+      // Force a repaint
+      html.style.display = 'none';
+      html.offsetHeight; // Trigger reflow
+      html.style.display = '';
     }
-
-    // Save to localStorage
-    try {
-      localStorage.setItem('klynaa-theme', newTheme);
-      console.log('Theme saved to localStorage:', newTheme);
-    } catch (e) {
-      console.warn('Failed to save theme to localStorage:', e);
-    }
-
-    console.log('Theme applied successfully. HTML classes:', document.documentElement.className);
-  };
-
-  // Load theme on mount
+  };  // Load theme on mount
   useEffect(() => {
-    console.log('ThemeProvider: Loading initial theme');
+    console.log('🎨 ThemeProvider: Loading initial theme');
+
+    // Ensure we're in browser environment
+    if (typeof window === 'undefined') return;
 
     let initialTheme: Theme = 'light';
 
@@ -57,14 +57,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const savedTheme = localStorage.getItem('klynaa-theme') as Theme;
       if (savedTheme === 'dark' || savedTheme === 'light') {
         initialTheme = savedTheme;
+        console.log('🎨 Found saved theme:', savedTheme);
       } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         initialTheme = 'dark';
+        console.log('🎨 Using system preference: dark');
+      } else {
+        console.log('🎨 Using default: light');
       }
     } catch (e) {
       console.warn('Failed to load theme:', e);
     }
 
-    console.log('Initial theme will be:', initialTheme);
+    console.log('🎨 Initial theme will be:', initialTheme);
     setTheme(initialTheme);
     applyTheme(initialTheme);
   }, []);

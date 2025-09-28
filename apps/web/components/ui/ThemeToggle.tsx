@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import { Icon } from './Icons';
 
 interface ThemeToggleProps {
     className?: string;
@@ -38,15 +38,14 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
     return (
         <button
             onClick={toggleTheme}
-            className={`theme-toggle-button ${className}`}
+            className={`flex items-center justify-center w-9 h-9 rounded-lg bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 transition-colors ${className}`}
             aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
             title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
         >
-            {isDark ? (
-                <SunIcon className="h-5 w-5" />
-            ) : (
-                <MoonIcon className="h-5 w-5" />
-            )}
+            <Icon
+                name={isDark ? 'Sun' : 'Moon'}
+                className="w-5 h-5 text-neutral-600 dark:text-neutral-300"
+            />
         </button>
     );
 };

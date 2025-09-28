@@ -14,11 +14,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <ThemeProvider>
           <LanguageProvider>
             <ToastHost>
-              <div className="min-h-screen bg-neutral-50 dark:bg-neutral-900">
-                <NavigationProvider>
-                  <Component {...pageProps} />
-                </NavigationProvider>
-              </div>
+              <NavigationProvider>
+                <Component {...pageProps} />
+              </NavigationProvider>
             </ToastHost>
           </LanguageProvider>
         </ThemeProvider>

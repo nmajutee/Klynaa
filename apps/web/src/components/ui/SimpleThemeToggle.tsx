@@ -15,32 +15,16 @@ export default function SimpleThemeToggle() {
   console.log('SimpleThemeToggle render, theme:', theme);
 
   return (
-    <div>
-      <button
-        onClick={handleClick}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '36px',
-          height: '36px',
-          borderRadius: '8px',
-          backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
-          color: theme === 'dark' ? '#f3f4f6' : '#374151',
-          border: '1px solid',
-          borderColor: theme === 'dark' ? '#6b7280' : '#d1d5db',
-          cursor: 'pointer',
-          transition: 'all 0.2s ease'
-        }}
-        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      >
-        {theme === 'dark' ? (
-          <Icon name="Sun" size={16 as any} />
-        ) : (
-          <Icon name="Moon" size={16 as any} />
-        )}
-      </button>
-    </div>
+    <button
+      onClick={handleClick}
+      className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200 ease-in-out hover:scale-105 bg-gray-100 hover:bg-gray-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 border border-gray-300 dark:border-neutral-600"
+      title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+    >
+      <Icon
+        name={theme === 'dark' ? 'Sun' : 'Moon'}
+        className="w-4 h-4 text-gray-700 dark:text-gray-200"
+      />
+    </button>
   );
 }
